@@ -18,19 +18,22 @@
     <LibraryReferences>{c354639a-83ff-4ae7-bff1-5d4870aaaff7}</LibraryReferences>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Funtions\FB_CSVLogger.TcPOU">
+    <Compile Include="Functions\FB_CSVLogger.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Funtions\FB_ValveControl.TcPOU">
+    <Compile Include="Functions\FB_ValveControl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Funtions\FB_MqttManager.TcPOU">
+    <Compile Include="Functions\FB_MqttManager.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Functions\FB_SensorIO.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Funtions\MAIN.TcPOU">
+    <Compile Include="Functions\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="State_Var\E_CSVLogState.TcDUT">
@@ -46,6 +49,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="State_Var\ST_MQTT_Command.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="State_Var\ST_SensorData.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="State_Var\ST_ValveData.TcDUT">
@@ -69,7 +75,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Funtions" />
+    <Folder Include="Functions" />
     <Folder Include="State_Var" />
     <Folder Include="Variables_Lists" />
   </ItemGroup>

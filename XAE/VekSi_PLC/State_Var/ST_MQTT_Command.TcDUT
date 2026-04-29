@@ -1,14 +1,47 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <DUT Name="ST_MQTT_Command" Id="{6408835c-1577-4fae-afd9-8d68de3755d2}">
-    <Declaration><![CDATA[{attribute 'TcJsonObject' := ''}
+    <Declaration><![CDATA[(*
+============================================================
+ST_MQTT_Command
+============================================================
+PURPOSE
+  JSON-deserialized incoming MQTT command payload.
+  FB_MqttManager parses received JSON into this struct.
+
+EXPECTED JSON FORMAT (publish to irrigation/command):
+  {
+    "Valve1": 50,
+    "Valve2": 25,
+    "Valve3": 75,
+    "Valve1_Enable": true,
+    "Valve2_Enable": true,
+    "Valve3_Enable": false
+  }
+
+  Valve setpoints are in percent (0–100).
+  ValveN_Enable = true  → MQTT is allowed to command that valve.
+  ValveN_Enable = false → that valve ignores MQTT setpoints.
+  Omitting a field leaves its current value unchanged.
+
+NOTES
+  • {attribute 'TcJsonObject'} enables Beckhoff JSON auto-parse.
+  • DINT used for setpoints to avoid floating-point JSON quirks;
+    values are clamped to 0–100 before use.
+============================================================
+*)
+{attribute 'TcJsonObject' := ''}
 TYPE ST_MQTT_Command :
 STRUCT
-	Valve1	:	DINT;
-	Valve2	: 	DINT;
-	Valve3 :	DINT;
+    (* ── Setpoints (0–100 %) ────────────────────────────────── *)
+    Valve1          : DINT;     (* Desired position valve 1, 0–100 % *)
+    Valve2          : DINT;     (* Desired position valve 2, 0–100 % *)
+    Valve3          : DINT;     (* Desired position valve 3, 0–100 % *)
 
-
+    (* ── Per-valve MQTT override enable ─────────────────────── *)
+    Valve1_Enable   : BOOL;     (* TRUE = allow MQTT to command valve 1 *)
+    Valve2_Enable   : BOOL;     (* TRUE = allow MQTT to command valve 2 *)
+    Valve3_Enable   : BOOL;     (* TRUE = allow MQTT to command valve 3 *)
 END_STRUCT
 END_TYPE
 ]]></Declaration>

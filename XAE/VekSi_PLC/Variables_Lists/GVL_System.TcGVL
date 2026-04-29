@@ -1,29 +1,54 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <GVL Name="GVL_System" Id="{aa1e9a6c-afe5-4d88-aef5-1834e6cbe9ad}">
-    <Declaration><![CDATA[// Purpose: Runtime system state shared between all modules.
-//          Written by FBs, read by MAIN and other FBs.
-VAR_GLOBAL	
-    // ── Valve runtime data (written by FB_ValveControl) ──────
-    Valve   : ARRAY[1..3] OF ST_ValveData;     // Index 1=Valve1, 2=Valve2, 3=Valve3
-	
-	// ── Sensor data (written by FB_SensorIO) ─────────────────
-	
-	// ── CSV Logger status (written by FB_CSVLogger) ──────────
-    CSV_LastWriteTime   : DT;           // Timestamp of last successful row write
-    CSV_FileError       : BOOL;                 // File I/O error flag
-    CSV_RowsWritten     : UDINT;                // Total rows written in current session
-	CSV_CurrentFile		: STRING;
-	CSV_LoggerState		: E_CSVLogState;
+    <Declaration><![CDATA[(*
+============================================================
+GVL_System  —  Runtime shared state
+============================================================
+PURPOSE
+  Central runtime data bus. Written by function blocks,
+  read by MAIN and mirrored to GVL_HMI for display.
 
-	// ── MQTT runtime status (written by FB_MQTTManager) ──────
-	
-	
-	    // ── System health ─────────────────────────────────────────
-    SystemReady         : BOOL;                 // All valves homed, no active faults
-    AnyFaultActive      : BOOL;                 // OR of all valve fault flags
-	
-	
-END_VAR]]></Declaration>
+OWNERSHIP
+  Valve[1..3]     → written by FB_ValveControl instances
+  Sensors         → written by FB_SensorIO
+  CSV_*           → written by FB_CSVLogger
+  MQTT_*          → written by FB_MqttManager
+  SystemReady,
+  AnyFaultActive  → computed in MAIN
+============================================================
+*)
+VAR_GLOBAL
+
+    // ── Valve runtime data ───────────────────────────────────────
+    Valve                   : ARRAY[1..3] OF ST_ValveData;  // Index 1=V1, 2=V2, 3=V3
+
+    // ── Sensor data (written by FB_SensorIO) ─────────────────────
+    Sensors                 : ST_SensorData;
+
+    // ── CSV Logger status (written by FB_CSVLogger) ───────────────
+    CSV_LastWriteTime       : DT;               // Timestamp of last successful row write
+    CSV_FileError           : BOOL;             // File I/O error flag
+    CSV_RowsWritten         : UDINT;            // Total rows written this session
+    CSV_CurrentFile         : STRING;           // Active filename (e.g. IrrigationLog_2026-04.csv)
+    CSV_LoggerState         : E_CSVLogState;    // Internal state for diagnostics
+
+    // ── MQTT runtime status (written by FB_MqttManager) ──────────
+    MQTT_Connected          : BOOL;             // TRUE when broker connection is active
+    MQTT_Error              : BOOL;             // TRUE on connection error or reconnect
+    MQTT_LastErrorCode      : HRESULT;          // HRESULT error code (0 = OK)
+    MQTT_LastErrorMsg       : STRING(128);      // Human-readable error description
+    MQTT_LastRxTopic        : STRING(255);      // Last received topic
+    MQTT_LastRxPayload      : STRING(2048);     // Last received payload (for diagnostics)
+    MQTT_LastJsonStatus     : STRING(2048);     // Last outgoing JSON payload (for diagnostics)
+    MQTT_NewCommand         : BOOL;             // TRUE for one cycle after valid command received
+
+    // ── System health (computed in MAIN) ─────────────────────────
+    SystemReady             : BOOL;             // All valves homed and no active faults
+    AnyFaultActive          : BOOL;             // OR of all valve IsFault flags
+    AnySensorFault          : BOOL;             // TRUE if any sensor is disconnected/faulty
+
+END_VAR
+]]></Declaration>
   </GVL>
 </TcPlcObject>
