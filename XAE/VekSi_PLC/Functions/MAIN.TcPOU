@@ -56,6 +56,14 @@ VAR
     sTimestamp      : STRING(64);
     sTempStr        : STRING(8);
 
+    // ── Whole-array buffers passed to FB_MqttManager ─────────────
+    // TwinCAT does not allow per-element array assignment inside
+    // an FB call's parameter list. Populate these arrays each
+    // cycle, then pass them in a single assignment.
+    aValveSetpoint  : ARRAY[1..3] OF REAL;
+    aValveActual    : ARRAY[1..3] OF REAL;
+    aValveSource    : ARRAY[1..3] OF STRING(8);
+
     // ── First-scan flag for MQTT default config load ─────────────
     bMqttConfigInit : BOOL := FALSE;
 END_VAR
@@ -290,9 +298,23 @@ sTimestamp := CONCAT(sTimestamp, sTempStr);
 
 // ============================================================
 // STEP 8 — MQTT MANAGER
-// Full wiring: HMI config in, valve+sensor data for outgoing
-// JSON, parsed MQTT setpoints back to system bus, status out.
+// Populate whole-array buffers (per-element assignment is not
+// allowed inside an FB call), then run the manager.
 // ============================================================
+
+// Build the array buffers required by FB_MqttManager
+aValveSetpoint[1] := GVL_System.Valve[1].Active_Setpoint;
+aValveSetpoint[2] := GVL_System.Valve[2].Active_Setpoint;
+aValveSetpoint[3] := GVL_System.Valve[3].Active_Setpoint;
+
+aValveActual[1] := GVL_System.Valve[1].Actual_Position;
+aValveActual[2] := GVL_System.Valve[2].Actual_Position;
+aValveActual[3] := GVL_System.Valve[3].Actual_Position;
+
+aValveSource[1] := GVL_HMI.ACT_Valve1_SourceText;
+aValveSource[2] := GVL_HMI.ACT_Valve2_SourceText;
+aValveSource[3] := GVL_HMI.ACT_Valve3_SourceText;
+
 fbMqttManager(
     bEnable              := GVL_HMI.HMI_MQTT_bEnable,
     stConfig             := GVL_HMI.HMI_MQTT_Config,
@@ -302,15 +324,9 @@ fbMqttManager(
     tStatusPublishTime   := GVL_HMI.HMI_MQTT_Config.tStatusPublishInterval,
     sStatusTopic         := GVL_HMI.HMI_MQTT_Config.sMainTopic,
 
-    rValveSetpoint[1]    := GVL_System.Valve[1].Active_Setpoint,
-    rValveSetpoint[2]    := GVL_System.Valve[2].Active_Setpoint,
-    rValveSetpoint[3]    := GVL_System.Valve[3].Active_Setpoint,
-    rValveActual[1]      := GVL_System.Valve[1].Actual_Position,
-    rValveActual[2]      := GVL_System.Valve[2].Actual_Position,
-    rValveActual[3]      := GVL_System.Valve[3].Actual_Position,
-    sValveSource[1]      := GVL_HMI.ACT_Valve1_SourceText,
-    sValveSource[2]      := GVL_HMI.ACT_Valve2_SourceText,
-    sValveSource[3]      := GVL_HMI.ACT_Valve3_SourceText,
+    rValveSetpoint       := aValveSetpoint,
+    rValveActual         := aValveActual,
+    sValveSource         := aValveSource,
 
     rTemperature_C       := GVL_System.Sensors.rTemperature_C[1],
     rWaterLevel_pct      := GVL_System.Sensors.rWaterLevel_pct,
