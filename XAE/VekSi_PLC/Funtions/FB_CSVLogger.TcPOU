@@ -1,0 +1,327 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_CSVLogger" Id="{8a84e9fd-9a8f-453a-90ca-561ec719d60c}" SpecialFunc="None">
+    <Declaration><![CDATA[(*  FB_CsvLogger
+  ============
+  Appends one CSV row per log interval to a daily log file on the
+  IPC local file system.
+
+  File naming: <BasePath><YYYY-MM-DD>.csv
+  Example:     C:\TwinCAT\IrrigationLogs\2024-01-15.csv
+
+  CSV header (written once when file is first created):
+    Timestamp,V1_Setpoint_%,V1_Actual_%,V1_Source,
+    V2_Setpoint_%,V2_Actual_%,V2_Source,
+    V3_Setpoint_%,V3_Actual_%,V3_Source,
+    WaterLevel_%,Temperature_C
+
+  Each call to WriteEntry() appends one data row.
+
+  Libraries required:
+    Tc2_Utilities (FB_FileOpen, FB_FilePuts, FB_FileClose)
+    Tc2_System    (FB_LocalSystemTime)
+
+  Notes:
+    • File I/O FBs are non-blocking; each step waits for bBusy=FALSE
+      before proceeding, which may span multiple PLC cycles.
+    • A new file is created at midnight automatically.
+*)
+
+FUNCTION_BLOCK FB_CsvLogger
+
+VAR_INPUT
+  bEnable         : BOOL := TRUE;
+  bForceWrite     : BOOL;          (* Rising edge: write immediately        *)
+  tLogInterval    : TIME;          (* Periodic log interval                 *)
+  sBasePath       : STRING(128);   (* Folder path including trailing '\'    *)
+  stValve         : ARRAY[1..3] OF ST_ValveData;
+  sPrefix  	   	  : T_MaxString;
+ // stSystem        : ST_SystemData;
+END_VAR
+
+VAR_OUTPUT
+  bBusy           : BOOL;          (* File I/O in progress                  *)
+  bError          : BOOL;
+  nErrorCode      : UDINT;
+  bFileExists 	  : BOOL := FALSE;
+  dtLastWrite     : DT;            (* Timestamp of last successful write    *)
+  sCurrentFile    : STRING(128);   (* Path of file currently being written  *)
+  sCurrentFilename    : STRING(128);
+  
+    (* ── State machine ───────────────────────────────────────── *)
+  eState          : E_CSVLogState := E_CSVLogState.CSV_IDLE; 
+  
+END_VAR
+
+VAR
+  (* ── File I/O FBs (Tc2_Utilities) ───────────────────────── *)
+  
+  fbFileOpen      : FB_FileOpen;
+  fbFileWrite     : FB_FileWrite;
+  fbFileClose     : FB_FileClose;
+  fbFileRead	  : FB_FileRead;
+  hFilenumber     : UINT;
+  cbLen      	  : UDINT;
+
+  (* ── Timing ─────────────────────────────────────────────── *)
+  tIntervalTimer  : TON;
+  bForceEdge      : R_TRIG;
+  bTriggerWrite   : BOOL;
+
+  (* ── Date/time ───────────────────────────────────────────── *)
+  fbGetTime       : FB_LocalSystemTime;
+  stSysTime       : TIMESTRUCT;
+  sDate           : STRING(12);    (* YYYY-MM-DD                           *)
+  sTimestamp      : STRING(24);    (* YYYY-MM-DD HH:MM:SS                  *)
+  nLastDay        : UINT;          (* Track day rollover for new file      *)
+  
+  nYear     	  : UINT;
+  nMonth    	  : UINT;
+  sYear    		  : STRING(8);
+  sMonth     	  : STRING(4);
+
+
+
+  (* ── String building ─────────────────────────────────────── *)
+  sLine           : STRING(512);
+  sHeader         : STRING(512);
+  bNeedHeader     : BOOL;
+
+  (* ── Source string helper ────────────────────────────────── *)
+  sSource         : STRING(8);
+  
+  (* ── FB_Enum ────────────────────────────────── *)
+  fbEnum		  : FB_EnumFindFileEntry;
+  bEnumStart       : BOOL;
+  bEnumDone        : BOOL;
+  bMatchFound      : BOOL;
+  
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* ============================================================
+   FB_CsvLogger – Cyclic Execution
+   ============================================================ *)
+(* Get current time every cycle *)
+fbGetTime(bEnable := TRUE, dwCycle := 1);
+
+//stSysTime := fbGetTime.systemTime;
+
+(*IF NOT bEnable THEN
+  IF hFile <> 0 THEN
+    fbFileClose(sNetId := '', hFile := hFile, bExecute := TRUE);
+    IF NOT fbFileClose.bBusy THEN
+      hFile  := 0;
+      eState := IDLE;
+    END_IF
+  END_IF
+  RETURN;
+END_IF
+*)
+bForceEdge(CLK := bForceWrite);
+tIntervalTimer(IN := TRUE, PT := tLogInterval);
+
+bTriggerWrite := tIntervalTimer.Q OR bForceEdge.Q;
+
+IF tIntervalTimer.Q THEN
+  tIntervalTimer(IN := FALSE);
+END_IF
+
+
+
+(* ── State machine ──────────────────────────────────────────── *)
+CASE eState OF
+
+  E_CSVLogState.CSV_IDLE:
+ 	bBusy := FALSE;		
+    IF bTriggerWrite THEN
+	    bFileExists := FALSE;
+        bEnumStart := TRUE;
+        bEnumDone := FALSE;
+        bMatchFound := FALSE;
+        eState := E_CSVLogState.CSV_PREPARE;
+    END_IF 
+	
+//---------------------------------------------------------------------------------------------------------------
+
+  E_CSVLogState.CSV_OPEN:
+    bBusy := TRUE;
+    fbFileOpen(
+      sPathName := sCurrentFile,
+      nMode     := FOPEN_MODEAPPEND,
+      bExecute  := TRUE,  
+	  hFile		=> hFilenumber
+    );
+    IF NOT fbFileOpen.bBusy THEN
+     	fbFileOpen(bExecute := FALSE);
+		
+		IF NOT fbFileOpen.bError THEN
+        	hFilenumber := fbFileOpen.hFile;		
+       IF NOT bFileExists  THEN
+         eState := E_CSVLogState.CSV_WRITE_HDR;
+       ELSE
+         eState := E_CSVLogState.CSV_WRITE_ROW;
+        END_IF
+      ELSE
+        nErrorCode := fbFileOpen.nErrId;
+        bError     := TRUE;
+        eState     := E_CSVLogState.CSV_ERROR;
+      END_IF
+    END_IF
+	
+//---------------------------------------------------------------------------------------------------------------
+E_CSVLogState.CSV_PREPARE:
+(* Build date string for filename and timestamp string for data row *)
+    nYear  := fbGetTime.systemTime.wYear;
+    nMonth := fbGetTime.systemTime.wMonth;
+    sYear  := UINT_TO_STRING(nYear);
+    sMonth := UINT_TO_STRING(nMonth); //
+
+    IF nMonth < 10 THEN
+        sMonth := CONCAT('0', sMonth);
+    END_IF
+
+	
+    
+    sCurrentFilename  :=  sPrefix;
+    sCurrentFilename  := CONCAT(sCurrentFilename, sYear);
+    sCurrentFilename  := CONCAT(sCurrentFilename, '-');
+    sCurrentFilename  := CONCAT(sCurrentFilename, sMonth);
+    sCurrentFilename  := CONCAT(sCurrentFilename, '.csv');
+	
+	sCurrentFile := CONCAT(sBasePath, sCurrentFilename);  // File name along with directory path
+	
+//--------------------------------------------------------------------
+
+(*Checking If file exists *)
+    bBusy := TRUE;
+    IF bEnumStart THEN
+        fbEnum(
+            sPathName := sCurrentFile,
+            eCmd := eEnumCmd_First,
+            bExecute := TRUE,
+            tTimeout := T#5S
+        );
+        bEnumStart := FALSE;
+    ELSE
+        fbEnum(
+            sPathName := sCurrentFile,
+            eCmd := eEnumCmd_Next,
+            bExecute := FALSE,
+            tTimeout := T#5S
+        );
+    END_IF
+    IF NOT fbEnum.bBusy THEN
+        fbEnum(bExecute := FALSE);
+        IF fbEnum.bError THEN
+            bFileExists := FALSE;
+            eState := E_CSVLogState.CSV_OPEN;;
+        ELSE
+            IF fbEnum.stFindFile.sFileName <> '' THEN
+                bFileExists := TRUE;
+                eState := E_CSVLogState.CSV_OPEN;
+            ELSE
+                (* keep enumerating *)
+                bFileExists := FALSE;
+                eState := E_CSVLogState.CSV_OPEN;
+            END_IF
+        END_IF
+    END_IF
+//--------------------------------------------------------------------
+
+
+
+
+//---------------------------------------------------------------------------------------------------------------
+  E_CSVLogState.CSV_WRITE_HDR:
+    sHeader := 'Timestamp,V1_Setpoint_%,V1_Actual_%,V1_Source,V2_Setpoint_%,V2_Actual_%,V2_Source,V3_Setpoint_%,V3_Actual_%,V3_Source,WaterLevel_%,Temperature_C$R$N';
+	cbLen := INT_TO_UDINT(LEN(sHeader));
+    fbFileWrite (
+		bExecute 	:= TRUE,
+      	hFile    	:= hFilenumber,
+        pWriteBuff 	:= ADR(sHeader),
+        cbWriteLen 	:= cbLen
+    );
+	
+    IF NOT fbFileWrite.bBusy THEN
+      fbFileWrite(bExecute := FALSE);
+      bNeedHeader := FALSE;
+      IF fbFileWrite.bError THEN
+        nErrorCode := fbFileWrite.nErrId;
+        bError     := TRUE;
+        eState     := E_CSVLogState.CSV_CLOSE ;
+      ELSE
+        eState := E_CSVLogState.CSV_WRITE_ROW ;
+      END_IF
+    END_IF
+	
+//---------------------------------------------------------------------------------------------------------------
+
+  E_CSVLogState.CSV_WRITE_ROW:
+    (* Build CSV data row *)
+   
+ //	sSource := SEL(stValve[1].eCommandSource = E_CommandSource.MQTT, 'HMI', 'MQTT'); //E_CommandSource.MQTT
+ //   IF stValve[1].eCommandSource = E_CommandSource.NONE THEN sSource := 'NONE'; END_IF
+    
+	sLine := CONCAT(SYSTEMTIME_TO_STRING(fbGetTime.systemTime), ',');
+    	sLine := CONCAT(sLine, CONCAT(REAL_TO_STRING(stValve[1].Active_Setpoint), ',')); //stValve[1].rActiveSetpoint
+    	sLine := CONCAT(sLine, CONCAT(REAL_TO_STRING(stValve[1].Actual_Position), ',')); //stValve[1].rActualPosition
+    	sLine := CONCAT(sLine, CONCAT(sSource, ','));
+
+ //   sSource := SEL(stValve[2].eCommandSource = E_CommandSource.MQTT, 'HMI', 'MQTT');
+ //   IF stValve[2].eCommandSource = E_CommandSource.NONE THEN sSource := 'NONE'; END_IF
+    
+	sLine := CONCAT(sLine, CONCAT(REAL_TO_STRING(stValve[2].Active_Setpoint), ','));
+    	sLine := CONCAT(sLine, CONCAT(REAL_TO_STRING(stValve[2].Actual_Position), ','));
+    	sLine := CONCAT(sLine, CONCAT(sSource, ','));
+
+ //   sSource := SEL(stValve[3].eCommandSource = E_CommandSource.MQTT, 'HMI', 'MQTT');
+  //  IF stValve[3].eCommandSource = E_CommandSource.NONE THEN sSource := 'NONE'; END_IF
+    
+	sLine := CONCAT(sLine, CONCAT(REAL_TO_STRING(stValve[3].Active_Setpoint), ','));
+    	sLine := CONCAT(sLine, CONCAT(REAL_TO_STRING(stValve[3].Actual_Position), ','));
+    	sLine := CONCAT(sLine, CONCAT(sSource, ','));
+
+    sLine := CONCAT(sLine, CONCAT(REAL_TO_STRING(-999), ',')); //stSystem.rWaterLevel_pct
+    sLine := CONCAT(sLine, CONCAT(REAL_TO_STRING(-999), '$R$N')); //stSystem.rTemperature_C
+	
+	cbLen := INT_TO_UDINT(LEN(sLine));
+
+    fbFileWrite( bExecute   := TRUE, hFile	:= hFilenumber, pWriteBuff := ADR(sLine), cbWriteLen := cbLen);
+
+    IF NOT fbFileWrite .bBusy THEN
+      fbFileWrite(bExecute := FALSE);
+      IF fbFileWrite.bError THEN
+        nErrorCode := fbFileWrite.nErrId;
+        bError     := TRUE;
+      ELSE
+        bError      := FALSE;
+        dtLastWrite := SYSTEMTIME_TO_DT (fbGetTime.systemTime);
+      END_IF
+      eState := E_CSVLogState.CSV_CLOSE ;
+    END_IF
+	
+//---------------------------------------------------------------------------------------------------------------
+
+  E_CSVLogState.CSV_CLOSE :
+    fbFileClose(hFile := hFilenumber, bExecute := TRUE);
+    IF NOT fbFileClose.bBusy THEN
+      fbFileClose(bExecute := FALSE);
+      eState := E_CSVLogState.CSV_IDLE;
+	  hFilenumber := 0;
+    END_IF
+	
+//---------------------------------------------------------------------------------------------------------------
+
+  E_CSVLogState.CSV_ERROR :
+    bBusy      := FALSE;
+    bError     := TRUE;
+    (* Recovery: next trigger will attempt again *)
+    IF NOT bTriggerWrite THEN
+      eState := E_CSVLogState.CSV_IDLE;
+    END_IF
+
+END_CASE]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

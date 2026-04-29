@@ -1,0 +1,558 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_MqttManager" Id="{a85faad5-c4ce-456e-ac7f-31861d0adeef}" SpecialFunc="None">
+    <Declaration><![CDATA[(*
+============================================================
+FUNCTION_BLOCK: FB_MqttManager
+============================================================
+
+PURPOSE
+  Central MQTT manager for irrigation system.
+
+HANDLES
+  • MQTT connection / reconnection
+  • Topic subscription / unsubscription
+  • Manual publish
+  • Cyclic JSON status publish
+  • Incoming JSON command parsing
+  • List of currently subscribed topics for HMI
+
+EXPECTED INCOMING JSON
+  {
+    "valve_1": 25.0,
+    "valve_2": 50.0,
+    "valve_3": 75.0
+  }
+
+OUTGOING JSON
+  Similar to CSV row:
+    timestamp,
+    valve setpoints,
+    valve actual positions,
+    valve command sources,
+    temperature,
+    water level
+
+LIBRARIES
+  • TF6701 / Tc3_IotBase
+  • Tc2_Standard
+============================================================
+*)
+
+FUNCTION_BLOCK FB_MqttManager
+VAR_INPUT
+    (* ── Connection control ───────────────────────────── *)
+    bEnable         : BOOL;             (* Master enable. FALSE disconnects MQTT. *)
+    stConfig        : ST_MqttConfig;    (* Broker address, port, username, etc.   *)
+    bApplyConfig    : BOOL;             (* Rising edge: reconnect with new config *)
+
+    (* ── Manual publish command ───────────────────────── *)
+    bPublish        : BOOL;             (* Rising edge: publish sPubPayload       *)
+    sPubTopic       : STRING(255);      (* Manual publish topic                   *)
+    sPubPayload     : STRING(2048);     (* Manual publish payload                 *)
+
+    (* ── Subscribe command ────────────────────────────── *)
+    bSubscribe      : BOOL;             (* Rising edge: subscribe to sSubTopic    *)
+    sSubTopic       : STRING(255) := stConfig.SubscribeTopic;      (* Topic to subscribe                     *)
+	sPayloadRcv     : STRING(255);     (* Manual publish payload                 *)
+	sTopicRcv      	: STRING(255);
+	
+
+    (* ── Unsubscribe command ──────────────────────────── *)
+    bUnsubscribe    : BOOL;             (* Rising edge: unsubscribe topic         *)
+    sUnsubTopic     : STRING(255);      (* Topic to unsubscribe                   *)
+
+    (* ── Cyclic status publishing ─────────────────────── *)
+    bEnableStatusPublish : BOOL;        (* TRUE = publish status JSON cyclically  *)
+    tStatusPublishTime   : TIME;        (* Example: T#10S                         *)
+    sStatusTopic         : STRING(255); (* Example: 'irrigation/status'           *)
+
+    (* ── System data for outgoing JSON ────────────────── *)
+    rValveSetpoint       : ARRAY[1..3] OF REAL;
+    rValveActual         : ARRAY[1..3] OF REAL;
+    sValveSource         : ARRAY[1..3] OF STRING(32);
+    rTemperature_C       : REAL;
+    rWaterLevel_Percent  : REAL;
+    sTimestamp           : STRING(64);
+END_VAR
+
+
+VAR_OUTPUT
+    (* ── Connection status ────────────────────────────── *)
+    bConnected      : BOOL;             (* TRUE when broker is connected          *)
+    bError          : BOOL;             (* TRUE on MQTT error / reconnect state   *)
+    nErrorCode      : HRESULT;          (* MQTT HRESULT error code                *)
+    sErrorMsg       : STRING(128);      (* Human readable error message           *)
+
+    (* ── Subscribed topic list for HMI ────────────────── *)
+    aSubscribedTopic :  STRING(255); //ARRAY[1..20] OF STRING(255);
+    nSubscribedCount  : UINT;
+
+    (* ── Command feedback flags ───────────────────────── *)
+    bPublishDone      : BOOL;           (* TRUE for one cycle after publish call  *)
+    bSubscribeDone    : BOOL;           (* TRUE for one cycle after subscribe     *)
+    bUnsubscribeDone  : BOOL;           (* TRUE for one cycle after unsubscribe   *)
+
+    (* ── Incoming command outputs ─────────────────────── *)
+    bNewRemoteCommand : BOOL;           (* TRUE for one cycle after valid JSON    *)
+    rMqttValveSetpoint : ARRAY[1..3] OF REAL;
+
+    sLastRxTopic      : STRING(255);    (* Last received topic                    *)
+    sLastRxPayload    : STRING(2048);   (* Last received payload                  *)
+
+    (* ── Outgoing JSON preview for HMI/debug ──────────── *)
+    sJsonStatusPayload : STRING(2048);
+END_VAR
+
+
+VAR
+    (* ── MQTT client ──────────────────────────────────── *)
+    fbMqttClient : FB_IotMqttClient;
+	fbMessageQueue : FB_IotMqttMessageQueue;
+	fbMessage      : FB_IotMqttMessage;
+
+    (* ── Connection state machine ─────────────────────── *)
+    eState : (
+        DISABLED,
+        CONNECTING,
+        CONNECTED,
+        DISCONNECTING,
+        WAIT_RECONNECT
+    );
+
+    (* ── Edge detection ───────────────────────────────── *)
+    rtApplyConfig : R_TRIG;
+    rtPublish     : R_TRIG;
+    rtSubscribe   : R_TRIG;
+    rtUnsubscribe : R_TRIG;
+
+    (* ── Timers ───────────────────────────────────────── *)
+    tonReconnect     : TON;
+    tonStatusPublish : TON;
+
+    (* ── Internal flags ───────────────────────────────── *)
+    bConnectCmd : BOOL;
+    bReconnectAfterDisconnect : BOOL;
+
+    i : UINT;
+    bTopicFound : BOOL;
+	
+	
+    fbJson           : FB_JsonDomParser;
+    fbJsonDataType   : FB_JsonReadWriteDatatype;
+
+    (* Incoming *)
+    stCmdRecv        : ST_MQTT_Command;
+
+    (* Outgoing *)
+    //stStatus         : ST_IrrigationStatus;
+	
+	bSuccess : BOOL;
+	
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* ============================================================
+   EDGE DETECTION
+   ============================================================ *)
+
+rtApplyConfig(CLK := bApplyConfig);
+rtPublish(CLK := bPublish);
+rtSubscribe(CLK := bSubscribe);
+rtUnsubscribe(CLK := bUnsubscribe);
+
+
+(* ============================================================
+   RESET ONE-CYCLE FEEDBACK FLAGS
+   ============================================================ *)
+
+bPublishDone := FALSE;
+bSubscribeDone := FALSE;
+bUnsubscribeDone := FALSE;
+bNewRemoteCommand := FALSE;
+
+
+(* ============================================================
+   DEFAULT MQTT CONNECT COMMAND
+
+   IMPORTANT:
+   Do NOT permanently call Execute(TRUE).
+   TRUE  = connect / stay connected
+   FALSE = disconnect
+   ============================================================ *)
+
+bConnectCmd := FALSE;
+
+
+(* ============================================================
+   CONNECTION STATE MACHINE
+   ============================================================ *)
+
+CASE eState OF
+
+    (* --------------------------------------------------------
+       DISABLED
+
+       MQTT is disabled.
+       Wait until operator/system sets bEnable = TRUE.
+       -------------------------------------------------------- *)
+    DISABLED:
+
+        sErrorMsg := '';
+        bReconnectAfterDisconnect := FALSE;
+
+        IF bEnable THEN
+            eState := CONNECTING;
+        END_IF
+
+
+    (* --------------------------------------------------------
+       CONNECTING
+
+       Apply MQTT configuration and request connection.
+       Configuration must be assigned before Execute(TRUE).
+       -------------------------------------------------------- *)
+    CONNECTING:
+
+        fbMqttClient.sHostName     := stConfig.sBrokerAddress;
+        fbMqttClient.nHostPort     := stConfig.nPort;
+        fbMqttClient.sClientId     := stConfig.sClientId;
+        fbMqttClient.sUserName     := stConfig.sUsername;
+        fbMqttClient.sUserPassword := stConfig.sPassword;
+		fbMqttClient.ipMessageQueue := fbMessageQueue;
+		
+
+        bConnectCmd := TRUE;
+
+        IF fbMqttClient.bConnected THEN
+            sErrorMsg := '';
+            eState := CONNECTED;
+
+        ELSIF fbMqttClient.bError THEN
+            sErrorMsg := 'MQTT connect failed. Check broker, port, username/password.';
+            eState := WAIT_RECONNECT;
+        END_IF
+
+
+    (* --------------------------------------------------------
+       CONNECTED
+
+       MQTT connection is active.
+       Monitor enable, config changes, and connection loss.
+       -------------------------------------------------------- *)
+    CONNECTED:
+
+        bConnectCmd := TRUE;
+
+        IF NOT bEnable THEN
+            bReconnectAfterDisconnect := FALSE;
+            eState := DISCONNECTING;
+
+        ELSIF rtApplyConfig.Q THEN
+            (* Config changed, so disconnect first then reconnect. *)
+            bReconnectAfterDisconnect := TRUE;
+            eState := DISCONNECTING;
+
+        ELSIF NOT fbMqttClient.bConnected THEN
+            (* Unexpected connection loss. *)
+            sErrorMsg := 'MQTT connection lost. Reconnecting...';
+            eState := WAIT_RECONNECT;
+        END_IF
+
+
+    (* --------------------------------------------------------
+       DISCONNECTING
+
+       Execute(FALSE) allows client to disconnect.
+       After disconnect:
+         • reconnect if config was changed
+         • otherwise go to disabled
+       -------------------------------------------------------- *)
+    DISCONNECTING:
+
+        bConnectCmd := FALSE;
+
+        IF NOT fbMqttClient.bConnected THEN
+
+            IF bEnable AND bReconnectAfterDisconnect THEN
+                bReconnectAfterDisconnect := FALSE;
+                eState := CONNECTING;
+            ELSE
+                eState := DISABLED;
+            END_IF
+
+        END_IF
+
+
+    (* --------------------------------------------------------
+       WAIT_RECONNECT
+
+       Back-off delay before trying connection again.
+       -------------------------------------------------------- *)
+    WAIT_RECONNECT:
+
+        bConnectCmd := FALSE;
+
+        tonReconnect(IN := TRUE, PT := stConfig.tReconnectDelay);
+
+        IF NOT bEnable THEN
+            tonReconnect(IN := FALSE);
+            eState := DISABLED;
+
+        ELSIF tonReconnect.Q THEN
+            tonReconnect(IN := FALSE);
+            eState := CONNECTING;
+        END_IF
+
+END_CASE
+
+
+(* ============================================================
+   EXECUTE MQTT CLIENT
+
+   Must be called every PLC cycle.
+   ============================================================ *)
+
+fbMqttClient.Execute(bConnectCmd);
+
+IF fbMessageQueue.nQueuedMessages > 0 THEN 
+    IF fbMessageQueue.Dequeue(fbMessage:=fbMessage) THEN
+        fbMessage.GetTopic(pTopic:=ADR(sTopicRcv), nTopicSize:=SIZEOF(sTopicRcv) );
+		fbMessage.GetPayload(pPayload:=ADR(sPayloadRcv), nPayloadSize:=SIZEOF(sPayloadRcv), bSetNullTermination:=TRUE);
+        bSuccess := fbJsonDataType.SetSymbolFromJson(sPayloadRcv, 'ST_MQTT_COMMAND', SIZEOF(stCmdRecv), ADR(stCmdRecv));
+		IF bSuccess THEN
+            bNewRemoteCommand := TRUE; // Trigger a flag for other parts of your program
+			rMqttValveSetpoint [1]:= LIMIT (0, stCmdRecv.Valve1,100);
+			rMqttValveSetpoint [3]:= LIMIT (0, stCmdRecv.Valve2 ,100);
+			rMqttValveSetpoint [2]:= LIMIT (0, stCmdRecv.Valve3 ,100);
+        END_IF
+		
+	END_IF
+END_IF
+(* ============================================================
+   MANUAL PUBLISH
+
+   Sends sPubPayload to sPubTopic on rising edge of bPublish.
+   ============================================================ *)
+
+IF fbMqttClient.bConnected AND rtPublish.Q THEN
+
+    (* Build latest status JSON. *)
+    BuildStatusJson();
+
+    fbMqttClient.Publish(
+        sTopic       :=  stConfig.sMainTopic,   //sPubTopic,
+        pPayload     := ADR(sJsonStatusPayload),
+        nPayloadSize := LEN(sJsonStatusPayload),
+        eQoS         := TcIotMqttQos.AtMostOnceDelivery,
+        bRetain      := TRUE
+    );
+
+    bPublishDone := TRUE;
+END_IF
+
+
+(* ============================================================
+   SUBSCRIBE TO TOPIC
+
+   TF6701 does not automatically give you a topic list.
+   Therefore, this FB stores subscribed topics manually.
+   ============================================================ *)
+
+IF fbMqttClient.bConnected AND rtSubscribe.Q THEN
+
+    IF NOT bSubscribeDone THEN
+		bSubscribeDone := fbMqttClient.Subscribe( sTopic := sSubTopic, eQoS   := TcIotMqttQos.AtMostOnceDelivery);
+	END_IF
+	
+
+   // bTopicFound := FALSE;
+	
+
+(*    (* Check if topic already exists in list. *)
+    FOR i := 1 TO 20 DO
+        IF aSubscribedTopics[i] = sSubTopic THEN
+            bTopicFound := TRUE;
+        END_IF
+    END_FOR
+
+    (* Add topic to first empty slot. *)
+    IF NOT bTopicFound THEN
+        FOR i := 1 TO 20 DO
+            IF aSubscribedTopics[i] = '' THEN
+                aSubscribedTopics[i] := sSubTopic;
+                nSubscribedCount := nSubscribedCount + 1;
+                EXIT;
+            END_IF
+        END_FOR
+    END_IF
+*)
+    
+END_IF
+
+
+(* ============================================================
+   UNSUBSCRIBE FROM TOPIC
+
+   Removes topic from MQTT broker subscription and local list.
+   ============================================================ *)
+
+IF fbMqttClient.bConnected AND rtUnsubscribe.Q THEN
+
+    fbMqttClient.Unsubscribe(
+        sTopic := sUnsubTopic
+    );
+
+        IF aSubscribedTopic = sUnsubTopic THEN
+            aSubscribedTopic := '';
+
+        END_IF
+    bUnsubscribeDone := TRUE;
+END_IF
+
+(* ============================================================
+   CYCLIC STATUS JSON PUBLISH
+
+   Builds JSON similar to your CSV row and publishes it.
+   Example topic:
+     irrigation/status
+   ============================================================ *)
+
+tonStatusPublish(
+    IN := bEnableStatusPublish AND fbMqttClient.bConnected,
+    PT := tStatusPublishTime
+);
+
+IF tonStatusPublish.Q THEN
+
+    (* Reset timer to create repeating pulse. *)
+    tonStatusPublish(IN := FALSE);
+
+    (* Build latest status JSON. *)
+    BuildStatusJson();
+
+    (* Publish JSON status. *)
+    fbMqttClient.Publish(
+        sTopic       := sStatusTopic,
+        pPayload     := ADR(sJsonStatusPayload),
+        nPayloadSize := LEN(sJsonStatusPayload),
+        eQoS         := TcIotMqttQos.AtMostOnceDelivery,
+        bRetain      := FALSE
+    );
+
+END_IF
+
+(* ============================================================
+   OUTPUT STATUS
+   ============================================================ *)
+
+bConnected := fbMqttClient.bConnected;
+nErrorCode := fbMqttClient.hrErrorCode;
+
+bError := fbMqttClient.bError OR (eState = WAIT_RECONNECT);
+
+IF NOT bError THEN
+    nErrorCode := 0;
+END_IF
+
+]]></ST>
+    </Implementation>
+    <Method Name="BuildStatusJson" Id="{bc75ef4b-b89a-47f3-acd6-d73e4c45bc14}">
+      <Declaration><![CDATA[(*
+============================================================
+METHOD: BuildStatusJson
+============================================================
+
+PURPOSE
+  Builds outgoing JSON payload similar to the CSV row.
+
+OUTPUT
+  sJsonStatusPayload
+
+EXAMPLE
+  {
+    "timestamp":"2026-04-24 12:30:00",
+    "valve_1_setpoint":20.0,
+    "valve_1_actual":19.8,
+    "valve_1_source":"MQTT",
+    ...
+  }
+============================================================
+*)
+
+METHOD BuildStatusJson
+VAR
+    sTemp : STRING(2048);
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[sTemp := '{';
+
+sTemp := CONCAT(sTemp, '"timestamp":"');
+sTemp := CONCAT(sTemp, sTimestamp);
+sTemp := CONCAT(sTemp, '"');
+
+sTemp := CONCAT(sTemp, ',"valve_1_setpoint":');
+sTemp := CONCAT(sTemp, REAL_TO_STRING(rValveSetpoint[1]));
+
+sTemp := CONCAT(sTemp, ',"valve_1_actual":');
+sTemp := CONCAT(sTemp, REAL_TO_STRING(rValveActual[1]));
+
+sTemp := CONCAT(sTemp, ',"valve_1_source":"');
+sTemp := CONCAT(sTemp, sValveSource[1]);
+sTemp := CONCAT(sTemp, '"');
+
+sTemp := CONCAT(sTemp, ',"valve_2_setpoint":');
+sTemp := CONCAT(sTemp, REAL_TO_STRING(rValveSetpoint[2]));
+
+sTemp := CONCAT(sTemp, ',"valve_2_actual":');
+sTemp := CONCAT(sTemp, REAL_TO_STRING(rValveActual[2]));
+
+sTemp := CONCAT(sTemp, ',"valve_2_source":"');
+sTemp := CONCAT(sTemp, sValveSource[2]);
+sTemp := CONCAT(sTemp, '"');
+
+sTemp := CONCAT(sTemp, ',"valve_3_setpoint":');
+sTemp := CONCAT(sTemp, REAL_TO_STRING(rValveSetpoint[3]));
+
+sTemp := CONCAT(sTemp, ',"valve_3_actual":');
+sTemp := CONCAT(sTemp, REAL_TO_STRING(rValveActual[3]));
+
+sTemp := CONCAT(sTemp, ',"valve_3_source":"');
+sTemp := CONCAT(sTemp, sValveSource[3]);
+sTemp := CONCAT(sTemp, '"');
+
+sTemp := CONCAT(sTemp, ',"temperature_c":');
+sTemp := CONCAT(sTemp, REAL_TO_STRING(rTemperature_C));
+
+sTemp := CONCAT(sTemp, ',"water_level_percent":');
+sTemp := CONCAT(sTemp, REAL_TO_STRING(rWaterLevel_Percent));
+
+sTemp := CONCAT(sTemp, '}');
+
+sJsonStatusPayload := sTemp;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetClientRef" Id="{5df7620b-3e01-4e9d-936d-deef8a5db0c8}">
+      <Declaration><![CDATA[(*
+============================================================
+METHOD: GetClientRef
+============================================================
+
+PURPOSE
+  Returns reference to internal MQTT client.
+
+USE
+  Other FBs can use this reference for advanced MQTT handling.
+============================================================
+*)
+
+METHOD GetClientRef : REFERENCE TO FB_IotMqttClient]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+GetClientRef REF= fbMqttClient;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
