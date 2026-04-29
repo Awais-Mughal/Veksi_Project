@@ -1,36 +1,71 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <GVL Name="GVL_Config" Id="{3f9b61cc-9b72-4973-88f0-22ca8b080aec}">
-    <Declaration><![CDATA[{attribute 'qualified_only'}
+    <Declaration><![CDATA[(*
+============================================================
+GVL_Config  —  System-wide compile-time constants
+============================================================
+All values here are CONSTANT and cannot be changed at runtime.
+To change a value: edit here, rebuild and download the project.
+Runtime-adjustable parameters are exposed via GVL_HMI.
+
+CALIBRATION REQUIRED:
+  • VALVE_FULL_STROKE_MM  — measure physical travel of each actuator
+  • WATER_LEVEL_ENG_MAX_MM — measure the full-scale tank height
+  • Sensor raw min/max    — verify with your specific EL3074 settings
+============================================================
+*)
+{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
-	    // ── Valve motion parameters ───────────────────────────────
-    VALVE_FULL_STROKE_MM        : REAL   := 6.096;   // mm — 3600degree *** CALIBRATE to hardware ***
-    VALVE_POSITION_TOLERANCE    : REAL   := 0.5;    // %  — InPosition dead-band
-    VALVE_MOVE_VELOCITY         : LREAL  := 1.5;   // mm/s
-    VALVE_MOVE_ACCELERATION     : LREAL  := 16.9085;   // mm/s²
-    VALVE_MOVE_DECELERATION     : LREAL  := 16.9085;   // mm/s²
-    VALVE_MOVE_JERK             : LREAL  := 53.5391;    // mm/s³ — 0 = trapezoidal profile
-    VALVE_HOMING_VELOCITY       : LREAL  := 1;    // mm/s — reference for NC axis config
 
-    // ── Sensor scaling ────────────────────────────────────────
+    // ── Valve Motion Parameters ─────────────────────────────────
+    // *** CALIBRATE to hardware before first run ***
+    VALVE_FULL_STROKE_MM        : REAL   := 6.096;      // mm — full travel (3600° stepper)
+    VALVE_POSITION_TOLERANCE    : REAL   := 0.5;        // %  — in-position dead-band
+    VALVE_MOVE_VELOCITY         : LREAL  := 1.5;        // mm/s — max travel speed
+    VALVE_MOVE_ACCELERATION     : LREAL  := 16.9085;    // mm/s² — ramp-up rate
+    VALVE_MOVE_DECELERATION     : LREAL  := 16.9085;    // mm/s² — ramp-down rate
+    VALVE_MOVE_JERK             : LREAL  := 53.5391;    // mm/s³ — 0.0 = trapezoidal profile
+    VALVE_HOMING_VELOCITY       : LREAL  := 1.0;        // mm/s — slow speed during homing
 
+    // ── Sensor Scaling — Water Level ───────────────────────────
+    // Raw INT from EL3074 (4–20 mA, 0–32767 counts typical)
+    // Adjust RAW_MIN/MAX to match your EL3074 configuration
+    WATER_LEVEL_RAW_MIN         : INT    := 0;          // ADC count at 0 % / 0 mm
+    WATER_LEVEL_RAW_MAX         : INT    := 32767;      // ADC count at 100 % / ENG_MAX_MM
+    WATER_LEVEL_ENG_MIN_MM      : REAL   := 0.0;        // mm at raw minimum
+    WATER_LEVEL_ENG_MAX_MM      : REAL   := 1000.0;     // mm at raw maximum — calibrate!
 
-    // ── CSV Logging ───────────────────────────────────────────
-    CSV_LOG_INTERVAL_S          : TIME    := T#15M;
+    // ── Sensor Scaling — Temperature ───────────────────────────
+    // Raw INT from EL3202 RTD (PT100, -200…+850 °C, 0.1 °C resolution)
+    // EL3202 outputs tenths of a degree, e.g. 250 = 25.0 °C
+    TEMP_RAW_SCALE_FACTOR       : REAL   := 0.1;        // °C per raw count
+    TEMP_OFFSET_C               : REAL   := 0.0;        // offset correction if needed
+
+    // ── Sensor Fault Detection ─────────────────────────────────
+    // Readings at or below this value are treated as disconnected
+    SENSOR_FAULT_THRESHOLD      : INT    := -100;       // -999 default in GVL_IO = hardware stub
+
+    // ── CSV Logging ─────────────────────────────────────────────
+    CSV_LOG_INTERVAL_S          : TIME   := T#15M;      // Logging period (15 min default)
     CSV_FILE_PATH               : STRING := 'C:\TwinCAT\3.1\Boot\Log\';
     CSV_FILENAME_PREFIX         : STRING := 'IrrigationLog_';
 
-    // ── MQTT Defaults ─────────────────────────────────────────
+    // ── MQTT Defaults (loaded into GVL_HMI.HMI_MQTT_Config at startup) ──
     MQTT_DEFAULT_BROKER_IP      : STRING := '192.168.1.100';
     MQTT_DEFAULT_PORT           : UINT   := 1883;
     MQTT_DEFAULT_CLIENT_ID      : STRING := 'BeckhoffIrrigationPLC';
-    MQTT_DEFAULT_USERNAME       : STRING := '';
-    MQTT_DEFAULT_PASSWORD       : STRING := '';
+    MQTT_DEFAULT_USERNAME       : STRING := '';         // Set from HMI for production
+    MQTT_DEFAULT_PASSWORD       : STRING := '';         // Set from HMI for production
     MQTT_DEFAULT_TOPIC_PREFIX   : STRING := 'irrigation';
-    MQTT_DEFAULT_PUBLISH_INTERVAL : UINT := 120;    // seconds (5 min)
+    MQTT_DEFAULT_MAIN_TOPIC     : STRING := 'irrigation/status';
+    MQTT_DEFAULT_SUB_TOPIC      : STRING := 'irrigation/command';
+    MQTT_DEFAULT_PUBLISH_INTERVAL : UINT := 300;        // 300 s = 5 min
 
-    // ── Task cycle time ───────────────────────────────────────
-    TASK_CYCLE_MS               : UINT := 10;       // Must match TwinCAT task setting
-END_VAR]]></Declaration>
+    // ── Task Cycle Time ──────────────────────────────────────────
+    TASK_CYCLE_MS               : UINT   := 10;         // Must match TwinCAT task setting
+
+END_VAR
+]]></Declaration>
   </GVL>
 </TcPlcObject>
