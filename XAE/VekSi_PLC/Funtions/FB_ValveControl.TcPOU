@@ -1,0 +1,356 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_ValveControl" Id="{83e8a007-202b-43ef-a593-2a6bab96e41d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ValveControl
+
+VAR_IN_OUT
+    Axis                : AXIS_REF; // Axis ---> linked to NC axis
+	
+END_VAR
+
+
+VAR_INPUT
+	// ── Setpoints ─────────────────────────────────────────────
+    HMI_Setpoint        : REAL;     // Target position from HMI   (0.0–100.0 %)
+    MQTT_Setpoint       : REAL;     // Target position from MQTT  (0.0–100.0 %)
+    MQTT_Enabled        : BOOL;     // FALSE = ignore MQTT commands for this valve
+	eHomingSelection	: MC_HomingMode;
+	bHoming				: BOOL;
+	
+	
+	
+    // ── Control ───────────────────────────────────────────────
+    Enable              : BOOL;     // TRUE = drive powered. FALSE = de-energised.
+    Reset               : BOOL;     // Rising edge = clear fault and re-home.
+	Move_Stop			: BOOL;  	
+	UPDATE				: BOOL;
+								// Wire to momentary HMI button.
+								
+	ZeroPosition		: BOOL;
+    // ── Motion parameters ─────────────────────────────────────
+    // LREAL type required — matches MC_MoveAbsolute VAR_INPUT types exactly.
+    // Ref: Beckhoff Infosys → TC2_MC2 → MC_MoveAbsolute
+    MoveVelocity        : LREAL;    // mm/s   — normal travel speed
+    MoveAccel           : LREAL;    // mm/s²  — acceleration ramp
+    MoveDecel           : LREAL;    // mm/s²  — deceleration ramp
+    MoveJerk            : LREAL;    // mm/s³  — jerk limit; 0.0 = trapezoidal (no S-curve)
+    HomeVelocity        : LREAL;    // mm/s   — for reference only; actual homing speed
+                                    //          is set in NC axis Homing tab								
+    // ── Scaling ───────────────────────────────────────────────
+    FullStroke_mm       : REAL;     // mm — axis travel at 100% open. Calibrate to hardware.
+    PosTolerance        : REAL;     // %  — InPosition dead-band
+END_VAR
+
+VAR_OUTPUT
+    // ── Position feedback ─────────────────────────────────────
+    Actual_Position     : REAL;         // Current valve opening (0.0–100.0 %)
+    InPosition          : BOOL;         // TRUE when |actual - setpoint| <= PosTolerance
+	
+	rActual_mm          : LREAL;
+	rTarget_mm          : LREAL := 0.0;
+	
+    // ── State and source ──────────────────────────────────────
+    State               : E_ValveState; // Current state machine state
+    Source              : E_ValveSource;// Who gave the last command: HMI or MQTT
+    // ── Status flags ──────────────────────────────────────────
+    IsHomed             : BOOL;         // TRUE once homing completed successfully
+    IsMoving            : BOOL;         // TRUE while axis is physically moving
+    IsFault             : BOOL;         // TRUE while in FAULT state
+    FaultCode           : UDINT;        // MC2 ErrorID — see Beckhoff error code list:
+                                        // infosys.beckhoff.com → TwinCAT → Error Codes
+END_VAR
+
+VAR
+    // ── TC2_MC2 function block instances ──────────────────────
+    // Declared here (not locally) so they retain state between cycles.
+    // Ref: Beckhoff Infosys → TC2_MC2 → General Information
+    fbPower             : MC_Power;
+    fbHome              : MC_Home;
+    fbMoveAbs           : MC_MoveAbsolute;
+    fbReadPos           : MC_ReadActualPosition;
+	fbHalt				: MC_Halt;
+    fbReset_MC          : MC_Reset;
+	fbSetPos    	    : MC_SetPosition;
+    // ── State machine ─────────────────────────────────────────
+    eState              : E_ValveState := E_ValveState.INIT; 
+    // ── Setpoint arbitration ──────────────────────────────────
+    rActiveSetpoint     : REAL  := 0.0;
+    //rTarget_mm          : LREAL := 0.0;
+    rPrev_HMI_SP        : REAL  := -999.0;  // Initialised to -999 so first value is always detected
+    rPrev_MQTT_SP       : REAL  := -999.0;
+    // ── PLCopen Execute flags ─────────────────────────────────
+    // Set TRUE when entering a state → MC FB sees rising edge.
+    // Set FALSE on Done or Error → FB resets for next trigger.
+    // Ref: PLCopen Motion Control Part 1, Section 4
+    bExecHome           : BOOL;
+    bExecMove           : BOOL;
+    bExecReset          : BOOL;
+	bExecHalt			: BOOL;
+    // ── Edge detection ────────────────────────────────────────
+    rtReset             : R_TRIG;
+	rtUpdate			: F_TRIG;
+	rtZeroPosition		: R_TRIG;
+	rtHoming			: R_TRIG;
+    // ── Internal working variables ────────────────────────────
+    //rActual_mm          : LREAL;
+    bAxisReady          : BOOL;
+	MoveDone			: BOOL;
+	
+	tempSetpoint		:	REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// ============================================================
+// SECTION 1 — RISING EDGE DETECTION
+// R_TRIG: output Q is TRUE for exactly one cycle on rising edge.
+// Ensures one Reset button press = one reset attempt only
+// ============================================================
+rtReset(CLK := Reset);
+rtUpdate (CLK := UPDATE);
+rtZeroPosition (CLK := ZeroPosition);
+rtHoming (CLK := bHoming);
+
+Axis.ReadStatus(); //Called every cycle to read status of the axis
+
+tempSetpoint := LIMIT(0.0, HMI_Setpoint, 100.0);
+
+IF rtUpdate.Q THEN 
+	rActiveSetpoint := tempSetpoint;
+END_IF
+rTarget_mm := REAL_TO_LREAL(rActiveSetpoint / 100.0 * FullStroke_mm);
+
+// SECTION 2 — MC_Power
+fbPower(
+    Axis            := Axis,
+    Enable          := Enable AND (eState <> E_ValveState.FAULT),
+    Enable_Positive := TRUE,    // Allow positive direction — NC software limit protects max
+    Enable_Negative := TRUE,    // Allow negative direction — NC software limit protects min
+    Override        := 100.0    // 100% velocity override (full programmed speed)
+	);
+	bAxisReady := fbPower.Status AND NOT fbPower.Error;
+
+// Catch unexpected drive fault from any non-fault state
+IF fbPower.Error AND
+   eState <> E_ValveState.FAULT AND
+   eState <> E_ValveState.RESET AND
+   eState <> E_ValveState.INIT
+	THEN
+    	FaultCode := fbPower.ErrorID;
+   		 eState    := E_ValveState.FAULT;
+	END_IF
+
+// SECTION 3 — MC_ReadActualPosition 
+fbReadPos(
+    Axis   := Axis,
+    Enable := fbPower.Status
+	);
+	IF fbReadPos.Valid THEN
+   	 rActual_mm := fbReadPos.Position;
+	END_IF
+	
+	//Convert Actual postion to percentage of full stroke 
+	IF FullStroke_mm > 0.0 THEN
+    	Actual_Position := LREAL_TO_REAL(rActual_mm / REAL_TO_LREAL(FullStroke_mm)) * 100.0; 
+   		Actual_Position := LIMIT(0.0, Actual_Position, 100.0);
+		//Actual_Position := LREAL_TO_REAL(rActual_mm); //rawvalue for positon control
+	ELSE
+ 	   Actual_Position := 0.0; // Guard: avoid divide-by-zero if FullStroke_mm not set
+	END_IF
+	
+
+
+// Pre-compute target in mm every cycle 
+// Percentage (user input) to mm for PLC control
+
+//rTarget_mm := rActiveSetpoint;
+
+// SECTION 5 
+// InPosition := ABS(Actual_Position - rActiveSetpoint) <= PosTolerance;
+			
+
+
+// ============================================================
+// SECTION 6 — STATE MACHINE
+// ============================================================
+CASE eState OF
+
+    // ----------------------------------------------------------
+    E_ValveState.INIT:
+    // Clear all Execute flags. Wait for drive to report ready.
+    // ----------------------------------------------------------
+	    bExecHome  := FALSE;
+        bExecMove  := FALSE;
+        bExecReset := FALSE;
+		bExecHalt  := FALSE;
+
+        IF bAxisReady THEN
+            eState := E_ValveState.HOMING;
+			(*  fbSetPos(
+        			Axis := Axis,
+        			Execute := TRUE,
+       				Position := 0.0,
+       				Mode := FALSE
+   					 );
+    		//IF fbSetPos.Done THEN
+       			// bSetZeroOnce := FALSE;
+   			//END_IF
+			eState := E_ValveState.IDLE;*)
+        END_IF
+	
+	// ----------------------------------------------------------
+    E_ValveState.HOMING:
+	// ----------------------------------------------------------
+	    bExecHome := TRUE;
+
+        fbHome(
+            Axis            := Axis,
+            Execute         := bExecHome,
+            Position        := 0.0,     // Home = 0 mm = valve fully closed
+            HomingMode      := eHomingSelection,//MC_Direct, //0,       // MC_DefaultHoming — use NC axis homing config
+            bCalibrationCam := ZeroPosition //FALSE    // Cam signal from NC axis hardware, not PLC DI
+        );
+		IF fbHome.Done THEN
+            bExecHome := FALSE;
+			fbHOme(Axis := Axis, Execute := bExecHome);
+            IsHomed   := TRUE;
+            eState    := E_ValveState.IDLE;
+        ELSIF fbHome.Error THEN
+            bExecHome := FALSE;
+            FaultCode := fbHome.ErrorID;
+            eState    := E_ValveState.FAULT;
+			//fbHOme(Axis := Axis, Execute := bExecHome);
+        END_IF
+	
+	
+	// ----------------------------------------------------------
+    E_ValveState.IDLE:
+    // ----------------------------------------------------------	
+        bExecMove := FALSE;
+		
+		IF rtHoming.Q THEN
+			IsHomed	:= FALSE; 
+			eState := E_ValveState.HOMING; 
+		END_IF
+
+        IF IsHomed AND ABS(rActiveSetpoint - Actual_Position) > PosTolerance THEN
+            bExecMove := TRUE;
+            eState    := E_ValveState.MOVING;
+        END_IF
+	
+	// ----------------------------------------------------------
+    E_ValveState.MOVING:
+	// ----------------------------------------------------------
+			fbMoveAbs(
+    		Axis         := Axis,
+			Execute      := bExecMove,
+			Position     := rTarget_mm,
+			Velocity     := MoveVelocity,
+			Acceleration := MoveAccel,
+			Deceleration := MoveDecel,
+			Jerk         := MoveJerk,
+			BufferMode   := MC_BlendingNext,
+			Active 		 => IsMoving,
+			Done		 => MoveDone
+	
+			);
+		IF  Move_Stop THEN 
+			bExecHalt := TRUE;
+			eState	:= E_ValveState.HALT;
+		END_IF
+	
+        IF fbMoveAbs.Done THEN
+            bExecMove := FALSE;
+			fbMoveAbs(Axis := Axis, Execute := bExecMove);
+            eState    := E_ValveState.HOLD;
+        ELSIF fbMoveAbs.CommandAborted THEN
+            bExecMove := FALSE;
+			fbMoveAbs(Axis := Axis, Execute := bExecMove);
+            eState    := E_ValveState.IDLE; // Re-evaluate setpoint and re-issue
+        ELSIF fbMoveAbs.Error THEN
+            bExecMove := FALSE;
+			fbMoveAbs(Axis := Axis, Execute := bExecMove);
+            FaultCode := fbMoveAbs.ErrorID;
+            eState    := E_ValveState.FAULT;
+        END_IF	
+	
+    // ----------------------------------------------------------
+    E_ValveState.HOLD:	
+    // ----------------------------------------------------------	
+        IsMoving	:= FALSE;
+        bExecMove	:= FALSE;
+		//MoveDone	:= FALSE;
+        IF ABS(rActiveSetpoint - Actual_Position) > PosTolerance THEN
+            bExecMove := TRUE;
+            eState    := E_ValveState.MOVING;
+        END_IF
+		IF rtHoming.Q THEN 
+			IsHomed	:= FALSE;
+			eState := E_ValveState.HOMING; 
+		END_IF	
+	
+	// ----------------------------------------------------------
+    E_ValveState.FAULT:
+    // ----------------------------------------------------------
+        IsFault   := TRUE;
+        IsMoving  := FALSE;
+        bExecHome := FALSE;
+        bExecMove := FALSE;
+
+        IF rtReset.Q THEN
+            bExecReset := TRUE;
+            eState     := E_ValveState.RESET;
+        END_IF
+    // ----------------------------------------------------------
+    E_ValveState.HALT:
+    // ----------------------------------------------------------
+		fbHalt (
+			Axis         := Axis,
+			Execute      := bExecHalt,
+			Deceleration := MoveDecel,
+			Jerk         := MoveJerk,
+			BufferMode   := MC_Aborting,
+			);		
+		IF fbHalt.Done THEN
+            bExecHalt := FALSE;
+			fbHalt(Axis := Axis, Execute := bExecHalt);
+			rActiveSetpoint	:=	Actual_Position;
+        ELSIF fbHalt .Error THEN
+            bExecHalt := FALSE;
+			fbHalt(Axis := Axis, Execute := bExecHalt);
+            FaultCode := fbHalt .ErrorID;
+            eState    := E_ValveState.FAULT;
+        END_IF
+		IF rtReset.Q THEN 
+			eState := E_ValveState.IDLE; 
+		END_IF
+	
+	
+    // ----------------------------------------------------------
+    E_ValveState.RESET:
+    // ----------------------------------------------------------
+        fbReset_MC(
+            Axis    := Axis,
+            Execute := bExecReset
+        );	
+        IF fbReset_MC.Done THEN
+            bExecReset := FALSE;
+            IsFault    := FALSE;
+            FaultCode  := 0;
+            IsHomed    := FALSE;    // Stepper may have lost steps — must re-home
+            eState     := E_ValveState.HOMING;
+        ELSIF fbReset_MC.Error THEN
+            bExecReset := FALSE;    // Clear — next Reset press will retry
+            FaultCode  := fbReset_MC.ErrorID;
+            // Remain in RESET
+        END_IF
+	
+ELSE
+    // Unknown state — safety fallback. Re-powers and re-homes cleanly.
+    eState := E_ValveState.INIT;	
+END_CASE	
+
+State   := eState;
+IsFault := (eState = E_ValveState.FAULT);]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

@@ -1,48 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <DUT Name="ST_MqttConfig" Id="{0d23f381-9828-49b6-8416-3eaade8f2f19}">
     <Declaration><![CDATA[(*
-============================================================
-ST_MqttConfig
-============================================================
-PURPOSE
+  ST_MqttConfig
+  =============
   MQTT broker connection and topic configuration.
-  Populated from GVL_Config defaults on startup.
-  Operator can override all fields from the HMI MQTT-Config
-  panel, then press "Apply & Reconnect" to activate changes.
+  Populated from GVL_Parameters defaults; operator can override via HMI.
 
-NOTES
-  • Changing any field requires pressing Apply (triggers bApplyConfig
-    rising edge in FB_MqttManager) to reconnect with new settings.
-  • Use TLS (bUseTls = TRUE, nPort = 8883) for production deployments.
-  • Credentials are NOT stored in persistent memory — they must be
-    re-entered after a cold restart unless the HMI retains them.
-============================================================
+  IMPORTANT: Changing any field at runtime requires pressing the
+  "Apply & Reconnect" button on the HMI (triggers bApplyConfig).
 *)
 TYPE ST_MqttConfig :
 STRUCT
-    (* ── Broker Connection ──────────────────────────────────── *)
-    sBrokerAddress      : STRING(255) := '192.168.1.100';   (* IP or hostname of MQTT broker     *)
-    nPort               : UINT        := 1883;              (* 1883 = plain, 8883 = TLS/SSL      *)
-    sClientId           : STRING(64)  := 'BeckhoffIrrigationPLC'; (* Must be unique per broker   *)
-    sUsername           : STRING(64)  := '';                (* Leave empty if no auth required   *)
-    sPassword           : STRING(64)  := '';                (* Leave empty if no auth required   *)
-    bUseTls             : BOOL        := FALSE;             (* TRUE enables TLS/SSL connection   *)
+  (* ── Broker Connection ──────────────────────────────── *)
+  sBrokerAddress    : STRING(255)	:= 'imsiot.aws.thinger.io'	 ;    (* IP address or hostname             *)
+  nPort             : UINT	:= 1883;           (* Default 1883 (plain) / 8883 (TLS)  *)
+  sClientId         : STRING(64) := 'Beckhoff';     (* Unique client identifier           *)
+  sUsername         : STRING(64) := 'ims_iot' ;     (* Leave empty if no auth             *)
+  sPassword         : STRING(64) := '123456789';     (* Leave empty if no auth             *)
+  sDeviceName   	: STRING := 'Beckhoff'; 
+  bUseTls           : BOOL;           (* TRUE = TLS/SSL connection          *)
 
-    (* ── Topic Configuration ────────────────────────────────── *)
-    sTopicPrefix        : STRING(64)  := 'irrigation';      (* Base prefix for all topics        *)
-    (* Publish topic  : <prefix>/status                                                           *)
-    (* Subscribe topic: <prefix>/command                                                          *)
-    sMainTopic          : STRING(128) := 'irrigation/status';   (* Full publish topic            *)
-    SubscribeTopic      : STRING(128) := 'irrigation/command';  (* Full subscribe topic          *)
+  (* ── Topic Configuration ────────────────────────────── *)
+  sTopicPrefix      : STRING(64);     (* e.g. 'irrigation/site1'            *)
+  sMainTopic   		: STRING := 'motor';
+  (* Publish topic  : <prefix>/status                                       *)
+  SubscribeTopic    : STRING := 'command';
+  (* Subscribe V1   : <prefix>/valve1/setpoint                              *)
+  (* Subscribe V2   : <prefix>/valve2/setpoint                              *)
+  (* Subscribe V3   : <prefix>/valve3/setpoint                              *)
 
-    (* ── Timing ─────────────────────────────────────────────── *)
-    tStatusPublishInterval : TIME := T#5M;                  (* Cyclic publish interval (5 min)   *)
-    tReconnectDelay        : TIME := T#30S;                 (* Back-off delay between retries    *)
+  (* ── Timing ─────────────────────────────────────────── *)
+  tPublishInterval  : TIME := T#5M;           (* Periodic publish interval          *)
+  tReconnectDelay   : TIME := T#2M;           (* Delay between reconnect attempts   *)
 
-    (* ── Runtime Control ────────────────────────────────────── *)
-    bUseStatusPublish   : BOOL := TRUE;                     (* TRUE = publish status cyclically  *)
-    bApplyConfig        : BOOL;                             (* Rising edge: reconnect with new cfg*)
+  (* ── Runtime Control ────────────────────────────────── *)
+  bApplyConfig      : BOOL;           (* Rising edge: reconnect with new cfg*)
 END_STRUCT
 END_TYPE
 ]]></Declaration>
