@@ -229,7 +229,7 @@ flowchart LR
         IO[AI_L1V11<br/>AI_Tmp_1<br/>bBottom_position_1<br/>...]
     end
     subgraph SystemLayer["GVL_System (runtime state)"]
-        SYS[Valve[1..3]<br/>Sensors<br/>MQTT_*<br/>CSV_*]
+        SYS["Valve[1..3]<br/>Sensors<br/>MQTT_*<br/>CSV_*"]
     end
     subgraph HMILayer["GVL_HMI (HMI bindings)"]
         HMI[HMI_Valve1_Setpoint<br/>ACT_Valve1_Position<br/>HMI_MQTT_Config<br/>...]
@@ -710,7 +710,7 @@ flowchart LR
     subgraph Out["GVL_System.Sensors"]
         e[rWaterLevel_mm]
         f[rWaterLevel_pct]
-        g[rTemperature_C[1..2]]
+        g["rTemperature_C[1..2]"]
         h[bAnySensorFault]
     end
 
