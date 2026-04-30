@@ -703,7 +703,7 @@ flowchart LR
     subgraph FB["FB_SensorIO"]
         F[Fault detection<br/>raw <= -100 ?] --> S
         S[ScaleLinear method] --> L
-        L[Low-pass filter<br/>y = α·x + (1-α)·y_prev] --> O
+        L["Low-pass filter<br/>y = a·x + (1-a)·y_prev"] --> O
         O[Write outputs to<br/>ST_SensorData]
     end
 
@@ -1459,7 +1459,7 @@ every existing valve is a template.
 flowchart TB
     A[1. Wire 4th EPP7041 drive<br/>+ limit switch in hardware] --> B
     B[2. TwinCAT MOTION:<br/>Add Axis_Valve4 NC axis] --> C
-    C[3. GVL_System: change<br/>Valve : ARRAY[1..4] OF ST_ValveData] --> D
+    C["3. GVL_System: change<br/>Valve : ARRAY[1..4] OF ST_ValveData"] --> D
     D[4. GVL_HMI: add HMI_Valve4_*<br/>and ACT_Valve4_* variables] --> E
     E[5. MAIN: declare fbValve4<br/>+ Axis_Valve4 + arrays size 1..4] --> F
     F[6. MAIN: copy step 1 / step 5<br/>and step 10 patterns for valve 4] --> G
