@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="MAIN" Id="{a0f99a09-eccb-42d8-b9bd-167b13d45a91}" SpecialFunc="None">
     <Declaration><![CDATA[(*
@@ -38,7 +38,7 @@ LIBRARIES
 PROGRAM MAIN
 VAR
     // ── Function block instances ────────────────────────────────
-    fbSensorIO      : FB_SensorIO;
+    fbSensorIO      : FB_SensorIO;    //////Not Implemented currently
     fbValve1        : FB_ValveControl;
     fbValve2        : FB_ValveControl;
     fbValve3        : FB_ValveControl;
@@ -86,7 +86,7 @@ IF NOT bMqttConfigInit THEN
     GVL_HMI.HMI_MQTT_Config.SubscribeTopic         := GVL_Config.MQTT_DEFAULT_SUB_TOPIC;
     GVL_HMI.HMI_MQTT_Config.tStatusPublishInterval := UDINT_TO_TIME(UINT_TO_UDINT(GVL_Config.MQTT_DEFAULT_PUBLISH_INTERVAL) * 1000);
     GVL_HMI.HMI_MQTT_Config.bUseStatusPublish      := TRUE;
-    bMqttConfigInit := TRUE;
+   // bMqttConfigInit := TRUE;
 END_IF
 
 
@@ -158,11 +158,12 @@ fbValve1(
     MQTT_Setpoint    := GVL_System.Valve[1].MQTT_Setpoint,
     MQTT_Enabled    := GVL_System.Valve[1].MQTT_Enabled,
     Enable           := TRUE,
-    eHomingSelection := MC_Direct,
+    eHomingSelection := MC_DefaultHoming, //MC_Direct,
     Reset            := GVL_System.Valve[1].Reset_Cmd,
     Move_Stop        := GVL_HMI.HMI_Valve1_Stop,
     UPDATE           := GVL_HMI.HMI_UPDATE,
     ZeroPosition     := GVL_IO.bBottom_position_1,
+	TopPosition		 := GVL_IO.bTop_position_1,  
     bHoming          := GVL_HMI.HMI_Valve1_Homing,
     MoveVelocity     := GVL_Config.VALVE_MOVE_VELOCITY,
     MoveAccel        := GVL_Config.VALVE_MOVE_ACCELERATION,
@@ -340,7 +341,11 @@ fbMqttManager(
     sLastRxTopic         => GVL_System.MQTT_LastRxTopic,
     sLastRxPayload       => GVL_System.MQTT_LastRxPayload,
     sJsonStatusPayload   => GVL_System.MQTT_LastJsonStatus,
-    bNewRemoteCommand    => GVL_System.MQTT_NewCommand
+    bNewRemoteCommand    => GVL_System.MQTT_NewCommand,
+	
+	LastmsgPub			=> GVL_HMI.ACT_MQTT_LastMsgPubTime,
+	LastmsgRcv 			=> GVL_HMI.ACT_MQTT_LastMsgRcvTime,
+	currentState		=> GVL_HMI.ACT_MQTT_State
 );
 
 // Auto-clear Apply button after one cycle (rising edge consumed inside FB)

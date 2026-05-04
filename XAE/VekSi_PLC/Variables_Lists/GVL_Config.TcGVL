@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <GVL Name="GVL_Config" Id="{3f9b61cc-9b72-4973-88f0-22ca8b080aec}">
     <Declaration><![CDATA[(*
@@ -52,11 +52,11 @@ VAR_GLOBAL CONSTANT
     CSV_FILENAME_PREFIX         : STRING := 'IrrigationLog_';
 
     // ── MQTT Defaults (loaded into GVL_HMI.HMI_MQTT_Config at startup) ──
-    MQTT_DEFAULT_BROKER_IP      : STRING := '192.168.1.100';
-    MQTT_DEFAULT_PORT           : UINT   := 1883;
-    MQTT_DEFAULT_CLIENT_ID      : STRING := 'BeckhoffIrrigationPLC';
-    MQTT_DEFAULT_USERNAME       : STRING := '';         // Set from HMI for production
-    MQTT_DEFAULT_PASSWORD       : STRING := '';         // Set from HMI for production
+    MQTT_DEFAULT_BROKER_IP      : STRING := 'imsiot.aws.thinger.io';
+    MQTT_DEFAULT_PORT           : UINT   := 8883;
+    MQTT_DEFAULT_CLIENT_ID      : STRING := 'Beckhoff';
+    MQTT_DEFAULT_USERNAME       : STRING := 'ims_iot';         // Set from HMI for production
+    MQTT_DEFAULT_PASSWORD       : STRING := '123456789';         // Set from HMI for production
     MQTT_DEFAULT_TOPIC_PREFIX   : STRING := 'irrigation';
     MQTT_DEFAULT_MAIN_TOPIC     : STRING := 'irrigation/status';
     MQTT_DEFAULT_SUB_TOPIC      : STRING := 'irrigation/command';

@@ -1,0 +1,9 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "definitions": {
+        "TcHmi.Controls.Beckhoff.Industries.Common.TapMode": {
+            "type": "string",
+            "enum": ["Toggle", "Tap"]
+        }
+    }
+}

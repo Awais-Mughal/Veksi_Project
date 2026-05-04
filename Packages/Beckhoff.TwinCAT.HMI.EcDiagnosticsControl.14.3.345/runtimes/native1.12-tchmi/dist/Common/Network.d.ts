@@ -1,0 +1,38 @@
+import type { Master } from './Master.js';
+import type { Slave } from './Slave.js';
+import { Topology } from './Topology.js';
+import type { SR_GetSlaves, SR_GetSlaves_Master, SR_Slave } from './ServerRespondDef.js';
+import type { SlaveTerminalGroup } from './SlaveGroup.js';
+export declare class Network {
+    constructor(master: Master);
+    private __media?;
+    private __updatePixelRatio;
+    destroy(): void;
+    private __resizeObserver;
+    private __master;
+    get master(): Master;
+    get target(): import("./Target.js").Target;
+    get main(): import("./main.js").EcDiagnostics;
+    reload(): void;
+    resetView(): void;
+    update(slavesData: SR_GetSlaves): void;
+    get masterTopology(): Topology | null;
+    private __hotConnectTopologies;
+    getHotConnectTopologies(): Topology[];
+    private __disabledSlaveTopologies;
+    getDisabledSlaves(): Topology[];
+    __addMasterTopology(): void;
+    __addMasterSlaveTopology(slavesOfMaster: SR_GetSlaves_Master): void;
+    __addHotConnectTopology(slave: SR_Slave): void;
+    __addDisabledSlave(slave: SR_Slave): void;
+    toggleExpansion(): void;
+    private __isExpand;
+    get isExpand(): boolean;
+    setToNotExpand(): void;
+    recalcNetwork(focusedComponent?: Master | Slave | SlaveTerminalGroup): void;
+    private __resizeEvent;
+    private __networkView;
+    private __combinedMatrix;
+    drawMatrix: () => void;
+    private __drawMatrix;
+}

@@ -1,0 +1,36 @@
+import { DrawingInteraction } from './DrawingInteraction.js';
+import type { EcDiagnostics } from './main.js';
+import type { Network } from './Network.js';
+import { type Layers } from './Layer.js';
+import { type Port } from './Port.js';
+import { Master } from './Master.js';
+import { Slave } from './Slave.js';
+import { type SlaveGroup, SlaveTerminalGroup } from './SlaveGroup.js';
+export declare function createElementAndAddText(elementType: string, content: string): HTMLElement;
+export declare class DrawingNetwork extends DrawingInteraction {
+    constructor(main: EcDiagnostics, network?: Network, redrawFn?: () => void);
+    private __toolboxResetViewButton;
+    init(master: Master, redrawnFn: () => void): void;
+    deinit(): void;
+    disconnectedCallback(): void;
+    private __network;
+    get network(): Network | undefined;
+    get master(): Master | undefined;
+    initDrawing(): void;
+    resetView: () => void;
+    drawCableLinkConnectionOrientation(outputPort: Port, layers: Layers): void;
+    drawCableLinkConnectionRedundancyOrientation(inputPort: Port, layers: Layers): void;
+    private __getConnectionOrientationGradient;
+    drawCableLinkConnection(inputPort: Port, layers: Layers): void;
+    drawCableLinkConnectionRedundancy(inputPort: Port, layers: Layers): void;
+    drawComponent(component: Master | Slave | SlaveGroup, layers: Layers): void;
+    drawSlave(slave: Slave, layers: Layers): void;
+    private __drawTraceFlag;
+    drawSlaveCouplerGroup(coupler: Slave, layers: Layers): void;
+    drawSlaveTerminalGroup(slaveTerminalGroup: SlaveTerminalGroup, layers: Layers): void;
+    drawMaster(master: Master, layers: Layers): void;
+    __addMasterEventTarget(master: Master, layers: Layers): void;
+    drawMasterPort(master: Master, layers: Layers): void;
+    drawMasterRedundancyPort(master: Master, layers: Layers): void;
+    drawMasterFlag(master: Master, layers: Layers): void;
+}

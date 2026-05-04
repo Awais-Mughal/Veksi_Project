@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <GVL Name="GVL_HMI" Id="{0e0ac9c9-f341-4ef2-89c2-f9614e406c1b}">
     <Declaration><![CDATA[(*
@@ -94,11 +94,15 @@ VAR_GLOBAL
     HMI_MQTT_ApplyConfig        : BOOL;             // HMI button:   apply config & reconnect
 
     ACT_MQTT_Connected          : BOOL;             // PLC output: broker connection active
+	ACT_MQTT_State				: STRING;
     ACT_MQTT_Error              : BOOL;             // PLC output: connection error flag
     ACT_MQTT_ErrorMsg           : STRING(128);      // PLC output: error description text
     ACT_MQTT_JsonPreview        : STRING(2048);     // PLC output: last outgoing JSON (debug)
-    ACT_MQTT_LastRxTopic        : STRING(255);      // PLC output: last received topic
+    ACT_MQTT_LastMsgRcvTime		: STRING;
+	ACT_MQTT_LastMsgPubTime		: STRING;
+	ACT_MQTT_LastRxTopic        : STRING(255);      // PLC output: last received topic
     ACT_MQTT_NewCommand         : BOOL;             // PLC output: TRUE for one cycle on cmd
+	
 
     // ══════════════════════════════════════════════════════════
     // CSV LOGGER CONTROL & STATUS

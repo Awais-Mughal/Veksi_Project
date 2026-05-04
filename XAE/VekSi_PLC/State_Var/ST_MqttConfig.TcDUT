@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <DUT Name="ST_MqttConfig" Id="{0d23f381-9828-49b6-8416-3eaade8f2f19}">
     <Declaration><![CDATA[(*
@@ -22,11 +22,11 @@ NOTES
 TYPE ST_MqttConfig :
 STRUCT
     (* ── Broker Connection ──────────────────────────────────── *)
-    sBrokerAddress      : STRING(255) := '192.168.1.100';   (* IP or hostname of MQTT broker     *)
+    sBrokerAddress      : STRING(255) := 'imsiot.aws.thinger.io';   (* IP or hostname of MQTT broker     *)
     nPort               : UINT        := 1883;              (* 1883 = plain, 8883 = TLS/SSL      *)
-    sClientId           : STRING(64)  := 'BeckhoffIrrigationPLC'; (* Must be unique per broker   *)
-    sUsername           : STRING(64)  := '';                (* Leave empty if no auth required   *)
-    sPassword           : STRING(64)  := '';                (* Leave empty if no auth required   *)
+    sClientId           : STRING(64)  := 'Beckhoff'; (* Must be unique per broker   *)
+    sUsername           : STRING(64)  := 'ims_iot';                (* Leave empty if no auth required   *)
+    sPassword           : STRING(64)  := '123456789';                (* Leave empty if no auth required   *)
     bUseTls             : BOOL        := FALSE;             (* TRUE enables TLS/SSL connection   *)
 
     (* ── Topic Configuration ────────────────────────────────── *)

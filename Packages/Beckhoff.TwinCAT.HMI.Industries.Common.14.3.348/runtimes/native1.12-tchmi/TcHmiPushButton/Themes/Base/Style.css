@@ -1,0 +1,13 @@
+/** Styles for the theme: Base */
+.TcHmi_Controls_Beckhoff_Industries_Common_TcHmiPushButton {
+    --tchmi-indicator-color-inactive: var(--tchmi-foreground-color-2);
+    --tchmi-indicator-color-active: var(--tchmi-highlight-color-1);
+    --tchmi-indicator-color: var(--tchmi-indicator-color-inactive);
+    --tchmi-border-color: var(--tchmi-foreground-color-3);
+    --tchmi-background-primary: var(--tchmi-background-color-2);
+    --tchmi-background-secondary: var(--tchmi-background-color-3);
+}
+
+.TcHmi_Controls_Beckhoff_Industries_Common_TcHmiPushButton.TcHmi_Controls_Beckhoff_TcHmiButton.down {
+    --tchmi-indicator-color: var(--tchmi-indicator-color-active);
+}

@@ -1,0 +1,30 @@
+import type { Network } from './Network.js';
+import type { Master } from './Master.js';
+import type { Slave } from './Slave.js';
+import type { SlaveTerminalGroup } from './SlaveGroup.js';
+import type { Topology } from './Topology.js';
+import type { MatrixCoordinates, Dimension } from './Drawing.js';
+export declare class Trace {
+    constructor(topology: Topology);
+    private __slaves;
+    private __pos;
+    get pos(): MatrixCoordinates | null;
+    set pos(value: MatrixCoordinates | null);
+    addWidth(value: number): void;
+    set height(value: number);
+    private __dimension;
+    get dimension(): Dimension;
+    get slaves(): Slave[];
+    addSlave(slave: Slave): number;
+    private __topology;
+    get topology(): Topology;
+    get network(): Network;
+    get master(): Master;
+    private __slaveTerminalGroups;
+    addSlaveTerminalGroup(group: SlaveTerminalGroup): void;
+    hasSlaveTerminalGroups(): boolean;
+    hasGroupedSlaves(): boolean | null;
+    ungroupSlaveTerminalGroups(): void;
+    groupSlaveTerminalGroups(): void;
+    toggleSlaveTerminalGroups(): void;
+}

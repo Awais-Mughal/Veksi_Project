@@ -1,0 +1,12 @@
+/* TcHmiMotion styles for theme Base-Dark */
+.TcHmi_Controls_Beckhoff_Industries_Common_TcHmiIndicatorLight {
+    --tchmi-indicator-color-inactive: var(--tchmi-foreground-color-2);
+    --tchmi-indicator-color-active: var(--tchmi-highlight-color-1);
+    --tchmi-indicator-color: var(--tchmi-indicator-color-inactive);
+    --tchmi-border-color: var(--tchmi-foreground-color-2);
+    --tchmi-background-primary: var(--tchmi-background-color-2);
+}
+
+.TcHmi_Controls_Beckhoff_Industries_Common_TcHmiIndicatorLight.active {
+    --tchmi-indicator-color: var(--tchmi-indicator-color-active);
+}

@@ -1,0 +1,13 @@
+/* Theme dependend style for Theme: Base */
+
+.TcHmi_Controls_Beckhoff_Industries_Common_TcHmiSevenSegmentDisplay {
+    --tchmi-background: var(--tchmi-background-color-1);
+    background: var(--tchmi-background);
+}
+
+.TcHmi_Controls_Beckhoff_Industries_Common_TcHmiSevenSegmentDisplay-invalid-notification {
+    background-image: url('Images/invalid-notification.svg');
+    background-size: 200% 200%;
+    background-color: var(--tchmi-error-color);
+    background-position: 50% 50%;
+}

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="FB_CsvLogger" Id="{8a84e9fd-9a8f-453a-90ca-561ec719d60c}" SpecialFunc="None">
     <Declaration><![CDATA[(*
@@ -264,7 +264,7 @@ CASE eState OF
         END_CASE
         sLine := CONCAT(sLine, REAL_TO_STRING(stValve[1].Active_Setpoint));  sLine := CONCAT(sLine, ',');
         sLine := CONCAT(sLine, REAL_TO_STRING(stValve[1].Actual_Position));  sLine := CONCAT(sLine, ',');
-        sLine := CONCAT(sLine, sSource);                                      sLine := CONCAT(sLine, ',');
+        sLine := CONCAT(sLine, sSource);                                     sLine := CONCAT(sLine, ',');
         sLine := CONCAT(sLine, INT_TO_STRING(stValve[1].State));             sLine := CONCAT(sLine, ',');
 
         (* Valve 2 *)
@@ -275,7 +275,7 @@ CASE eState OF
         END_CASE
         sLine := CONCAT(sLine, REAL_TO_STRING(stValve[2].Active_Setpoint));  sLine := CONCAT(sLine, ',');
         sLine := CONCAT(sLine, REAL_TO_STRING(stValve[2].Actual_Position));  sLine := CONCAT(sLine, ',');
-        sLine := CONCAT(sLine, sSource);                                      sLine := CONCAT(sLine, ',');
+        sLine := CONCAT(sLine, sSource);                                     sLine := CONCAT(sLine, ',');
         sLine := CONCAT(sLine, INT_TO_STRING(stValve[2].State));             sLine := CONCAT(sLine, ',');
 
         (* Valve 3 *)
@@ -286,7 +286,7 @@ CASE eState OF
         END_CASE
         sLine := CONCAT(sLine, REAL_TO_STRING(stValve[3].Active_Setpoint));  sLine := CONCAT(sLine, ',');
         sLine := CONCAT(sLine, REAL_TO_STRING(stValve[3].Actual_Position));  sLine := CONCAT(sLine, ',');
-        sLine := CONCAT(sLine, sSource);                                      sLine := CONCAT(sLine, ',');
+        sLine := CONCAT(sLine, sSource);                                     sLine := CONCAT(sLine, ',');
         sLine := CONCAT(sLine, INT_TO_STRING(stValve[3].State));             sLine := CONCAT(sLine, ',');
 
         (* Sensor data — real values from FB_SensorIO, not hardcoded -999 *)

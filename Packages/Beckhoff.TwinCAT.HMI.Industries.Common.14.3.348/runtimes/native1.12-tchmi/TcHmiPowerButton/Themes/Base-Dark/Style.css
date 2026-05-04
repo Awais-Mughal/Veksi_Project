@@ -1,0 +1,15 @@
+/** Styles for the theme: Base-Dark */
+.TcHmi_Controls_Beckhoff_Industries_Common_TcHmiPowerButton {
+    --tchmi-indicator-color-inactive: var(--tchmi-background-color-4);
+    --tchmi-indicator-color-active: var(--tchmi-highlight-color-1);
+    --tchmi-indicator-color: var(--tchmi-indicator-color-inactive);
+    --tchmi-border-color: var(--tchmi-foreground-color-2);
+    --tchmi-background-primary: var(--tchmi-background-color-2);
+    --tchmi-background-secondary: var(--tchmi-foreground-color-3);
+    --tchmi-icon-color: var(--tchmi-foreground-color-2);
+}
+
+.TcHmi_Controls_Beckhoff_Industries_Common_TcHmiPowerButton.TcHmi_Controls_Beckhoff_TcHmiButton.down {
+    --tchmi-indicator-color: var(--tchmi-indicator-color-active);
+    --tchmi-icon-color: var(--tchmi-indicator-color-active);
+}

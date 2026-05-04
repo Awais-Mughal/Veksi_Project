@@ -103,6 +103,13 @@
       }
     },
     {
+      "name": "Beckhoff.TwinCAT.HMI.EcDiagnosticsControl",
+      "basePath": "/Beckhoff.TwinCAT.HMI.EcDiagnosticsControl",
+      "symbols": {
+        "package": {}
+      }
+    },
+    {
       "name": "Beckhoff.TwinCAT.HMI.Framework",
       "basePath": "/Beckhoff.TwinCAT.HMI.Framework",
       "symbols": {
@@ -112,6 +119,13 @@
     {
       "name": "Beckhoff.TwinCAT.HMI.Functions",
       "basePath": "/Beckhoff.TwinCAT.HMI.Functions",
+      "symbols": {
+        "package": {}
+      }
+    },
+    {
+      "name": "Beckhoff.TwinCAT.HMI.Industries.Common",
+      "basePath": "/Beckhoff.TwinCAT.HMI.Industries.Common",
       "symbols": {
         "package": {}
       }

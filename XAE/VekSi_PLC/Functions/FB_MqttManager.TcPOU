@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="FB_MqttManager" Id="{a85faad5-c4ce-456e-ac7f-31861d0adeef}" SpecialFunc="None">
     <Declaration><![CDATA[(*
@@ -86,6 +86,13 @@ VAR_OUTPUT
     (* Last received message for diagnostics *)
     sLastRxTopic        : STRING(255);      (* Last received topic                       *)
     sLastRxPayload      : STRING(2048);     (* Last received payload                     *)
+	
+	(* Connection state machine *)
+	eState : E_MQTTState;
+	currentState	: STRING;
+	
+	LastmsgPub : STRING;
+	LastmsgRcv : STRING;
 
     (* Outgoing JSON preview for HMI / debugging *)
     sJsonStatusPayload  : STRING(2048);
@@ -96,15 +103,8 @@ VAR
     fbMqttClient    : FB_IotMqttClient;
     fbMessageQueue  : FB_IotMqttMessageQueue;
     fbMessage       : FB_IotMqttMessage;
-
-    (* Connection state machine *)
-    eState : (
-        DISABLED,
-        CONNECTING,
-        CONNECTED,
-        DISCONNECTING,
-        WAIT_RECONNECT
-    );
+	fbGetTime       : FB_LocalSystemTime;
+    
 
     (* Edge detection *)
     rtApplyConfig   : R_TRIG;
@@ -135,6 +135,7 @@ END_VAR
    ============================================================ *)
 rtApplyConfig(CLK := bApplyConfig);
 rtPublish(CLK := bPublish);
+fbGetTime(bEnable := TRUE, dwCycle := 1);
 
 
 (* ============================================================
@@ -151,14 +152,15 @@ CASE eState OF
     (* -----------------------------------------------------------
        DISABLED — MQTT off, waiting for operator enable
        ----------------------------------------------------------- *)
-    DISABLED:
+    E_MQTTState.DISABLED:
+		currentState := 'DISABLED';
         bConnectCmd               := FALSE;
         bAutoSubscribed           := FALSE;
         sErrorMsg                 := '';
         bReconnectAfterDisconnect := FALSE;
 
         IF bEnable THEN
-            eState := CONNECTING;
+            eState := E_MQTTState.CONNECTING;
         END_IF
 
 
@@ -166,7 +168,8 @@ CASE eState OF
        CONNECTING — apply config and request connection
        Config must be assigned before Execute(TRUE) is called.
        ----------------------------------------------------------- *)
-    CONNECTING:
+    E_MQTTState.CONNECTING:
+		currentState := 'CONNECTING';
         fbMqttClient.sHostName      := stConfig.sBrokerAddress;
         fbMqttClient.nHostPort      := stConfig.nPort;
         fbMqttClient.sClientId      := stConfig.sClientId;
@@ -174,24 +177,35 @@ CASE eState OF
         fbMqttClient.sUserPassword  := stConfig.sPassword;
         fbMqttClient.ipMessageQueue := fbMessageQueue;
 
+		fbMqttClient.stTLS.sVersion := 'tlsv1.2';
+		fbMqttClient.stTLS.bNoServerCertCheck := TRUE;
+		fbMqttClient.stTLS.sCA := '';
+		fbMqttClient.stTLS.sCert := '';
+		fbMqttClient.stTLS.sKeyFile := '';
+		
+
         bConnectCmd := TRUE;
 
         IF fbMqttClient.bConnected THEN
             sErrorMsg       := '';
             bAutoSubscribed := FALSE;   (* Will subscribe on first CONNECTED cycle *)
-            eState          := CONNECTED;
+            eState          := E_MQTTState.CONNECTED;
         ELSIF fbMqttClient.bError THEN
             sErrorMsg := 'MQTT connect failed - check broker IP, port, credentials.';
-            eState    := WAIT_RECONNECT;
+            eState    := E_MQTTState.WAIT_RECONNECT;
         END_IF
-
+		IF NOT bEnable THEN
+            bReconnectAfterDisconnect := FALSE;
+            eState := E_MQTTState.DISCONNECTING;
+		END_IF
 
     (* -----------------------------------------------------------
        CONNECTED — connection active.
        Auto-subscribe on first entry.
        Monitor for config change, enable toggle, or dropout.
        ----------------------------------------------------------- *)
-    CONNECTED:
+    E_MQTTState.CONNECTED:
+		currentState := 'CONNECTED';
         bConnectCmd := TRUE;
 
         (* Auto-subscribe to command topic once per connection.
@@ -204,30 +218,31 @@ CASE eState OF
 
         IF NOT bEnable THEN
             bReconnectAfterDisconnect := FALSE;
-            eState := DISCONNECTING;
+            eState := E_MQTTState.DISCONNECTING;
         ELSIF rtApplyConfig.Q THEN
             (* Config changed: disconnect then reconnect with new settings *)
             bReconnectAfterDisconnect := TRUE;
             bAutoSubscribed           := FALSE;
-            eState                    := DISCONNECTING;
+            eState                    := E_MQTTState.DISCONNECTING;
         ELSIF NOT fbMqttClient.bConnected THEN
             sErrorMsg := 'MQTT connection lost - reconnecting...';
-            eState    := WAIT_RECONNECT;
+            eState    := E_MQTTState.WAIT_RECONNECT;
         END_IF
 
 
     (* -----------------------------------------------------------
        DISCONNECTING — Execute(FALSE) closes the connection.
        ----------------------------------------------------------- *)
-    DISCONNECTING:
+    E_MQTTState.DISCONNECTING:
+		currentState := 'DISCONNECTING';
         bConnectCmd := FALSE;
 
         IF NOT fbMqttClient.bConnected THEN
             IF bEnable AND bReconnectAfterDisconnect THEN
                 bReconnectAfterDisconnect := FALSE;
-                eState := CONNECTING;
+                eState := E_MQTTState.CONNECTING;
             ELSE
-                eState := DISABLED;
+                eState := E_MQTTState.DISABLED;
             END_IF
         END_IF
 
@@ -235,16 +250,17 @@ CASE eState OF
     (* -----------------------------------------------------------
        WAIT_RECONNECT — back-off delay before next attempt.
        ----------------------------------------------------------- *)
-    WAIT_RECONNECT:
+    E_MQTTState.WAIT_RECONNECT:
+		currentState := 'WAIT_RECONNECT';
         bConnectCmd := FALSE;
         tonReconnect(IN := TRUE, PT := stConfig.tReconnectDelay);
 
         IF NOT bEnable THEN
             tonReconnect(IN := FALSE);
-            eState := DISABLED;
+            eState := E_MQTTState.DISABLED;
         ELSIF tonReconnect.Q THEN
             tonReconnect(IN := FALSE);
-            eState := CONNECTING;
+            eState := E_MQTTState.CONNECTING;
         END_IF
 
 END_CASE
@@ -293,9 +309,12 @@ WHILE fbMessageQueue.nQueuedMessages > 0 DO
             rMqttValveSetpoint[3] := LIMIT(0.0, DINT_TO_REAL(stCmdRecv.Valve3), 100.0);
 
             (* Per-valve MQTT override enable *)
-            bMqttValveEnable[1] := stCmdRecv.Valve1_Enable;
-            bMqttValveEnable[2] := stCmdRecv.Valve2_Enable;
-            bMqttValveEnable[3] := stCmdRecv.Valve3_Enable;
+            bMqttValveEnable[1] := stCmdRecv.Valve1_Enable; // will remove
+            bMqttValveEnable[2] := stCmdRecv.Valve2_Enable; // will remove
+            bMqttValveEnable[3] := stCmdRecv.Valve3_Enable; // will remove
+		
+		LastmsgRcv := SYSTEMTIME_TO_STRING(fbGetTime.systemTime);
+			
         END_IF
     END_IF
 END_WHILE
@@ -315,6 +334,7 @@ IF fbMqttClient.bConnected AND rtPublish.Q THEN
         eQoS         := TcIotMqttQos.AtMostOnceDelivery,
         bRetain      := TRUE    (* Retained so new subscribers get current state *)
     );
+	LastmsgPub := SYSTEMTIME_TO_STRING(fbGetTime.systemTime);
 END_IF
 
 
@@ -346,7 +366,7 @@ END_IF
    ============================================================ *)
 bConnected := fbMqttClient.bConnected;
 nErrorCode := fbMqttClient.hrErrorCode;
-bError     := fbMqttClient.bError OR (eState = WAIT_RECONNECT);
+bError     := fbMqttClient.bError OR (eState = E_MQTTState.WAIT_RECONNECT);
 
 IF NOT bError THEN
     nErrorCode := 0;

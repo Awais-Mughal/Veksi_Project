@@ -1878,7 +1878,7 @@ External Setpoint Generation:
 					</AxisPara>
 					<Encoder Name="Enc" EncType="1">
 						<EncPara ScaleFactorNumerator="0.003048">
-							<Inc RefSearchInverse="true" RefSoftSyncMask="#x0000ffff"/>
+							<Inc RefSearchInverse="true" RefSyncInverse="false" RefSoftSyncMask="#x0000ffff"/>
 							<TimeComp TimeCompMode="1" EncDelayCycles="4"/>
 						</EncPara>
 						<Vars VarGrpType="1">
@@ -2034,7 +2034,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{1DA7BD83-29A5-425E-BED6-F25BE9F7A34D}" Name="VekSi_PLC" PrjFilePath="VekSi_PLC\VekSi_PLC.plcproj" TmcFilePath="VekSi_PLC\VekSi_PLC.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{EFCFDE3F-00ED-AAE9-42EF-122BC963265D}" TmcPath="VekSi_PLC\VekSi_PLC.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{DEA63847-5DF5-58B6-0CC2-6E6747083F95}" TmcPath="VekSi_PLC\VekSi_PLC.tmc">
 					<Name>VekSi_PLC Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -5743,7 +5743,6 @@ External Setpoint Generation:
 				<Link VarA="Drive^Inputs^In^nState1" VarB="STM Status^Status^Ready to enable"/>
 				<Link VarA="Drive^Inputs^In^nState1" VarB="STM Status^Status^Torque reduced" Size="1" OffsA="6"/>
 				<Link VarA="Drive^Inputs^In^nState1" VarB="STM Status^Status^Warning" Size="1" OffsA="2"/>
-				<Link VarA="Drive^Inputs^In^nState2" VarB="STM Status^Status^Digital input 2" Size="1" OffsA="4"/>
 				<Link VarA="Drive^Inputs^In^nState2" VarB="STM Status^Status^Sync error" Size="1" OffsA="5"/>
 				<Link VarA="Drive^Inputs^In^nState2" VarB="STM Status^Status^TxPDO Toggle" Size="1" OffsA="7"/>
 				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
@@ -5846,6 +5845,7 @@ External Setpoint Generation:
 		<OwnerA Name="TIPC^VekSi_PLC^VekSi_PLC Instance">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1322)^Box 8 (EPP7041-1002)">
 				<Link VarA="PlcTask Inputs^GVL_IO.bBottom_position_1" VarB="STM Status^Status^Digital input 1"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.bTop_position_1" VarB="STM Status^Status^Digital input 2"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis 1">
 				<Link VarA="PlcTask Inputs^MAIN.Axis_Valve1.NcToPlc" VarB="Outputs^ToPlc"/>

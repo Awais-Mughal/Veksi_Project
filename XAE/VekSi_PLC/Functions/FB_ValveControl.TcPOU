@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="FB_ValveControl" Id="{83e8a007-202b-43ef-a593-2a6bab96e41d}" SpecialFunc="None">
     <Declaration><![CDATA[(*
@@ -56,6 +56,7 @@ VAR_INPUT
     Move_Stop           : BOOL;             // TRUE: halt movement immediately
     UPDATE              : BOOL;             // Rising edge from HMI Apply setpoint button
     ZeroPosition        : BOOL;             // Limit switch at home/zero position
+	TopPosition			: BOOL;
 
     // ── Motion parameters ─────────────────────────────────────
     // LREAL type required — matches MC_MoveAbsolute VAR_INPUT types exactly.
@@ -99,6 +100,7 @@ VAR
     fbReadPos           : MC_ReadActualPosition;
     fbHalt              : MC_Halt;
     fbReset_MC          : MC_Reset;
+	fbSetPos			: MC_SetPosition;
 
     // ── State machine ─────────────────────────────────────────
     eState              : E_ValveState := E_ValveState.INIT;
@@ -119,8 +121,8 @@ VAR
 
     // ── Edge detection ────────────────────────────────────────
     rtReset             : R_TRIG;
-    rtUpdate            : R_TRIG;   // Rising edge on HMI Apply button
-    rtZeroPosition      : R_TRIG;
+    rtUpdate            : F_TRIG;   // Rising edge on HMI Apply button
+    rtZeroPosition      : R_TRIG; //not used
     rtHoming            : R_TRIG;
 
     // ── Internal working variables ────────────────────────────
@@ -137,7 +139,6 @@ END_VAR
 // ============================================================
 rtReset(CLK := Reset);
 rtUpdate(CLK := UPDATE);
-rtZeroPosition(CLK := ZeroPosition);
 rtHoming(CLK := bHoming);
 
 // ReadStatus must be called every cycle to keep Axis state current
@@ -203,6 +204,20 @@ END_IF
 // Read current axis position every cycle.
 // rActual_mm is then converted to a percentage.
 // ============================================================
+
+(*IF TopPosition THEN
+	fbSetPos (
+		Axis := Axis,
+		Execute := TRUE,
+		Position := FullStroke_mm
+		//Mode
+		);	
+	IF fbSetPos.Done THEN
+		fbSetPos (Execute := FALSE, Axis := Axis);
+		rActiveSetpoint := Actual_Position;  // Adopt current position as new setpoint
+	END_IF
+END_IF *)
+
 fbReadPos(
     Axis   := Axis,
     Enable := fbPower.Status
@@ -266,6 +281,7 @@ CASE eState OF
             bExecHome := FALSE;
             fbHome(Axis := Axis, Execute := bExecHome);  // Clear Execute cleanly
             IsHomed   := TRUE;
+			rActiveSetpoint := 0;  // Adopt current position as new setpoint
             eState    := E_ValveState.IDLE;
         ELSIF fbHome.Error THEN
             bExecHome := FALSE;
