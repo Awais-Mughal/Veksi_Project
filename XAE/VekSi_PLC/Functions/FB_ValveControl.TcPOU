@@ -81,7 +81,7 @@ VAR_OUTPUT
 
     // ── State and source ──────────────────────────────────────
     State               : E_ValveState;     // Current state machine state (for HMI display)
-    Source              : E_ValveSource;    // Who issued the last command (HMI / MQTT / NONE)
+    Source              : E_CommandSource;    // Who issued the last command (HMI / MQTT / NONE)
 
     // ── Status flags ──────────────────────────────────────────
     IsHomed             : BOOL;             // TRUE once homing completed successfully
@@ -160,14 +160,14 @@ Axis.ReadStatus();
 IF MQTT_Enabled AND (MQTT_Setpoint <> rPrev_MQTT_SP) THEN
     rActiveSetpoint := LIMIT(0.0, MQTT_Setpoint, 100.0);
     rPrev_MQTT_SP   := MQTT_Setpoint;
-    Source          := E_ValveSource.MQTT;
+    Source          := E_CommandSource.MQTT;
 END_IF
 
 // HMI Update button overrides MQTT if pressed in the same cycle
 IF rtUpdate.Q THEN
     rActiveSetpoint := LIMIT(0.0, HMI_Setpoint, 100.0);
     rPrev_HMI_SP    := HMI_Setpoint;
-    Source          := E_ValveSource.HMI;
+    Source          := E_CommandSource.HMI;
 END_IF
 
 // Convert percentage setpoint to axis units (mm)

@@ -90,6 +90,8 @@ IF NOT bMqttConfigInit THEN
 END_IF
 
 
+
+
 // ============================================================
 // STEP 1 — COPY HMI SETPOINTS / RESETS INTO SYSTEM BUS
 // ============================================================
@@ -398,20 +400,20 @@ GVL_HMI.ACT_Valve3_FaultCode := GVL_System.Valve[3].FaultCode;
 
 // Source text strings (HMI indicators + MQTT JSON sValveSource[])
 CASE GVL_System.Valve[1].Source OF
-    E_ValveSource.MQTT: GVL_HMI.ACT_Valve1_SourceText := 'MQTT';
-    E_ValveSource.HMI:  GVL_HMI.ACT_Valve1_SourceText := 'HMI';
+    E_CommandSource.MQTT: GVL_HMI.ACT_Valve1_SourceText := 'MQTT';
+    E_CommandSource.HMI:  GVL_HMI.ACT_Valve1_SourceText := 'HMI';
     ELSE                GVL_HMI.ACT_Valve1_SourceText := 'NONE';
 END_CASE
 
 CASE GVL_System.Valve[2].Source OF
-    E_ValveSource.MQTT: GVL_HMI.ACT_Valve2_SourceText := 'MQTT';
-    E_ValveSource.HMI:  GVL_HMI.ACT_Valve2_SourceText := 'HMI';
+    E_CommandSource.MQTT: GVL_HMI.ACT_Valve2_SourceText := 'MQTT';
+    E_CommandSource.HMI:  GVL_HMI.ACT_Valve2_SourceText := 'HMI';
     ELSE                GVL_HMI.ACT_Valve2_SourceText := 'NONE';
 END_CASE
 
 CASE GVL_System.Valve[3].Source OF
-    E_ValveSource.MQTT: GVL_HMI.ACT_Valve3_SourceText := 'MQTT';
-    E_ValveSource.HMI:  GVL_HMI.ACT_Valve3_SourceText := 'HMI';
+    E_CommandSource.MQTT: GVL_HMI.ACT_Valve3_SourceText := 'MQTT';
+    E_CommandSource.HMI:  GVL_HMI.ACT_Valve3_SourceText := 'HMI';
     ELSE                GVL_HMI.ACT_Valve3_SourceText := 'NONE';
 END_CASE
 

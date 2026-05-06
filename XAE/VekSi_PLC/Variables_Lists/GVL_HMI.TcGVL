@@ -33,7 +33,7 @@ VAR_GLOBAL
 
     ACT_Valve1_Position         : REAL;             // PLC output: actual position 0–100 %
     ACT_Valve1_State            : E_ValveState;     // PLC output: current state machine state
-    ACT_Valve1_Source           : E_ValveSource;    // PLC output: last command source enum
+    ACT_Valve1_Source           : E_CommandSource;    // PLC output: last command source enum
     ACT_Valve1_SourceText       : STRING(8);        // PLC output: 'HMI', 'MQTT', or 'NONE'
     ACT_Valve1_Fault            : BOOL;             // PLC output: fault active flag
     ACT_Valve1_FaultCode        : UDINT;            // PLC output: MC2 fault code
@@ -51,7 +51,7 @@ VAR_GLOBAL
 
     ACT_Valve2_Position         : REAL;             // PLC output: actual position 0–100 %
     ACT_Valve2_State            : E_ValveState;     // PLC output: current state machine state
-    ACT_Valve2_Source           : E_ValveSource;    // PLC output: last command source enum
+    ACT_Valve2_Source           : E_CommandSource;    // PLC output: last command source enum
     ACT_Valve2_SourceText       : STRING(8);        // PLC output: 'HMI', 'MQTT', or 'NONE'
     ACT_Valve2_Fault            : BOOL;             // PLC output: fault active flag
     ACT_Valve2_FaultCode        : UDINT;            // PLC output: MC2 fault code
@@ -69,7 +69,7 @@ VAR_GLOBAL
 
     ACT_Valve3_Position         : REAL;             // PLC output: actual position 0–100 %
     ACT_Valve3_State            : E_ValveState;     // PLC output: current state machine state
-    ACT_Valve3_Source           : E_ValveSource;    // PLC output: last command source enum
+    ACT_Valve3_Source           : E_CommandSource;    // PLC output: last command source enum
     ACT_Valve3_SourceText       : STRING(8);        // PLC output: 'HMI', 'MQTT', or 'NONE'
     ACT_Valve3_Fault            : BOOL;             // PLC output: fault active flag
     ACT_Valve3_FaultCode        : UDINT;            // PLC output: MC2 fault code

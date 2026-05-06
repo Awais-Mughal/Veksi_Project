@@ -14,7 +14,7 @@ STRUCT
     Actual_Pos_Raw  : LREAL;        // Raw axis position in mm or steps (from MC2)
 
     // --- Command source tracking ---
-    Source          : E_ValveSource;  // Who issued the last command
+    Source          : E_CommandSource;  // Who issued the last command
     MQTT_Enabled    : BOOL;           // Allow MQTT to override this valve's setpoint
 
     // --- State machine status ---
