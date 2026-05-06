@@ -20,7 +20,7 @@ VAR_GLOBAL CONSTANT
 
     // ── Valve Motion Parameters ─────────────────────────────────
     // *** CALIBRATE to hardware before first run ***
-    VALVE_FULL_STROKE_MM        : REAL   := 6.096;      // mm — full travel (3600° stepper)
+    VALVE_FULL_STROKE_MM        : REAL   := 126;      // mm — full travel (3600° stepper)
     VALVE_POSITION_TOLERANCE    : REAL   := 0.5;        // %  — in-position dead-band
     VALVE_MOVE_VELOCITY         : LREAL  := 1.5;        // mm/s — max travel speed
     VALVE_MOVE_ACCELERATION     : LREAL  := 16.9085;    // mm/s² — ramp-up rate

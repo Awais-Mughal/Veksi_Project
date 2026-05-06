@@ -109,23 +109,19 @@ IF GVL_HMI.HMI_ResetAll THEN
     GVL_System.Valve[3].Reset_Cmd := TRUE;
     GVL_HMI.HMI_ResetAll := FALSE;
 END_IF
-
 // MQTT setpoints from FB_MqttManager (parsed from incoming JSON)
 GVL_System.Valve[1].MQTT_Setpoint := fbMqttManager.rMqttValveSetpoint[1];
 GVL_System.Valve[2].MQTT_Setpoint := fbMqttManager.rMqttValveSetpoint[2];
 GVL_System.Valve[3].MQTT_Setpoint := fbMqttManager.rMqttValveSetpoint[3];
-
 // Per-valve MQTT enable: master AND HMI checkbox AND command-level enable
 GVL_System.Valve[1].MQTT_Enabled :=
     GVL_HMI.HMI_MQTT_bEnable AND
     GVL_HMI.HMI_Valve1_MQTT_Enable AND
     fbMqttManager.bMqttValveEnable[1];
-
 GVL_System.Valve[2].MQTT_Enabled :=
     GVL_HMI.HMI_MQTT_bEnable AND
     GVL_HMI.HMI_Valve2_MQTT_Enable AND
     fbMqttManager.bMqttValveEnable[2];
-
 GVL_System.Valve[3].MQTT_Enabled :=
     GVL_HMI.HMI_MQTT_bEnable AND
     GVL_HMI.HMI_Valve3_MQTT_Enable AND
@@ -272,7 +268,7 @@ GVL_HMI.HMI_Valve3_Reset      := FALSE;
 // STEP 7 — BUILD TIMESTAMP STRING (YYYY-MM-DD HH:MM:SS)
 // Used for MQTT JSON and CSV row timestamps.
 // ============================================================
-fbSysTime(bEnable := TRUE, dwCycle := 1);
+(*fbSysTime(bEnable := TRUE, dwCycle := 1);
 
 sTimestamp := UINT_TO_STRING(fbSysTime.systemTime.wYear);
 sTimestamp := CONCAT(sTimestamp, '-');
@@ -295,7 +291,7 @@ sTimestamp := CONCAT(sTimestamp, ':');
 sTempStr   := UINT_TO_STRING(fbSysTime.systemTime.wSecond);
 IF fbSysTime.systemTime.wSecond < 10 THEN sTempStr := CONCAT('0', sTempStr); END_IF
 sTimestamp := CONCAT(sTimestamp, sTempStr);
-
+*)
 
 // ============================================================
 // STEP 8 — MQTT MANAGER

@@ -630,6 +630,14 @@
 </div>
 <div id="TcHmiButton_11" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="28" data-tchmi-height-unit="px" data-tchmi-left="1251" data-tchmi-left-unit="px" data-tchmi-text="Send MQTT Log" data-tchmi-top="172" data-tchmi-top-unit="px" data-tchmi-width="160" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_MQTT_mPublish%/s%">
 </div>
-<div id="TcHmiEcDiagnostics_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiEcDiagnostics" data-tchmi-allow-zoom-and-pan="True" data-tchmi-device="%f%Device 1 (EtherCAT)%/f%" data-tchmi-height="300" data-tchmi-height-unit="px" data-tchmi-left="873" data-tchmi-left-unit="px" data-tchmi-toolbox-reset-view="True" data-tchmi-top="341" data-tchmi-top-unit="px" data-tchmi-width="500" data-tchmi-width-unit="px" data-tchmi-is-enabled="True">
+<div id="TcHmiIndicatorLight_1" data-tchmi-type="TcHmi.Controls.Beckhoff.Industries.Common.TcHmiIndicatorLight" data-tchmi-height="14" data-tchmi-height-unit="px" data-tchmi-left="10" data-tchmi-left-unit="px" data-tchmi-top="100" data-tchmi-top-unit="px" data-tchmi-width="19" data-tchmi-width-unit="px" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_IO.bTop_position_1%/s%">
+
+<script data-tchmi-target-attribute="data-tchmi-active-color" type="application/json">
+{
+  "color": "rgba(244, 12, 12, 1)"
+}
+</script>
+</div>
+<div id="TcHmiEcDiagnostics_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiEcDiagnostics" data-tchmi-allow-zoom-and-pan="True" data-tchmi-device="Dev1" data-tchmi-height="300" data-tchmi-height-unit="px" data-tchmi-left="844" data-tchmi-left-unit="px" data-tchmi-toolbox-reset-view="True" data-tchmi-top="324" data-tchmi-top-unit="px" data-tchmi-width="500" data-tchmi-width-unit="px">
 </div>
 </div>

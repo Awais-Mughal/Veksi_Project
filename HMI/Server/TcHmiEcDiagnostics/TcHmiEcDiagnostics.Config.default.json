@@ -1,8 +1,8 @@
 {
     "devices": {
-        "Device 1 (EtherCAT)": {
+        "Dev1": {
             "enabled": true,
-            "masterNetId": "192.168.56.1.2.1",
+            "masterNetId": "10.1.176.203.2.1",
             "targetNetId": "10.1.176.203.1.1"
         }
     },

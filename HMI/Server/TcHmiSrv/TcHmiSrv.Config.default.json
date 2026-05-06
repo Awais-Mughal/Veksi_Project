@@ -1308,6 +1308,16 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_IO.bTop_position_1": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_IO::bTop_position_1",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.GVL_System.CSV_CurrentFile": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -5977,6 +5987,7 @@
                 "ADS.PLC1.GVL_HMI.HMI_Valve3_Setpoint": 3,
                 "ADS.PLC1.GVL_HMI.HMI_Valve3_Stop": 3,
                 "ADS.PLC1.GVL_HMI.WriteTrigger": 3,
+                "ADS.PLC1.GVL_IO.bTop_position_1": 3,
                 "ADS.PLC1.GVL_System.CSV_CurrentFile": 3,
                 "ADS.PLC1.GVL_System.CSV_LastWriteTime": 3,
                 "ADS.PLC1.GVL_System.CSV_LoggerState": 3,

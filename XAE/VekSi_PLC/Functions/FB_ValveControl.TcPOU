@@ -182,7 +182,7 @@ rTarget_mm := REAL_TO_LREAL(rActiveSetpoint / 100.0 * FullStroke_mm);
 fbPower(
     Axis            := Axis,
     Enable          := Enable AND (eState <> E_ValveState.FAULT),
-    Enable_Positive := TRUE,    // NC software limits protect max travel
+    Enable_Positive := TRUE AND NOT TopPosition,    // NC software limits protect max travel
     Enable_Negative := TRUE,    // NC software limits protect min travel
     Override        := 100.0    // 100 % velocity override = full programmed speed
 );
@@ -272,10 +272,16 @@ CASE eState OF
         fbHome(
             Axis            := Axis,
             Execute         := bExecHome,
-            Position        := 0.0,             // Home = 0 mm = fully closed
+            Position        := 5.0,             // Home = 0 mm = fully closed
             HomingMode      := eHomingSelection, // MC_Direct sets position without movement
             bCalibrationCam := ZeroPosition      // Wired to limit switch in GVL_IO
         );
+		
+		        // Operator STOP button: halt cleanly
+        IF Move_Stop THEN
+            bExecHalt := TRUE;
+            eState    := E_ValveState.HALT;
+        END_IF
 
         IF fbHome.Done THEN
             bExecHome := FALSE;

@@ -85,7 +85,7 @@ VAR_OUTPUT
 
     (* Last received message for diagnostics *)
     sLastRxTopic        : STRING(255);      (* Last received topic                       *)
-    sLastRxPayload      : STRING(2048);     (* Last received payload                     *)
+    sLastRxPayload      : STRING(255);     (* Last received payload                     *)
 	
 	(* Connection state machine *)
 	eState : E_MQTTState;
@@ -95,7 +95,7 @@ VAR_OUTPUT
 	LastmsgRcv : STRING;
 
     (* Outgoing JSON preview for HMI / debugging *)
-    sJsonStatusPayload  : STRING(2048);
+    sJsonStatusPayload  : STRING(1024);
 END_VAR
 
 VAR
@@ -393,15 +393,15 @@ OUTPUT FORMAT EXAMPLE
 *)
 METHOD BuildStatusJson
 VAR
-    sTemp : STRING(2048);
+    sTemp : STRING(1024);
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[sTemp := '{';
 
-sTemp := CONCAT(sTemp, '"timestamp":"');
-sTemp := CONCAT(sTemp, sTimestamp);
-sTemp := CONCAT(sTemp, '"');
+//sTemp := CONCAT(sTemp, '"timestamp":"');
+//sTemp := CONCAT(sTemp, sTimestamp);
+//sTemp := CONCAT(sTemp, '"');
 
 sTemp := CONCAT(sTemp, ',"valve_1_setpoint":');
 sTemp := CONCAT(sTemp, REAL_TO_STRING(rValveSetpoint[1]));
