@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="FB_ValveControl" Id="{83e8a007-202b-43ef-a593-2a6bab96e41d}" SpecialFunc="None">
     <Declaration><![CDATA[(*
@@ -22,12 +22,10 @@ STATE MACHINE
   FAULT     — Latches fault code; waits for Reset command
   RESET     — Executes MC_Reset; then transitions to HOMING
 
-SETPOINT ARBITRATION
-  MQTT (lower priority): applied when MQTT_Enabled = TRUE AND
-    MQTT_Setpoint changes from last known value.
-  HMI (higher priority): applied on rising edge of UPDATE button.
-  HMI always wins if both arrive in the same PLC cycle.
-  Source output reflects who issued the most recent command.
+SETPOINT HANDLING
+  MAIN selects exactly one command source and passes the resulting
+  Active_Setpoint to this FB. This FB only clamps and tracks that
+  selected setpoint for motion control.
 
 LIBRARIES
   TC2_MC2
@@ -41,10 +39,8 @@ VAR_IN_OUT
 END_VAR
 
 VAR_INPUT
-    // ── Setpoints ─────────────────────────────────────────────
-    HMI_Setpoint        : REAL;             // Target position from HMI   (0.0–100.0 %)
-    MQTT_Setpoint       : REAL;             // Target position from MQTT  (0.0–100.0 %)
-    MQTT_Enabled        : BOOL;             // FALSE = ignore MQTT commands for this valve
+    // ── Setpoint ──────────────────────────────────────────────
+    Active_Setpoint     : REAL;             // Selected target position from MAIN (0.0–100.0 %)
 
     // ── Homing ────────────────────────────────────────────────
     eHomingSelection    : MC_HomingMode;    // Homing mode (MC_Direct sets position without movement)
@@ -54,7 +50,6 @@ VAR_INPUT
     Enable              : BOOL;             // TRUE = drive powered; FALSE = de-energised
     Reset               : BOOL;             // Rising edge: clear fault and re-home
     Move_Stop           : BOOL;             // TRUE: halt movement immediately
-    UPDATE              : BOOL;             // Rising edge from HMI Apply setpoint button
     ZeroPosition        : BOOL;             // Limit switch at home/zero position
 	TopPosition			: BOOL;
 
@@ -79,9 +74,8 @@ VAR_OUTPUT
     rActual_mm          : LREAL;            // Raw axis position in mm
     rTarget_mm          : LREAL := 0.0;     // Active target in mm
 
-    // ── State and source ──────────────────────────────────────
+    // ── State ─────────────────────────────────────────────────
     State               : E_ValveState;     // Current state machine state (for HMI display)
-    Source              : E_CommandSource;    // Who issued the last command (HMI / MQTT / NONE)
 
     // ── Status flags ──────────────────────────────────────────
     IsHomed             : BOOL;             // TRUE once homing completed successfully
@@ -105,10 +99,9 @@ VAR
     // ── State machine ─────────────────────────────────────────
     eState              : E_ValveState := E_ValveState.INIT;
 
-    // ── Setpoint arbitration ──────────────────────────────────
+    // ── Selected setpoint tracking ────────────────────────────
     rActiveSetpoint     : REAL  := 0.0;
-    rPrev_HMI_SP        : REAL  := -999.0;  // -999 ensures first HMI value is always applied
-    rPrev_MQTT_SP       : REAL  := -999.0;  // -999 ensures first MQTT value is always applied
+    rPrev_Active_SP     : REAL  := -999.0;  // -999 ensures first selected value is always applied
 
     // ── PLCopen Execute flags ─────────────────────────────────
     // Set TRUE on state entry → MC FB receives rising edge.
@@ -121,7 +114,6 @@ VAR
 
     // ── Edge detection ────────────────────────────────────────
     rtReset             : R_TRIG;
-    rtUpdate            : F_TRIG;   // Rising edge on HMI Apply button
     rtZeroPosition      : R_TRIG; //not used
     rtHoming            : R_TRIG;
 
@@ -138,7 +130,6 @@ END_VAR
 // rising edge. Ensures button presses trigger exactly once.
 // ============================================================
 rtReset(CLK := Reset);
-rtUpdate(CLK := UPDATE);
 rtHoming(CLK := bHoming);
 
 // ReadStatus must be called every cycle to keep Axis state current
@@ -146,28 +137,15 @@ Axis.ReadStatus();
 
 
 // ============================================================
-// SECTION 2 — SETPOINT ARBITRATION & SOURCE TRACKING
-//
-// Priority (lowest to highest):
-//   1. MQTT: applied when MQTT_Enabled=TRUE and value has changed
-//   2. HMI:  applied on rising edge of UPDATE button (always wins)
-//
-// rPrev_* tracks last applied values so repeated identical
-// inputs do not unnecessarily re-trigger motion.
+// SECTION 2 — SELECTED SETPOINT TRACKING
+// MAIN performs command-source arbitration before this FB is called.
+// This FB accepts only the already selected setpoint, clamps it, and
+// updates the motion target when that selected value changes.
 // ============================================================
 
-// MQTT setpoint — only when explicitly enabled and value changed
-IF MQTT_Enabled AND (MQTT_Setpoint <> rPrev_MQTT_SP) THEN
-    rActiveSetpoint := LIMIT(0.0, MQTT_Setpoint, 100.0);
-    rPrev_MQTT_SP   := MQTT_Setpoint;
-    Source          := E_CommandSource.MQTT;
-END_IF
-
-// HMI Update button overrides MQTT if pressed in the same cycle
-IF rtUpdate.Q THEN
-    rActiveSetpoint := LIMIT(0.0, HMI_Setpoint, 100.0);
-    rPrev_HMI_SP    := HMI_Setpoint;
-    Source          := E_CommandSource.HMI;
+IF Active_Setpoint <> rPrev_Active_SP THEN
+    rActiveSetpoint := LIMIT(0.0, Active_Setpoint, 100.0);
+    rPrev_Active_SP := Active_Setpoint;
 END_IF
 
 // Convert percentage setpoint to axis units (mm)
@@ -215,6 +193,7 @@ END_IF
 	IF fbSetPos.Done THEN
 		fbSetPos (Execute := FALSE, Axis := Axis);
 		rActiveSetpoint := Actual_Position;  // Adopt current position as new setpoint
+		rPrev_Active_SP := Active_Setpoint;   // Hold until selected setpoint changes
 	END_IF
 END_IF *)
 
@@ -287,7 +266,8 @@ CASE eState OF
             bExecHome := FALSE;
             fbHome(Axis := Axis, Execute := bExecHome);  // Clear Execute cleanly
             IsHomed   := TRUE;
-			rActiveSetpoint := 0;  // Adopt current position as new setpoint
+			rActiveSetpoint := 0;       // Adopt home position as new setpoint
+			rPrev_Active_SP := -999.0; // Reapply selected setpoint on next scan
             eState    := E_ValveState.IDLE;
         ELSIF fbHome.Error THEN
             bExecHome := FALSE;
@@ -407,6 +387,7 @@ CASE eState OF
             bExecHalt       := FALSE;
             fbHalt(Axis := Axis, Execute := bExecHalt);  // Clear Execute cleanly
             rActiveSetpoint := Actual_Position;  // Adopt current position as new setpoint
+            rPrev_Active_SP := Active_Setpoint;   // Hold until selected setpoint changes
         ELSIF fbHalt.Error THEN
             bExecHalt := FALSE;
             fbHalt(Axis := Axis, Execute := bExecHalt);  // Clear Execute cleanly
