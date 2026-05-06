@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="FB_CsvLogger" Id="{8a84e9fd-9a8f-453a-90ca-561ec719d60c}" SpecialFunc="None">
     <Declaration><![CDATA[(*
@@ -258,9 +258,10 @@ CASE eState OF
 
         (* Valve 1 *)
         CASE stValve[1].Source OF
-            E_CommandSource.MQTT: sSource := 'MQTT';
-            E_CommandSource.HMI:  sSource := 'HMI';
-            ELSE                sSource := 'NONE';
+            E_CommandSource.MQTT:   sSource := 'MQTT';
+            E_CommandSource.HMI:    sSource := 'HMI';
+            E_CommandSource.Manual: sSource := 'Manual';
+            ELSE                  sSource := 'NONE';
         END_CASE
         sLine := CONCAT(sLine, REAL_TO_STRING(stValve[1].Active_Setpoint));  sLine := CONCAT(sLine, ',');
         sLine := CONCAT(sLine, REAL_TO_STRING(stValve[1].Actual_Position));  sLine := CONCAT(sLine, ',');
@@ -269,9 +270,10 @@ CASE eState OF
 
         (* Valve 2 *)
         CASE stValve[2].Source OF
-            E_CommandSource.MQTT: sSource := 'MQTT';
-            E_CommandSource.HMI:  sSource := 'HMI';
-            ELSE                sSource := 'NONE';
+            E_CommandSource.MQTT:   sSource := 'MQTT';
+            E_CommandSource.HMI:    sSource := 'HMI';
+            E_CommandSource.Manual: sSource := 'Manual';
+            ELSE                  sSource := 'NONE';
         END_CASE
         sLine := CONCAT(sLine, REAL_TO_STRING(stValve[2].Active_Setpoint));  sLine := CONCAT(sLine, ',');
         sLine := CONCAT(sLine, REAL_TO_STRING(stValve[2].Actual_Position));  sLine := CONCAT(sLine, ',');
@@ -280,9 +282,10 @@ CASE eState OF
 
         (* Valve 3 *)
         CASE stValve[3].Source OF
-            E_CommandSource.MQTT: sSource := 'MQTT';
-            E_CommandSource.HMI:  sSource := 'HMI';
-            ELSE                sSource := 'NONE';
+            E_CommandSource.MQTT:   sSource := 'MQTT';
+            E_CommandSource.HMI:    sSource := 'HMI';
+            E_CommandSource.Manual: sSource := 'Manual';
+            ELSE                  sSource := 'NONE';
         END_CASE
         sLine := CONCAT(sLine, REAL_TO_STRING(stValve[3].Active_Setpoint));  sLine := CONCAT(sLine, ',');
         sLine := CONCAT(sLine, REAL_TO_STRING(stValve[3].Actual_Position));  sLine := CONCAT(sLine, ',');
