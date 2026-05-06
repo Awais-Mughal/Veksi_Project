@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="FB_MqttManager" Id="{a85faad5-c4ce-456e-ac7f-31861d0adeef}" SpecialFunc="None">
     <Declaration><![CDATA[(*
@@ -31,10 +31,9 @@ OUTGOING JSON (published to stConfig.sMainTopic):
 
 INCOMING JSON (subscribed from stConfig.SubscribeTopic):
   {
-    "Valve1": 50, "Valve2": 25, "Valve3": 75,
-    "Valve1_Enable": true, "Valve2_Enable": true, "Valve3_Enable": false
+    "Valve1": 50, "Valve2": 25, "Valve3": 75
   }
-  Setpoints are in % (0-100). ValveN_Enable gates MQTT override.
+  Setpoints are in % (0-100); command authority is selected system-wide in MAIN.
   Deserialized into ST_MQTT_Command via Beckhoff JSON parser.
 
 AUTO-SUBSCRIBE
@@ -64,7 +63,7 @@ VAR_INPUT
     (* System data for outgoing JSON *)
     rValveSetpoint      : ARRAY[1..3] OF REAL;      (* Active setpoints 0-100 %          *)
     rValveActual        : ARRAY[1..3] OF REAL;      (* Actual positions 0-100 %          *)
-    sValveSource        : ARRAY[1..3] OF STRING(8); (* 'HMI', 'MQTT', or 'NONE'          *)
+    sValveSource        : ARRAY[1..3] OF STRING(8); (* 'HMI', 'MQTT', 'Manual', or 'NONE'*)
     rTemperature_C      : REAL;             (* Temperature probe 1 in degrees C          *)
     rWaterLevel_pct     : REAL;             (* Water level 0-100 %                      *)
     rWaterLevel_mm      : REAL;             (* Water level in mm                        *)
@@ -81,7 +80,6 @@ VAR_OUTPUT
     (* Incoming command outputs *)
     bNewRemoteCommand       : BOOL;                     (* TRUE for one cycle on valid command  *)
     rMqttValveSetpoint      : ARRAY[1..3] OF REAL;      (* Parsed setpoints 0-100 %             *)
-    bMqttValveEnable        : ARRAY[1..3] OF BOOL;      (* Per-valve MQTT override enable        *)
 
     (* Last received message for diagnostics *)
     sLastRxTopic        : STRING(255);      (* Last received topic                       *)
@@ -308,10 +306,6 @@ WHILE fbMessageQueue.nQueuedMessages > 0 DO
             rMqttValveSetpoint[2] := LIMIT(0.0, DINT_TO_REAL(stCmdRecv.Valve2), 100.0);
             rMqttValveSetpoint[3] := LIMIT(0.0, DINT_TO_REAL(stCmdRecv.Valve3), 100.0);
 
-            (* Per-valve MQTT override enable *)
-            bMqttValveEnable[1] := stCmdRecv.Valve1_Enable; // will remove
-            bMqttValveEnable[2] := stCmdRecv.Valve2_Enable; // will remove
-            bMqttValveEnable[3] := stCmdRecv.Valve3_Enable; // will remove
 		
 		LastmsgRcv := SYSTEMTIME_TO_STRING(fbGetTime.systemTime);
 			
