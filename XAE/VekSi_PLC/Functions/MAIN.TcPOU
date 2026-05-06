@@ -115,19 +115,8 @@ END_IF
 GVL_System.Valve[1].MQTT_Setpoint := fbMqttManager.rMqttValveSetpoint[1];
 GVL_System.Valve[2].MQTT_Setpoint := fbMqttManager.rMqttValveSetpoint[2];
 GVL_System.Valve[3].MQTT_Setpoint := fbMqttManager.rMqttValveSetpoint[3];
-// Per-valve MQTT enable: master AND HMI checkbox AND command-level enable
-GVL_System.Valve[1].MQTT_Enabled :=
-    GVL_HMI.HMI_MQTT_bEnable AND
-    GVL_HMI.HMI_Valve1_MQTT_Enable AND
-    fbMqttManager.bMqttValveEnable[1];
-GVL_System.Valve[2].MQTT_Enabled :=
-    GVL_HMI.HMI_MQTT_bEnable AND
-    GVL_HMI.HMI_Valve2_MQTT_Enable AND
-    fbMqttManager.bMqttValveEnable[2];
-GVL_System.Valve[3].MQTT_Enabled :=
-    GVL_HMI.HMI_MQTT_bEnable AND
-    GVL_HMI.HMI_Valve3_MQTT_Enable AND
-    fbMqttManager.bMqttValveEnable[3];
+// MQTT authority is system-wide: HMI_MQTT_bEnable controls the connection,
+// and HMI_CommandSource selects whether MQTT commands drive all valves.
 
 // Command source arbitration — choose exactly one source before valve FB calls
 CASE GVL_HMI.HMI_CommandSource OF
@@ -138,15 +127,9 @@ CASE GVL_HMI.HMI_CommandSource OF
 
     E_CommandSource.MQTT:
         IF GVL_HMI.HMI_MQTT_bEnable AND GVL_System.MQTT_Connected THEN
-            IF GVL_System.Valve[1].MQTT_Enabled THEN
-                GVL_System.Valve[1].Active_Setpoint := GVL_System.Valve[1].MQTT_Setpoint;
-            END_IF
-            IF GVL_System.Valve[2].MQTT_Enabled THEN
-                GVL_System.Valve[2].Active_Setpoint := GVL_System.Valve[2].MQTT_Setpoint;
-            END_IF
-            IF GVL_System.Valve[3].MQTT_Enabled THEN
-                GVL_System.Valve[3].Active_Setpoint := GVL_System.Valve[3].MQTT_Setpoint;
-            END_IF
+            GVL_System.Valve[1].Active_Setpoint := GVL_System.Valve[1].MQTT_Setpoint;
+            GVL_System.Valve[2].Active_Setpoint := GVL_System.Valve[2].MQTT_Setpoint;
+            GVL_System.Valve[3].Active_Setpoint := GVL_System.Valve[3].MQTT_Setpoint;
         END_IF
 
     E_CommandSource.Manual:
