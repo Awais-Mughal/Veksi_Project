@@ -33,7 +33,6 @@ VAR_GLOBAL
     HMI_Valve1_Reset            : BOOL;             // HMI button: reset fault for valve 1
     HMI_Valve1_Stop             : BOOL;             // HMI button: halt valve 1 movement
     HMI_Valve1_Homing           : BOOL;             // HMI button: trigger re-homing valve 1
-    HMI_Valve1_MQTT_Enable      : BOOL;             // HMI checkbox: allow MQTT to command valve 1
     HMI_UPDATE                  : BOOL;             // HMI button: apply setpoint(s)
 
     ACT_Valve1_Position         : REAL;             // PLC output: actual position 0–100 %
@@ -52,7 +51,6 @@ VAR_GLOBAL
     HMI_Valve2_Reset            : BOOL;             // HMI button: reset fault for valve 2
     HMI_Valve2_Stop             : BOOL;             // HMI button: halt valve 2 movement
     HMI_Valve2_Homing           : BOOL;             // HMI button: trigger re-homing valve 2
-    HMI_Valve2_MQTT_Enable      : BOOL;             // HMI checkbox: allow MQTT to command valve 2
 
     ACT_Valve2_Position         : REAL;             // PLC output: actual position 0–100 %
     ACT_Valve2_State            : E_ValveState;     // PLC output: current state machine state
@@ -70,7 +68,6 @@ VAR_GLOBAL
     HMI_Valve3_Reset            : BOOL;             // HMI button: reset fault for valve 3
     HMI_Valve3_Stop             : BOOL;             // HMI button: halt valve 3 movement
     HMI_Valve3_Homing           : BOOL;             // HMI button: trigger re-homing valve 3
-    HMI_Valve3_MQTT_Enable      : BOOL;             // HMI checkbox: allow MQTT to command valve 3
 
     ACT_Valve3_Position         : REAL;             // PLC output: actual position 0–100 %
     ACT_Valve3_State            : E_ValveState;     // PLC output: current state machine state
@@ -93,7 +90,7 @@ VAR_GLOBAL
     // ══════════════════════════════════════════════════════════
     // MQTT CONTROL & STATUS
     // ══════════════════════════════════════════════════════════
-    HMI_MQTT_bEnable            : BOOL;             // HMI checkbox: master MQTT enable
+    HMI_MQTT_bEnable            : BOOL;             // HMI checkbox: system MQTT connection enable
     HMI_MQTT_mPublish           : BOOL;             // HMI button:   manual publish now
     HMI_MQTT_Config             : ST_MqttConfig;    // HMI panel:    broker configuration
     HMI_MQTT_ApplyConfig        : BOOL;             // HMI button:   apply config & reconnect
