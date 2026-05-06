@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <GVL Name="GVL_HMI" Id="{0e0ac9c9-f341-4ef2-89c2-f9614e406c1b}">
     <Declaration><![CDATA[(*
@@ -22,6 +22,11 @@ BINDING PATTERN (TcHMI)
 VAR_GLOBAL
 
     // ══════════════════════════════════════════════════════════
+    // COMMAND SOURCE SELECTION
+    // ══════════════════════════════════════════════════════════
+    HMI_CommandSource           : E_CommandSource := E_CommandSource.HMI; // HMI input: selected command source for all valves
+
+    // ══════════════════════════════════════════════════════════
     // VALVE 1 — HMI Interface
     // ══════════════════════════════════════════════════════════
     HMI_Valve1_Setpoint         : REAL;             // HMI input:  desired position 0–100 %
@@ -34,7 +39,7 @@ VAR_GLOBAL
     ACT_Valve1_Position         : REAL;             // PLC output: actual position 0–100 %
     ACT_Valve1_State            : E_ValveState;     // PLC output: current state machine state
     ACT_Valve1_Source           : E_CommandSource;    // PLC output: last command source enum
-    ACT_Valve1_SourceText       : STRING(8);        // PLC output: 'HMI', 'MQTT', or 'NONE'
+    ACT_Valve1_SourceText       : STRING(8);        // PLC output: 'HMI', 'MQTT', 'Manual', or 'NONE'
     ACT_Valve1_Fault            : BOOL;             // PLC output: fault active flag
     ACT_Valve1_FaultCode        : UDINT;            // PLC output: MC2 fault code
     Raw_Valve1_Setpoint         : LREAL;            // PLC output: active setpoint in mm
@@ -52,7 +57,7 @@ VAR_GLOBAL
     ACT_Valve2_Position         : REAL;             // PLC output: actual position 0–100 %
     ACT_Valve2_State            : E_ValveState;     // PLC output: current state machine state
     ACT_Valve2_Source           : E_CommandSource;    // PLC output: last command source enum
-    ACT_Valve2_SourceText       : STRING(8);        // PLC output: 'HMI', 'MQTT', or 'NONE'
+    ACT_Valve2_SourceText       : STRING(8);        // PLC output: 'HMI', 'MQTT', 'Manual', or 'NONE'
     ACT_Valve2_Fault            : BOOL;             // PLC output: fault active flag
     ACT_Valve2_FaultCode        : UDINT;            // PLC output: MC2 fault code
     Raw_Valve2_Setpoint         : LREAL;            // PLC output: active setpoint in mm
@@ -70,7 +75,7 @@ VAR_GLOBAL
     ACT_Valve3_Position         : REAL;             // PLC output: actual position 0–100 %
     ACT_Valve3_State            : E_ValveState;     // PLC output: current state machine state
     ACT_Valve3_Source           : E_CommandSource;    // PLC output: last command source enum
-    ACT_Valve3_SourceText       : STRING(8);        // PLC output: 'HMI', 'MQTT', or 'NONE'
+    ACT_Valve3_SourceText       : STRING(8);        // PLC output: 'HMI', 'MQTT', 'Manual', or 'NONE'
     ACT_Valve3_Fault            : BOOL;             // PLC output: fault active flag
     ACT_Valve3_FaultCode        : UDINT;            // PLC output: MC2 fault code
     Raw_Valve3_Setpoint         : LREAL;            // PLC output: active setpoint in mm
