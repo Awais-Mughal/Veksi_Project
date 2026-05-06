@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <DUT Name="ST_ValveData" Id="{cbd16f96-e975-4a78-8ab5-965d19f24af6}">
     <Declaration><![CDATA[
@@ -7,7 +7,8 @@ STRUCT
     // --- Setpoints (written by HMI or MQTT) ---
     HMI_Setpoint    : REAL;         // Position setpoint from HMI (0.0–100.0 %)
     MQTT_Setpoint   : REAL;         // Position setpoint from MQTT (0.0–100.0 %)
-    Active_Setpoint : REAL;         // Currently active setpoint (latest of HMI/MQTT)
+    Manual_Setpoint : REAL;         // Future local/manual position setpoint (0.0–100.0 %)
+    Active_Setpoint : REAL;         // Currently selected setpoint after source arbitration
 
     // --- Feedback (written by FB_ValveControl) ---
     Actual_Position : REAL;         // Actual valve position in % (from MC axis)
