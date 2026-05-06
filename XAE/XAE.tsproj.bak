@@ -2034,7 +2034,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{1DA7BD83-29A5-425E-BED6-F25BE9F7A34D}" Name="VekSi_PLC" PrjFilePath="VekSi_PLC\VekSi_PLC.plcproj" TmcFilePath="VekSi_PLC\VekSi_PLC.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{1AB785C2-7F6E-13DC-FD63-5E1D4C4114EA}" TmcPath="VekSi_PLC\VekSi_PLC.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{BB8B96FC-1673-9390-10BE-9CF09F14B10B}" TmcPath="VekSi_PLC\VekSi_PLC.tmc">
 					<Name>VekSi_PLC Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">

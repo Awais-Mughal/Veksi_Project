@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="MAIN" Id="{a0f99a09-eccb-42d8-b9bd-167b13d45a91}" SpecialFunc="None">
     <Declaration><![CDATA[(*
@@ -75,7 +75,7 @@ END_VAR
 // HMI-bound config struct. The operator can then edit any field
 // from the HMI MQTT panel and click Apply to reconnect.
 // ============================================================
-IF NOT bMqttConfigInit THEN
+(*IF NOT bMqttConfigInit THEN
     GVL_HMI.HMI_MQTT_Config.sBrokerAddress         := GVL_Config.MQTT_DEFAULT_BROKER_IP;
     GVL_HMI.HMI_MQTT_Config.nPort                  := GVL_Config.MQTT_DEFAULT_PORT;
     GVL_HMI.HMI_MQTT_Config.sClientId              := GVL_Config.MQTT_DEFAULT_CLIENT_ID;
@@ -88,7 +88,7 @@ IF NOT bMqttConfigInit THEN
     GVL_HMI.HMI_MQTT_Config.bUseStatusPublish      := TRUE;
    // bMqttConfigInit := TRUE;
 END_IF
-
+*)
 
 
 
@@ -111,10 +111,12 @@ IF GVL_HMI.HMI_ResetAll THEN
     GVL_System.Valve[3].Reset_Cmd := TRUE;
     GVL_HMI.HMI_ResetAll := FALSE;
 END_IF
+
 // MQTT setpoints from FB_MqttManager (parsed from incoming JSON)
 GVL_System.Valve[1].MQTT_Setpoint := fbMqttManager.rMqttValveSetpoint[1];
 GVL_System.Valve[2].MQTT_Setpoint := fbMqttManager.rMqttValveSetpoint[2];
 GVL_System.Valve[3].MQTT_Setpoint := fbMqttManager.rMqttValveSetpoint[3];
+
 // Per-valve MQTT enable: master AND HMI checkbox AND command-level enable
 GVL_System.Valve[1].MQTT_Enabled :=
     GVL_HMI.HMI_MQTT_bEnable AND
@@ -198,7 +200,6 @@ fbValve1(
     HomeVelocity     := GVL_Config.VALVE_HOMING_VELOCITY,
     FullStroke_mm    := GVL_Config.VALVE_FULL_STROKE_MM,
     PosTolerance     := GVL_Config.VALVE_POSITION_TOLERANCE,
-
     Actual_Position  => GVL_System.Valve[1].Actual_Position,
     State            => GVL_System.Valve[1].State,
     IsHomed          => GVL_System.Valve[1].IsHomed,
@@ -229,7 +230,6 @@ fbValve2(
     HomeVelocity     := GVL_Config.VALVE_HOMING_VELOCITY,
     FullStroke_mm    := GVL_Config.VALVE_FULL_STROKE_MM,
     PosTolerance     := GVL_Config.VALVE_POSITION_TOLERANCE,
-
     Actual_Position  => GVL_System.Valve[2].Actual_Position,
     State            => GVL_System.Valve[2].State,
     IsHomed          => GVL_System.Valve[2].IsHomed,
@@ -260,7 +260,6 @@ fbValve3(
     HomeVelocity     := GVL_Config.VALVE_HOMING_VELOCITY,
     FullStroke_mm    := GVL_Config.VALVE_FULL_STROKE_MM,
     PosTolerance     := GVL_Config.VALVE_POSITION_TOLERANCE,
-
     Actual_Position  => GVL_System.Valve[3].Actual_Position,
     State            => GVL_System.Valve[3].State,
     IsHomed          => GVL_System.Valve[3].IsHomed,
@@ -289,30 +288,6 @@ GVL_HMI.HMI_Valve3_Reset      := FALSE;
 // STEP 7 — BUILD TIMESTAMP STRING (YYYY-MM-DD HH:MM:SS)
 // Used for MQTT JSON and CSV row timestamps.
 // ============================================================
-(*fbSysTime(bEnable := TRUE, dwCycle := 1);
-
-sTimestamp := UINT_TO_STRING(fbSysTime.systemTime.wYear);
-sTimestamp := CONCAT(sTimestamp, '-');
-sTempStr   := UINT_TO_STRING(fbSysTime.systemTime.wMonth);
-IF fbSysTime.systemTime.wMonth < 10 THEN sTempStr := CONCAT('0', sTempStr); END_IF
-sTimestamp := CONCAT(sTimestamp, sTempStr);
-sTimestamp := CONCAT(sTimestamp, '-');
-sTempStr   := UINT_TO_STRING(fbSysTime.systemTime.wDay);
-IF fbSysTime.systemTime.wDay < 10 THEN sTempStr := CONCAT('0', sTempStr); END_IF
-sTimestamp := CONCAT(sTimestamp, sTempStr);
-sTimestamp := CONCAT(sTimestamp, ' ');
-sTempStr   := UINT_TO_STRING(fbSysTime.systemTime.wHour);
-IF fbSysTime.systemTime.wHour < 10 THEN sTempStr := CONCAT('0', sTempStr); END_IF
-sTimestamp := CONCAT(sTimestamp, sTempStr);
-sTimestamp := CONCAT(sTimestamp, ':');
-sTempStr   := UINT_TO_STRING(fbSysTime.systemTime.wMinute);
-IF fbSysTime.systemTime.wMinute < 10 THEN sTempStr := CONCAT('0', sTempStr); END_IF
-sTimestamp := CONCAT(sTimestamp, sTempStr);
-sTimestamp := CONCAT(sTimestamp, ':');
-sTempStr   := UINT_TO_STRING(fbSysTime.systemTime.wSecond);
-IF fbSysTime.systemTime.wSecond < 10 THEN sTempStr := CONCAT('0', sTempStr); END_IF
-sTimestamp := CONCAT(sTimestamp, sTempStr);
-*)
 
 // ============================================================
 // STEP 8 — MQTT MANAGER

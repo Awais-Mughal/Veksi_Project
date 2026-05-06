@@ -3,8 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\amughal23\\Documents\\TcXaeShell\\VekSi_Project_Claude\\Veksi_Project\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{1DA7BD83-29A5-425E-BED6-F25BE9F7A34D}|XAE\\VekSi_PLC\\VekSi_PLC.plcproj|C:\\Users\\amughal23\\Documents\\TcXaeShell\\VekSi_Project_Claude\\Veksi_Project\\XAE\\VekSi_PLC\\Variables_Lists\\GVL_HMI.TcGVL||{CFF47BB1-5559-4BDE-A2AF-06B30BC64F6C}",
+      "RelativeMoniker": "D:0:0:{1DA7BD83-29A5-425E-BED6-F25BE9F7A34D}|XAE\\VekSi_PLC\\VekSi_PLC.plcproj|solutionrelative:XAE\\VekSi_PLC\\Variables_Lists\\GVL_HMI.TcGVL||{CFF47BB1-5559-4BDE-A2AF-06B30BC64F6C}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{1DA7BD83-29A5-425E-BED6-F25BE9F7A34D}|XAE\\VekSi_PLC\\VekSi_PLC.plcproj|C:\\Users\\amughal23\\Documents\\TcXaeShell\\VekSi_Project_Claude\\Veksi_Project\\XAE\\VekSi_PLC\\Functions\\MAIN.TcPOU||{CFF47BB1-5559-4BDE-A2AF-06B30BC64F6C}",
       "RelativeMoniker": "D:0:0:{1DA7BD83-29A5-425E-BED6-F25BE9F7A34D}|XAE\\VekSi_PLC\\VekSi_PLC.plcproj|solutionrelative:XAE\\VekSi_PLC\\Functions\\MAIN.TcPOU||{CFF47BB1-5559-4BDE-A2AF-06B30BC64F6C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DA7BD83-29A5-425E-BED6-F25BE9F7A34D}|XAE\\VekSi_PLC\\VekSi_PLC.plcproj|C:\\Users\\amughal23\\Documents\\TcXaeShell\\VekSi_Project_Claude\\Veksi_Project\\XAE\\VekSi_PLC\\Functions\\FB_ValveControl.TcPOU||{CFF47BB1-5559-4BDE-A2AF-06B30BC64F6C}",
+      "RelativeMoniker": "D:0:0:{1DA7BD83-29A5-425E-BED6-F25BE9F7A34D}|XAE\\VekSi_PLC\\VekSi_PLC.plcproj|solutionrelative:XAE\\VekSi_PLC\\Functions\\FB_ValveControl.TcPOU||{CFF47BB1-5559-4BDE-A2AF-06B30BC64F6C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1DA7BD83-29A5-425E-BED6-F25BE9F7A34D}|XAE\\VekSi_PLC\\VekSi_PLC.plcproj|C:\\Users\\amughal23\\Documents\\TcXaeShell\\VekSi_Project_Claude\\Veksi_Project\\XAE\\VekSi_PLC\\Functions\\FB_CSVLogger.TcPOU||{CFF47BB1-5559-4BDE-A2AF-06B30BC64F6C}",
@@ -13,10 +21,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{1DA7BD83-29A5-425E-BED6-F25BE9F7A34D}|XAE\\VekSi_PLC\\VekSi_PLC.plcproj|C:\\Users\\amughal23\\Documents\\TcXaeShell\\VekSi_Project_Claude\\Veksi_Project\\XAE\\VekSi_PLC\\Functions\\FB_MqttManager.TcPOU||{CFF47BB1-5559-4BDE-A2AF-06B30BC64F6C}",
       "RelativeMoniker": "D:0:0:{1DA7BD83-29A5-425E-BED6-F25BE9F7A34D}|XAE\\VekSi_PLC\\VekSi_PLC.plcproj|solutionrelative:XAE\\VekSi_PLC\\Functions\\FB_MqttManager.TcPOU||{CFF47BB1-5559-4BDE-A2AF-06B30BC64F6C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1DA7BD83-29A5-425E-BED6-F25BE9F7A34D}|XAE\\VekSi_PLC\\VekSi_PLC.plcproj|C:\\Users\\amughal23\\Documents\\TcXaeShell\\VekSi_Project_Claude\\Veksi_Project\\XAE\\VekSi_PLC\\Functions\\FB_ValveControl.TcPOU||{CFF47BB1-5559-4BDE-A2AF-06B30BC64F6C}",
-      "RelativeMoniker": "D:0:0:{1DA7BD83-29A5-425E-BED6-F25BE9F7A34D}|XAE\\VekSi_PLC\\VekSi_PLC.plcproj|solutionrelative:XAE\\VekSi_PLC\\Functions\\FB_ValveControl.TcPOU||{CFF47BB1-5559-4BDE-A2AF-06B30BC64F6C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{55F8BF8A-D737-44FC-AF25-455A00DFB318}|HMI\\HMI.hmiproj|C:\\Users\\amughal23\\Documents\\TcXaeShell\\VekSi_Project_Claude\\Veksi_Project\\HMI\\Desktop.view||{5D9FBDFB-BFD6-4B5F-871D-4B35C4B2E6E2}|Html",
@@ -38,7 +42,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,7 +54,18 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 0,
+              "Title": "GVL_HMI",
+              "DocumentMoniker": "C:\\Users\\amughal23\\Documents\\TcXaeShell\\VekSi_Project_Claude\\Veksi_Project\\XAE\\VekSi_PLC\\Variables_Lists\\GVL_HMI.TcGVL",
+              "RelativeDocumentMoniker": "XAE\\VekSi_PLC\\Variables_Lists\\GVL_HMI.TcGVL",
+              "ToolTip": "GVL_HMI [XAE.VekSi_PLC]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-05-06T08:32:41.143Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "E_CommandSource",
               "DocumentMoniker": "C:\\Users\\amughal23\\Documents\\TcXaeShell\\VekSi_Project_Claude\\Veksi_Project\\XAE\\VekSi_PLC\\State_Var\\E_CommandSource.TcDUT",
               "RelativeDocumentMoniker": "XAE\\VekSi_PLC\\State_Var\\E_CommandSource.TcDUT",
@@ -61,7 +76,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "MAIN",
               "DocumentMoniker": "C:\\Users\\amughal23\\Documents\\TcXaeShell\\VekSi_Project_Claude\\Veksi_Project\\XAE\\VekSi_PLC\\Functions\\MAIN.TcPOU",
               "RelativeDocumentMoniker": "XAE\\VekSi_PLC\\Functions\\MAIN.TcPOU",
@@ -72,7 +87,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "FB_CsvLogger",
               "DocumentMoniker": "C:\\Users\\amughal23\\Documents\\TcXaeShell\\VekSi_Project_Claude\\Veksi_Project\\XAE\\VekSi_PLC\\Functions\\FB_CSVLogger.TcPOU",
               "RelativeDocumentMoniker": "XAE\\VekSi_PLC\\Functions\\FB_CSVLogger.TcPOU",
@@ -83,7 +98,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "FB_MqttManager",
               "DocumentMoniker": "C:\\Users\\amughal23\\Documents\\TcXaeShell\\VekSi_Project_Claude\\Veksi_Project\\XAE\\VekSi_PLC\\Functions\\FB_MqttManager.TcPOU",
               "RelativeDocumentMoniker": "XAE\\VekSi_PLC\\Functions\\FB_MqttManager.TcPOU",
@@ -94,7 +109,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "tchmipublish.config.json[HMI]",
               "DocumentMoniker": "C:\\Users\\amughal23\\Documents\\TcXaeShell\\VekSi_Project_Claude\\Veksi_Project\\HMI\\Properties\\tchmipublish.config.json",
               "RelativeDocumentMoniker": "HMI\\Properties\\tchmipublish.config.json",
@@ -105,7 +120,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "FB_ValveControl",
               "DocumentMoniker": "C:\\Users\\amughal23\\Documents\\TcXaeShell\\VekSi_Project_Claude\\Veksi_Project\\XAE\\VekSi_PLC\\Functions\\FB_ValveControl.TcPOU",
               "RelativeDocumentMoniker": "XAE\\VekSi_PLC\\Functions\\FB_ValveControl.TcPOU",
@@ -116,7 +131,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Desktop.view",
               "DocumentMoniker": "C:\\Users\\amughal23\\Documents\\TcXaeShell\\VekSi_Project_Claude\\Veksi_Project\\HMI\\Desktop.view",
               "RelativeDocumentMoniker": "HMI\\Desktop.view",
