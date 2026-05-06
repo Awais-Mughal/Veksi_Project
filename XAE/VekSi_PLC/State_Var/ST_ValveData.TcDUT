@@ -16,7 +16,6 @@ STRUCT
 
     // --- Command source tracking ---
     Source          : E_CommandSource;  // Who issued the last command
-    MQTT_Enabled    : BOOL;           // Allow MQTT to override this valve's setpoint
 
     // --- State machine status ---
     State           : E_ValveState;  // Current state of FB_ValveControl
