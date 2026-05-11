@@ -4,20 +4,46 @@
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
 	
-	AI_L1V11  			: INT	:= -999 ;	// AT %I* // Water Level Sensors
-	AI_L1V20  			: INT	:= -999 ;	// AT %I*
-	AI_L2V21  			: INT	:= -999 ;	// AT %I*
+	AI_L1V11  					: INT	:= -999 ;	// AT %I* // Water Level Sensors
+	AI_L1V20  					: INT	:= -999 ;	// AT %I*
+	AI_L2V21  					: INT	:= -999 ;	// AT %I*
 
-	AI_Tmp_1 			: INT	:= -999;	// AT %I*
-	AI_Tmp_2  			: INT	:= -999;	// AT %I*
+	AI_Tmp_1 					: INT	:= -999;	// AT %I*
+	AI_Tmp_2  					: INT	:= -999;	// AT %I*
 	
-	AI_PosFeedback_1	: INT	:= -999;	// AT %I* //Position feedback from the encoder
-	AI_PosFeedback_2	: INT	:= -999;	// AT %I*
-	AI_PosFeedback_3	: INT	:= -999;	// AT %I*
-	
+	AI_PosFeedback_1			: INT	:= -999;	// AT %I* //Position feedback from the encoder
+	AI_PosFeedback_2			: INT	:= -999;	// AT %I*
+	AI_PosFeedback_3			: INT	:= -999;	// AT %I*
 
 	bTop_position_1		AT %I*	: BOOL;
 	bBottom_position_1	AT %I*	: BOOL;
+	
+	///////need to add links later/////////////////
+	
+	bTop_position_2			: BOOL;
+	bBottom_position_2		: BOOL;
+	
+  	bTop_position_3			: BOOL;
+	bBottom_position_3		: BOOL;
+	// Local panel jog push buttons (physical inputs)
+	bValve1_JogUp_PB		: BOOL;
+	bValve1_JogDown_PB		: BOOL;
+	
+	bValve2_JogUp_PB		: BOOL;
+	bValve2_JogDown_PB		: BOOL;
+	
+	bValve3_JogUp_PB		: BOOL;
+	bValve3_JogDown_PB		: BOOL;
+	// Local panel jog indicator LEDs (physical outputs)
+	bValve1_JogUp_LED		: BOOL;
+	bValve1_JogDown_LED		: BOOL;
+	
+	bValve2_JogUp_LED		: BOOL;
+	bValve2_JogDown_LED		: BOOL;
+	
+	bValve3_JogUp_LED		: BOOL;
+	bValve3_JogDown_LED		: BOOL;
+	
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

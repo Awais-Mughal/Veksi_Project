@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="E_MQTTState" Id="{5960eb4c-81f6-48d4-b251-2ed964b447f0}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_MQTTState :
+(
+	DISABLED := 0,
+    CONNECTING := 1,
+    CONNECTED := 2,
+    DISCONNECTING := 3,
+    WAIT_RECONNECT := 4
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

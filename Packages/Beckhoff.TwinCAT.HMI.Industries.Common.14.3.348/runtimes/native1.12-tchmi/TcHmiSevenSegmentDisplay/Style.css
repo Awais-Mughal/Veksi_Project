@@ -1,0 +1,14 @@
+/* General theme independent control css. */
+
+.TcHmi_Controls_Beckhoff_Industries_Common_TcHmiSevenSegmentDisplay-template {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+.TcHmi_Controls_Beckhoff_Industries_Common_TcHmiSevenSegmentDisplay-invalid-notification {
+    position: absolute;
+    width: 30px; /* is used for internal calc*/
+    height: 30px; /* is used for internal calc*/
+}

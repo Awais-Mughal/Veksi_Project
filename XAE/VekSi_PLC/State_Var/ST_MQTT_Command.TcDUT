@@ -13,15 +13,10 @@ EXPECTED JSON FORMAT (publish to irrigation/command):
   {
     "Valve1": 50,
     "Valve2": 25,
-    "Valve3": 75,
-    "Valve1_Enable": true,
-    "Valve2_Enable": true,
-    "Valve3_Enable": false
+    "Valve3": 75
   }
 
   Valve setpoints are in percent (0–100).
-  ValveN_Enable = true  → MQTT is allowed to command that valve.
-  ValveN_Enable = false → that valve ignores MQTT setpoints.
   Omitting a field leaves its current value unchanged.
 
 NOTES
@@ -37,11 +32,6 @@ STRUCT
     Valve1          : DINT;     (* Desired position valve 1, 0–100 % *)
     Valve2          : DINT;     (* Desired position valve 2, 0–100 % *)
     Valve3          : DINT;     (* Desired position valve 3, 0–100 % *)
-
-    (* ── Per-valve MQTT override enable ─────────────────────── *)
-    Valve1_Enable   : BOOL;     (* TRUE = allow MQTT to command valve 1 *)
-    Valve2_Enable   : BOOL;     (* TRUE = allow MQTT to command valve 2 *)
-    Valve3_Enable   : BOOL;     (* TRUE = allow MQTT to command valve 3 *)
 END_STRUCT
 END_TYPE
 ]]></Declaration>

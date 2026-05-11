@@ -13722,6 +13722,165 @@
     "VideoSourceList": {
       "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiVideo.VideoSourceList"
     },
+    "TcHmi.Controls.Beckhoff.TcHmiEcDiagnostics": {
+      "$schema": "http://json-schema.org/draft-04/schema",
+      "type": "object",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkControlType": "TcHmiEcDiagnostics",
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff"
+    },
+    "TcHmiEcDiagnostics": {
+      "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiEcDiagnostics"
+    },
+    "TcHmi.Controls.Beckhoff.TcHmiEcDiagnostics.InitTopologyView": {
+      "title": "InitTopologyView",
+      "description": "Definition of cell options in the grid.",
+      "type": "object",
+      "propertiesMeta": [
+        {
+          "name": "posX",
+          "displayName": "Pos X",
+          "displayPriority": 10,
+          "description": "Default is zero. Set a number to adjust the initial horizontal translation of the topology view in pixels.",
+          "defaultValue": null,
+          "defaultValueInternal": null
+        },
+        {
+          "name": "posY",
+          "displayName": "Pos Y",
+          "displayPriority": 11,
+          "description": "Default is zero. Set a number to adjust the initial vertical translation of the topology view in pixels.",
+          "defaultValue": null,
+          "defaultValueInternal": null
+        },
+        {
+          "name": "zoom",
+          "displayName": "Zoom",
+          "displayPriority": 12,
+          "description": "Default is the calculated zoom factor so that the topology covers the available space. Set a number to adjust the initial zoom of the topology view. Zoom 100 renders a terminal with 400px x 100px.",
+          "defaultValue": null,
+          "defaultValueInternal": null
+        }
+      ],
+      "properties": {
+        "posX": {
+          "$ref": "tchmi:framework#/definitions/MeasurementValue"
+        },
+        "posY": {
+          "$ref": "tchmi:framework#/definitions/MeasurementValue"
+        },
+        "zoom": {
+          "$ref": "tchmi:framework#/definitions/MeasurementValue"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TcHmi.Controls.Beckhoff.Industries.Common.TcHmiDipSwitch": {
+      "$schema": "http://json-schema.org/draft-04/schema",
+      "type": "object",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkControlType": "TcHmiDipSwitch",
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff.Industries.Common"
+    },
+    "TcHmiDipSwitch": {
+      "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.Industries.Common.TcHmiDipSwitch"
+    },
+    "TcHmi.Controls.Beckhoff.Industries.Common.TapMode": {
+      "type": "string",
+      "enum": [
+        "Toggle",
+        "Tap"
+      ]
+    },
+    "TcHmi.Controls.Beckhoff.Industries.Common.TcHmiIndicatorLight": {
+      "type": "object",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkControlType": "TcHmiIndicatorLight",
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff.Industries.Common"
+    },
+    "TcHmiIndicatorLight": {
+      "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.Industries.Common.TcHmiIndicatorLight"
+    },
+    "TcHmi.Controls.Beckhoff.Industries.Common.TcHmiIndicatorLight.StateSymbol": {
+      "allOf": [
+        {
+          "$ref": "tchmi:framework#/definitions/Symbol"
+        },
+        {
+          "frameworkSymbolSubType": {
+            "$ref": "tchmi:general#/definitions/Boolean"
+          }
+        }
+      ]
+    },
+    "TcHmi.Controls.Beckhoff.Industries.Common.TcHmiPowerButton": {
+      "$schema": "http://json-schema.org/draft-04/schema",
+      "type": "object",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkControlType": "TcHmiPowerButton",
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff.Industries.Common"
+    },
+    "TcHmiPowerButton": {
+      "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.Industries.Common.TcHmiPowerButton"
+    },
+    "TcHmi.Controls.Beckhoff.Industries.Common.TcHmiPushButton": {
+      "$schema": "http://json-schema.org/draft-04/schema",
+      "type": "object",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkControlType": "TcHmiPushButton",
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff.Industries.Common"
+    },
+    "TcHmiPushButton": {
+      "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.Industries.Common.TcHmiPushButton"
+    },
+    "TcHmi.Controls.Beckhoff.Industries.Common.TcHmiRockerSwitch": {
+      "$schema": "http://json-schema.org/draft-04/schema",
+      "type": "object",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkControlType": "TcHmiRockerSwitch",
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff.Industries.Common"
+    },
+    "TcHmiRockerSwitch": {
+      "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.Industries.Common.TcHmiRockerSwitch"
+    },
+    "TcHmi.Controls.Beckhoff.Industries.Common.TcHmiRockerSwitch.Orientation": {
+      "type": "string",
+      "enum": [
+        "Vertical",
+        "Horizontal"
+      ]
+    },
+    "TcHmi.Controls.Beckhoff.Industries.Common.TcHmiRotarySwitch": {
+      "$schema": "http://json-schema.org/draft-04/schema",
+      "type": "object",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkControlType": "TcHmiRotarySwitch",
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff.Industries.Common"
+    },
+    "TcHmiRotarySwitch": {
+      "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.Industries.Common.TcHmiRotarySwitch"
+    },
+    "TcHmi.Controls.Beckhoff.Industries.Common.TcHmiSevenSegmentDisplay": {
+      "type": "object",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkControlType": "TcHmiSevenSegmentDisplay",
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff.Industries.Common"
+    },
+    "TcHmiSevenSegmentDisplay": {
+      "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.Industries.Common.TcHmiSevenSegmentDisplay"
+    },
+    "TcHmi.Controls.Beckhoff.Industries.Common.TcHmiSevenSegmentDisplay.ValueSymbol": {
+      "allOf": [
+        {
+          "$ref": "tchmi:framework#/definitions/Symbol"
+        },
+        {
+          "frameworkSymbolSubType": {
+            "$ref": "tchmi:general#/definitions/Number"
+          }
+        }
+      ]
+    },
     "TcHmi.Functions.Beckhoff.Increment.IncrementValueSymbol": {
       "allOf": [
         {

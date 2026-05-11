@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "definitions": {
+        "TcHmi.Controls.Beckhoff.Industries.Common.TcHmiRockerSwitch": {
+            "$schema": "http://json-schema.org/draft-04/schema",
+            "type": "object",
+            "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+            "frameworkControlType": "TcHmiRockerSwitch",
+            "frameworkControlNamespace": "TcHmi.Controls.Beckhoff.Industries.Common"
+        },
+        "TcHmiRockerSwitch": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.Industries.Common.TcHmiRockerSwitch"
+        },
+        "TcHmi.Controls.Beckhoff.Industries.Common.TcHmiRockerSwitch.Orientation": {
+            "type": "string",
+            "enum": ["Vertical", "Horizontal"]
+        }
+    }
+}

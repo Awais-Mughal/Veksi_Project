@@ -6,14 +6,15 @@
 {attribute 'to_string'}
 TYPE E_ValveState :
 (
-    INIT    := 0,   // Initializing, powering axis
-    HOMING  := 1,   // Performing homing sequence (MC_Home)
-    IDLE    := 2,   // At position, no active command
-    MOVING  := 3,   // MC_MoveAbsolute active, travelling to setpoint
-	HALT	:= 4,
-    HOLD    := 5,   // At setpoint, holding position
-    FAULT   := 6,   // Error state — MC error, drive fault, or limit breach
-    RESET   := 7    // Clearing fault, preparing to re-home
+    INIT    		:= 0,   // Initializing, powering axis
+    HOMING  		:= 1,   // Performing homing sequence (MC_Home)
+    IDLE    		:= 2,   // At position, no active command
+    MOVING  		:= 3,   // MC_MoveAbsolute active, travelling to setpoint
+	HALT			:= 4,
+    HOLD		    := 5,   // At setpoint, holding position
+    MANNUAL_JOG		:= 6, // Manual hardware-panel jog mode
+    FAULT   		:= 7,   // Error state — MC error, drive fault, or limit breach
+    RESET   		:= 8    // Clearing fault, preparing to re-home
 );
 END_TYPE
 ]]></Declaration>

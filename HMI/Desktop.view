@@ -1,39 +1,614 @@
-<div id="Desktop" data-tchmi-type="TcHmi.Controls.System.TcHmiView" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width-mode="Content" data-tchmi-min-width="100" data-tchmi-min-width-unit="%" data-tchmi-height-mode="Content" data-tchmi-min-height="100" data-tchmi-min-height-unit="%">
-  <div id="TcHmiNumericInput_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiNumericInput" data-tchmi-auto-focus-out="True" data-tchmi-decimal-digits="0" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="34" data-tchmi-left-unit="px" data-tchmi-reset-to-last-valid-value="True" data-tchmi-top="98" data-tchmi-top-unit="px" data-tchmi-value="0" data-tchmi-width="150" data-tchmi-width-unit="px">
+<div id="Desktop" data-tchmi-type="TcHmi.Controls.System.TcHmiView" data-tchmi-top="0" data-tchmi-left="5" data-tchmi-width-mode="Content" data-tchmi-min-width="100" data-tchmi-min-width-unit="%" data-tchmi-height-mode="Content" data-tchmi-min-height="100" data-tchmi-min-height-unit="%" data-tchmi-zindex="6">
+  <div id="TcHmiTextblock_4" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="202" data-tchmi-height-unit="px" data-tchmi-left="34" data-tchmi-left-unit="px" data-tchmi-top="295" data-tchmi-top-unit="px" data-tchmi-width="871" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text="%f%'Valve_1 State: ' + %s%ADS.PLC1.GVL_HMI.ACT_Valve1_State%/s%  + '		Valve_2 State: ' + %s%ADS.PLC1.GVL_HMI.ACT_Valve2_State%/s% +  '		Valve_3 State: ' +  %s%ADS.PLC1.GVL_HMI.ACT_Valve3_State%/s%+
+'\n\n 0_Init	1_Homing	2_Idle	3_Moving	4_Halt	5_Hold	6_Fault	7_Reset ' +
+
+'\n\nStroke Length: ' + %s%ADS.PLC1.GVL_Config.VALVE_FULL_STROKE_MM%/s% +
+'\n\nCSV-Logger State: ' + %s%ADS.PLC1.GVL_System.CSV_LoggerState%/s% +
+'\nLast row written at: ' + %s%ADS.PLC1.GVL_System.CSV_LastWriteTime%/s% +
+'\nCurrent_File: ' + %s%ADS.PLC1.GVL_System.CSV_CurrentFile%/s%
+%/f%" data-tchmi-text-font-size="15" data-tchmi-horizontal-scroll="Auto" data-tchmi-vertical-scroll="Auto" data-tchmi-ignore-escape-sequences="False" data-tchmi-text-font-style="Italic" data-tchmi-text-font-weight="Auto" data-tchmi-zindex="6">
+
+<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
+{
+  "left": 1,
+  "right": 1,
+  "top": 1,
+  "bottom": 1,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "Dashed",
+  "right": "Dashed",
+  "top": "Dashed",
+  "bottom": "Dashed"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(224, 244, 182, 1)"
+}
+</script>
+
 <script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
 {
-  "top": 3,
+  "left": 4,
+  "right": 4,
+  "top": 4,
+  "bottom": 4,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+</div>
+<div id="TcHmiFileExplorer_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiFileExplorer" data-tchmi-height="261" data-tchmi-height-unit="px" data-tchmi-left="611" data-tchmi-left-unit="px" data-tchmi-top="16" data-tchmi-top-unit="px" data-tchmi-width="294" data-tchmi-width-unit="px" data-tchmi-root="/Log Files" data-tchmi-zindex="6">
+</div>
+<div id="TcHmiButton_6" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="705" data-tchmi-left-unit="px" data-tchmi-text="Force Write Log" data-tchmi-top="313" data-tchmi-top-unit="px" data-tchmi-width="175" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.WriteTrigger%/s%" data-tchmi-zindex="6">
+</div>
+<div id="TcHmiDatagrid_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiDatagrid" data-tchmi-height="80" data-tchmi-height-unit="px" data-tchmi-left="34" data-tchmi-left-unit="px" data-tchmi-top="512" data-tchmi-top-unit="px" data-tchmi-width="531" data-tchmi-width-unit="px" data-tchmi-is-enabled="True" data-tchmi-is-read-only="False" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-src-column" type="application/json">
+[
+  {
+    "name": "Valve_1",
+    "label": "Valve_1",
+    "control": "TextBlock",
+    "width": 100,
+    "widthUnit": "px",
+    "resize": true,
+    "minWidth": 100,
+    "minWidthUnit": "px",
+    "editable": false,
+    "horizontalAlignment": "Center",
+    "verticalAlignment": "Center"
+  },
+  {
+    "name": "Valve_2",
+    "label": "Valve_2",
+    "control": "TextBlock",
+    "width": 100,
+    "widthUnit": "px",
+    "resize": true,
+    "minWidth": 100,
+    "minWidthUnit": "px",
+    "editable": false,
+    "horizontalAlignment": "Center",
+    "verticalAlignment": "Center",
+    "sortable": true
+  },
+  {
+    "name": "Valve_3",
+    "label": "Valve_3",
+    "control": "TextBlock",
+    "width": 100,
+    "widthUnit": "px",
+    "resize": true,
+    "minWidth": 100,
+    "minWidthUnit": "px",
+    "editable": false,
+    "horizontalAlignment": "Center",
+    "verticalAlignment": "Center",
+    "headerHorizontalAlignment": "Center",
+    "headerVerticalAlignment": "Center",
+    "ignoreEscapeSequences": false,
+    "autoFocusOut": true,
+    "autoSelectText": false,
+    "sortable": true
+  },
+  {
+    "name": "desc",
+    "label": "-",
+    "control": "TextBlock",
+    "width": 100,
+    "widthUnit": "px",
+    "resize": false,
+    "minWidth": 200,
+    "minWidthUnit": "px",
+    "editable": false,
+    "horizontalAlignment": "Left",
+    "verticalAlignment": "Center",
+    "headerHorizontalAlignment": "Center",
+    "headerVerticalAlignment": "Center",
+    "ignoreEscapeSequences": false,
+    "autoFocusOut": true,
+    "autoSelectText": false,
+    "sortable": true
+  }
+]
+</script>
+<script data-tchmi-target-attribute="data-tchmi-src-data" type="application/json">
+[
+  {
+    "Valve_1": "%s%ADS.PLC1.MAIN.fbMqttManager.rMqttValveSetpoint.0%/s%",
+    "Valve_2": "%s%ADS.PLC1.MAIN.fbMqttManager.rMqttValveSetpoint.1%/s%",
+    "Valve_3": "%s%ADS.PLC1.MAIN.fbMqttManager.rMqttValveSetpoint.2%/s%",
+    "desc": "%s%ADS.PLC1.GVL_HMI.ACT_MQTT_LastMsgRcvTime%/s%"
+  }
+]
+</script>
+<script data-tchmi-target-attribute="data-tchmi-cell-content-padding" type="application/json">
+{
+  "left": 3,
+  "leftUnit": "px",
   "right": 3,
-  "bottom": 3,
-  "left": 3
+  "rightUnit": "px",
+  "top": 0,
+  "topUnit": "px",
+  "bottom": 0,
+  "bottomUnit": "px"
 }
 </script>
 
 </div>
-<div id="TcHmiNumericInput_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiNumericInput" data-tchmi-auto-focus-out="True" data-tchmi-decimal-digits="0" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="34" data-tchmi-left-unit="px" data-tchmi-reset-to-last-valid-value="True" data-tchmi-top="141" data-tchmi-top-unit="px" data-tchmi-value="0" data-tchmi-width="150" data-tchmi-width-unit="px">
-<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+
+<!-- ============================================================
+     ADDED CONTROLS - Sensor displays, MQTT config, status indicators.
+     Open Desktop.view in TcHMI Engineering after import to position
+     these controls visually. All TcHMI properties are pre-bound.
+     ============================================================ -->
+
+<!-- Sensor labels and displays (water level, temperature) -->
+
+
+
+
+<!-- Per-valve source indicators (HMI / MQTT / NONE) -->
+
+<!-- Per-valve MQTT enable checkboxes -->
+<div id="TcHmiCheckbox_V1_MQTT" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiCheckBox" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="800" data-tchmi-left-unit="px" data-tchmi-top="98" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-text="MQTT" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_Valve1_MQTT_Enable%/s%" data-tchmi-zindex="6"></div>
+<div id="TcHmiCheckbox_V2_MQTT" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiCheckBox" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="800" data-tchmi-left-unit="px" data-tchmi-top="141" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-text="MQTT" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_Valve2_MQTT_Enable%/s%" data-tchmi-zindex="6"></div>
+<div id="TcHmiCheckbox_V3_MQTT" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiCheckBox" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="800" data-tchmi-left-unit="px" data-tchmi-top="185" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-text="MQTT" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_Valve3_MQTT_Enable%/s%" data-tchmi-zindex="6"></div>
+
+<!-- MQTT global enable + connection status -->
+<div id="TcHmiCheckbox_MQTT_Master" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiCheckBox" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="34" data-tchmi-left-unit="px" data-tchmi-top="470" data-tchmi-top-unit="px" data-tchmi-width="200" data-tchmi-width-unit="px" data-tchmi-text="Enable MQTT Commands" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_MQTT_bEnable%/s%" data-tchmi-zindex="6"></div>
+
+<!-- MQTT broker configuration panel -->
+
+
+
+
+
+
+<!-- Apply config + Manual publish buttons -->
+
+<!-- System ready indicator -->
+
+<!-- CSV logger enable + filename info -->
+<div id="TcHmiCheckbox_CSV_Enable" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiCheckBox" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="591" data-tchmi-left-unit="px" data-tchmi-top="345" data-tchmi-top-unit="px" data-tchmi-width="200" data-tchmi-width-unit="px" data-tchmi-text="CSV Logging Enabled" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_CSV_Enable%/s%" data-tchmi-zindex="6"></div>
+
+<div id="TcHmiTextblock_7" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="202" data-tchmi-height-unit="px" data-tchmi-left="29" data-tchmi-left-unit="px" data-tchmi-text="%f%'  MQTT Broker Address: ' +  %s%ADS.PLC1.GVL_Config.MQTT_DEFAULT_BROKER_IP%/s%   + ':' + %s%ADS.PLC1.GVL_Config.MQTT_DEFAULT_PORT%/s%   
+ 
+ + ' \n\n  MQTT state: ' +%s%ADS.PLC1.GVL_HMI.ACT_MQTT_State%/s% 
+
++ '\n\n  Topic Subscribed: ' + %s%ADS.PLC1.GVL_Config.MQTT_DEFAULT_SUB_TOPIC%/s%
+
++ '\n\n  Topic to Publish: ' + %s%ADS.PLC1.GVL_Config.MQTT_DEFAULT_MAIN_TOPIC%/s%
+
++ '\n\n  Last message log sent at: ' +  %s%ADS.PLC1.GVL_HMI.ACT_MQTT_LastMsgPubTime%/s%%/f%" data-tchmi-top="619" data-tchmi-top-unit="px" data-tchmi-width="614" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-font-size="15" data-tchmi-horizontal-scroll="Auto" data-tchmi-vertical-scroll="Auto" data-tchmi-text-font-style="Italic" data-tchmi-zindex="6">
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
 {
-  "top": 3,
-  "right": 3,
-  "bottom": 3,
-  "left": 3
+  "color": "rgba(224, 244, 182, 1)"
 }
 </script>
 
-</div>
-<div id="TcHmiNumericInput_3" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiNumericInput" data-tchmi-auto-focus-out="True" data-tchmi-decimal-digits="0" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="34" data-tchmi-left-unit="px" data-tchmi-reset-to-last-valid-value="True" data-tchmi-top="185" data-tchmi-top-unit="px" data-tchmi-value="0" data-tchmi-width="150" data-tchmi-width-unit="px">
-<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
 {
-  "top": 3,
-  "right": 3,
-  "bottom": 3,
-  "left": 3
+  "left": 1,
+  "right": 1,
+  "top": 1,
+  "bottom": 1,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
 }
 </script>
 
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "Dotted",
+  "right": "Dotted",
+  "top": "Dotted",
+  "bottom": "Dotted"
+}
+</script>
 </div>
-<div id="TcHmiTextblock_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="214" data-tchmi-left-unit="px" data-tchmi-top="98" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-text="%s%ADS.PLC1.GVL_HMI.ACT_Valve1_Position%/s%">
+<div id="TcHmiRadioButton_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRadioButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="29" data-tchmi-left-unit="px" data-tchmi-text="HMI" data-tchmi-top="843" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-radio-state="Active" data-tchmi-zindex="6" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.sHMI_mode|BindingMode=TwoWay|Interval=5%/s%">
 
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onStateChanged",
+    "actions": []
+  },
+  {
+    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onRadioStateChanged",
+    "actions": [
+      {
+        "objectType": "Condition",
+        "active": true,
+        "parts": [
+          {
+            "if": [
+              {
+                "compare1": {
+                  "objectType": "Symbol",
+                  "valueType": "tchmi:framework#/definitions/ToggleState",
+                  "symbolExpression": "%ctrl%TcHmiRadioButton_1::RadioState%/ctrl%"
+                },
+                "compare2": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/ToggleState",
+                  "value": "Active"
+                },
+                "compareOperator": "==",
+                "logic": null
+              }
+            ],
+            "then": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%TcHmiContainer_1::IsEnabled%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/Boolean",
+                  "value": true
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "else": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%TcHmiContainer_1::IsEnabled%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/Boolean",
+                  "value": false
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  },
+  {
+    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onMouseClick",
+    "actions": [
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%s%ADS.PLC1.GVL_HMI.HMI_CommandSource%/s%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:server#/definitions/ADS-PLC1.E_CommandSource",
+          "value": 0
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiRadioButton_3::RadioState%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/ToggleState",
+          "value": "Normal"
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiRadioButton_2::RadioState%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/ToggleState",
+          "value": "Normal"
+        },
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+<div id="TcHmiRadioButton_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRadioButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="139" data-tchmi-left-unit="px" data-tchmi-text="MQTT" data-tchmi-top="843" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-zindex="6" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.sMqtt_mode|BindingMode=TwoWay|Interval=5%/s%">
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onStateChanged",
+    "actions": []
+  },
+  {
+    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onRadioStateChanged",
+    "actions": [
+      {
+        "objectType": "Condition",
+        "active": true,
+        "parts": [
+          {
+            "if": [
+              {
+                "compare1": {
+                  "objectType": "Symbol",
+                  "valueType": "tchmi:framework#/definitions/ToggleState",
+                  "symbolExpression": "%ctrl%TcHmiRadioButton_2::RadioState%/ctrl%"
+                },
+                "compare2": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/ToggleState",
+                  "value": "Active"
+                },
+                "compareOperator": "==",
+                "logic": null
+              }
+            ],
+            "then": []
+          },
+          {
+            "else": []
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  },
+  {
+    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onMouseClick",
+    "actions": [
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%s%ADS.PLC1.GVL_HMI.HMI_CommandSource%/s%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:server#/definitions/ADS-PLC1.E_CommandSource",
+          "value": 1
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiRadioButton_3::RadioState%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/ToggleState",
+          "value": "Normal"
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiRadioButton_1::RadioState%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/ToggleState",
+          "value": "Normal"
+        },
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+<div id="TcHmiRadioButton_3" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRadioButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="249" data-tchmi-left-unit="px" data-tchmi-text="Mannual" data-tchmi-top="843" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-zindex="6" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.sMannual_mode|BindingMode=TwoWay|Interval=5%/s%">
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onRadioStateChanged",
+    "actions": [
+      {
+        "objectType": "Condition",
+        "active": true,
+        "parts": [
+          {
+            "if": [
+              {
+                "compare1": {
+                  "objectType": "Symbol",
+                  "valueType": "tchmi:framework#/definitions/ToggleState",
+                  "symbolExpression": "%ctrl%TcHmiRadioButton_3::RadioState%/ctrl%"
+                },
+                "compare2": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/ToggleState",
+                  "value": "Active"
+                },
+                "compareOperator": "==",
+                "logic": null
+              }
+            ],
+            "then": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%TcHmiContainer_3::IsEnabled%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/Boolean",
+                  "value": true
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "else": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%TcHmiContainer_3::IsEnabled%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/Boolean",
+                  "value": false
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  },
+  {
+    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onStateChanged",
+    "actions": []
+  },
+  {
+    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onMouseClick",
+    "actions": [
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%s%ADS.PLC1.GVL_HMI.HMI_CommandSource%/s%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:server#/definitions/ADS-PLC1.E_CommandSource",
+          "value": 2
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiRadioButton_1::RadioState%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/ToggleState",
+          "value": "Normal"
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiRadioButton_2::RadioState%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/ToggleState",
+          "value": "Normal"
+        },
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+<div id="TcHmiButton_11" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="28" data-tchmi-height-unit="px" data-tchmi-left="456" data-tchmi-left-unit="px" data-tchmi-text="Send MQTT Log" data-tchmi-top="637" data-tchmi-top-unit="px" data-tchmi-width="160" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_MQTT_mPublish%/s%" data-tchmi-zindex="6">
+</div>
+<div id="TcHmiButton_10" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="28" data-tchmi-height-unit="px" data-tchmi-left="456" data-tchmi-left-unit="px" data-tchmi-text="MQTT Enable/Disable" data-tchmi-top="675" data-tchmi-top-unit="px" data-tchmi-width="160" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onMouseClick",
+    "actions": [
+      {
+        "objectType": "Condition",
+        "active": true,
+        "parts": [
+          {
+            "if": [
+              {
+                "compare1": {
+                  "objectType": "Symbol",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "symbolExpression": "%s%ADS.PLC1.GVL_HMI.HMI_MQTT_bEnable%/s%"
+                },
+                "compare2": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "value": false
+                },
+                "compareOperator": "==",
+                "logic": null
+              }
+            ],
+            "then": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%s%ADS.PLC1.GVL_HMI.HMI_MQTT_bEnable%/s%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "value": true
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "else": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%s%ADS.PLC1.GVL_HMI.HMI_MQTT_bEnable%/s%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "value": false
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+<div id="TcHmiContainer_2" data-tchmi-type="TcHmi.Controls.System.TcHmiContainer" data-tchmi-height="168" data-tchmi-height-unit="px" data-tchmi-left="217" data-tchmi-left-unit="px" data-tchmi-top="59" data-tchmi-top-unit="px" data-tchmi-width="182" data-tchmi-width-unit="px" data-tchmi-zindex="3">
+<div id="TcHmiTextblock_6" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="14" data-tchmi-left-unit="px" data-tchmi-text="Actual_Position" data-tchmi-top="5" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
+{
+  "left": 1,
+  "right": 1,
+  "top": 1,
+  "bottom": 1,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "Solid",
+  "right": "Solid",
+  "top": "Solid",
+  "bottom": "Solid"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="14" data-tchmi-left-unit="px" data-tchmi-top="41" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-text="%f%Number(%s%ADS.PLC1.GVL_HMI.ACT_Valve1_Position%/s%).toFixed(1) + ' %'  + ',  ' + %s%ADS.PLC1.GVL_HMI.ACT_Valve1_SourceText%/s%%/f%" data-tchmi-is-enabled="True" data-tchmi-zindex="6">
 <script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
 {
   "left": 1,
@@ -123,8 +698,8 @@
 
 
 </div>
-<div id="TcHmiTextblock_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="214" data-tchmi-left-unit="px" data-tchmi-text="%s%ADS.PLC1.GVL_HMI.ACT_Valve2_Position%/s%" data-tchmi-top="141" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center">
-
+<div id="TcHmiTextblock_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="14" data-tchmi-left-unit="px" data-tchmi-text="%f%Number(%s%ADS.PLC1.GVL_HMI.ACT_Valve2_Position%/s%).toFixed(1) + ' %' + ',  ' +%s%ADS.PLC1.GVL_HMI.ACT_Valve2_SourceText%/s%
+%/f%" data-tchmi-top="84" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-zindex="6">
 <script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
 {
   "left": 1,
@@ -147,8 +722,7 @@
 }
 </script>
 </div>
-<div id="TcHmiTextblock_3" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="214" data-tchmi-left-unit="px" data-tchmi-text="%s%ADS.PLC1.GVL_HMI.ACT_Valve3_Position%/s%" data-tchmi-top="185" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center">
-
+<div id="TcHmiTextblock_3" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="14" data-tchmi-left-unit="px" data-tchmi-text="%f%Number(%s%ADS.PLC1.GVL_HMI.ACT_Valve3_Position%/s%).toFixed(1) + ' %' + ',  ' +%s%ADS.PLC1.GVL_HMI.ACT_Valve3_SourceText%/s%%/f%" data-tchmi-top="128" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-zindex="6">
 <script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
 {
   "left": 1,
@@ -171,8 +745,104 @@
 }
 </script>
 </div>
-<div id="TcHmiButton_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="23" data-tchmi-height-unit="px" data-tchmi-left="122" data-tchmi-left-unit="px" data-tchmi-text="Update" data-tchmi-top="228" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_UPDATE%/s%">
+<div id="TcHmiContainer_1" data-tchmi-type="TcHmi.Controls.System.TcHmiContainer" data-tchmi-height="261" data-tchmi-height-unit="px" data-tchmi-left="-195" data-tchmi-left-unit="px" data-tchmi-top="-43" data-tchmi-top-unit="px" data-tchmi-width="579" data-tchmi-width-unit="px" data-tchmi-is-enabled="True" data-tchmi-zindex="5">
+<div id="TcHmiNumericInput_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiNumericInput" data-tchmi-auto-focus-out="True" data-tchmi-decimal-digits="1" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="29" data-tchmi-left-unit="px" data-tchmi-reset-to-last-valid-value="True" data-tchmi-top="84" data-tchmi-top-unit="px" data-tchmi-value="%s%ADS.PLC1.GVL_HMI.HMI_Valve1_Setpoint%/s%" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-zindex="6" data-tchmi-min-value="0" data-tchmi-max-value="100">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
 
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onValueChanged",
+    "actions": [
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%s%ADS.PLC1.GVL_HMI.HMI_Valve1_Setpoint%/s%",
+        "value": {
+          "objectType": "Symbol",
+          "valueType": "tchmi:general#/definitions/REAL",
+          "symbolExpression": "%ctrl%TcHmiNumericInput_1::Value%/ctrl%"
+        },
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+<div id="TcHmiNumericInput_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiNumericInput" data-tchmi-auto-focus-out="True" data-tchmi-decimal-digits="1" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="29" data-tchmi-left-unit="px" data-tchmi-reset-to-last-valid-value="True" data-tchmi-top="127" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-zindex="6" data-tchmi-value="%s%ADS.PLC1.GVL_HMI.HMI_Valve2_Setpoint%/s%" data-tchmi-decimal-precision-mode="Round">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onValueChanged",
+    "actions": [
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%s%ADS.PLC1.GVL_HMI.HMI_Valve2_Setpoint%/s%",
+        "value": {
+          "objectType": "Symbol",
+          "valueType": "tchmi:general#/definitions/REAL",
+          "symbolExpression": "%ctrl%TcHmiNumericInput_2::Value%/ctrl%"
+        },
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+<div id="TcHmiNumericInput_3" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiNumericInput" data-tchmi-auto-focus-out="True" data-tchmi-decimal-digits="1" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="29" data-tchmi-left-unit="px" data-tchmi-reset-to-last-valid-value="True" data-tchmi-top="171" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-zindex="6" data-tchmi-placeholder="Enter Setpoint" data-tchmi-value="%s%ADS.PLC1.GVL_HMI.HMI_Valve3_Setpoint%/s%">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onValueChanged",
+    "actions": [
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%s%ADS.PLC1.GVL_HMI.HMI_Valve3_Setpoint%/s%",
+        "value": {
+          "objectType": "Symbol",
+          "valueType": "tchmi:general#/definitions/REAL",
+          "symbolExpression": "%ctrl%TcHmiNumericInput_3::Value%/ctrl%"
+        },
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+<div id="TcHmiButton_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="23" data-tchmi-height-unit="px" data-tchmi-left="117" data-tchmi-left-unit="px" data-tchmi-text="Update" data-tchmi-top="214" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_UPDATE%/s%" data-tchmi-zindex="6">
 <script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
 [
   {
@@ -216,20 +886,21 @@
 ]
 </script>
 </div>
-<div id="TcHmiButton_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="395" data-tchmi-left-unit="px" data-tchmi-text="Stop" data-tchmi-top="98" data-tchmi-top-unit="px" data-tchmi-width="51" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_Valve1_Stop%/s%">
+<div id="TcHmiButton_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="418" data-tchmi-left-unit="px" data-tchmi-text="Stop" data-tchmi-top="86" data-tchmi-top-unit="px" data-tchmi-width="51" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_Valve1_Stop%/s%" data-tchmi-zindex="6">
 </div>
-<div id="TcHmiButton_3" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="395" data-tchmi-left-unit="px" data-tchmi-text="Stop" data-tchmi-top="141" data-tchmi-top-unit="px" data-tchmi-width="51" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_Valve2_Stop%/s%">
+<div id="TcHmiButton_3" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="418" data-tchmi-left-unit="px" data-tchmi-text="Stop" data-tchmi-top="127" data-tchmi-top-unit="px" data-tchmi-width="51" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_Valve2_Stop%/s%" data-tchmi-zindex="6">
 </div>
-<div id="TcHmiButton_4" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="395" data-tchmi-left-unit="px" data-tchmi-text="Stop" data-tchmi-top="185" data-tchmi-top-unit="px" data-tchmi-width="51" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_Valve3_Stop%/s%">
+<div id="TcHmiButton_4" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="418" data-tchmi-left-unit="px" data-tchmi-text="Stop" data-tchmi-top="171" data-tchmi-top-unit="px" data-tchmi-width="51" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_Valve3_Stop%/s%" data-tchmi-zindex="6">
 </div>
-<div id="TcHmiTextblock_4" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="202" data-tchmi-height-unit="px" data-tchmi-left="34" data-tchmi-left-unit="px" data-tchmi-top="295" data-tchmi-top-unit="px" data-tchmi-width="756" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text="%f%'Valve_1 State: ' + %s%ADS.PLC1.GVL_HMI.ACT_Valve1_State%/s% + '		Valve_2 State: ' + %s%ADS.PLC1.GVL_HMI.ACT_Valve2_State%/s% +  '		Valve_3 State: ' + %s%ADS.PLC1.GVL_HMI.ACT_Valve3_State%/s% +
-'\n\n 0_Init	1_Homing	2_Idle	3_Moving	4_Halt	5_Hold	6_Fault	7_Reset ' +
-
-'\n\nStroke Length: ' + %s%ADS.PLC1.GVL_Config.VALVE_FULL_STROKE_MM%/s% +
-'\n\nCSV-Logger State: ' + %s%ADS.PLC1.GVL_System.CSV_LoggerState%/s% +
-'\nLast row written at: ' + %s%ADS.PLC1.GVL_System.CSV_LastWriteTime%/s% +
-'\nCurrent_File: ' + %s%ADS.PLC1.GVL_System.CSV_CurrentFile%/s%
-%/f%" data-tchmi-text-font-size="15" data-tchmi-horizontal-scroll="Auto" data-tchmi-vertical-scroll="Auto" data-tchmi-ignore-escape-sequences="False" data-tchmi-text-font-style="Italic" data-tchmi-text-font-weight="Auto">
+<div id="TcHmiTextblock_5" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="29" data-tchmi-left-unit="px" data-tchmi-text="Position_Setpoint" data-tchmi-top="48" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "Solid",
+  "right": "Solid",
+  "top": "Solid",
+  "bottom": "Solid"
+}
+</script>
 
 <script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
 {
@@ -243,45 +914,113 @@
   "bottomUnit": "px"
 }
 </script>
-
-<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+</div>
+<div id="TcHmiButton_5" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="23" data-tchmi-height-unit="px" data-tchmi-left="341" data-tchmi-left-unit="px" data-tchmi-text="Reset" data-tchmi-top="214" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_ResetAll%/s%" data-tchmi-zindex="6">
+</div>
+<div id="TcHmiButton_7" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="484" data-tchmi-left-unit="px" data-tchmi-text="Homing" data-tchmi-top="86" data-tchmi-top-unit="px" data-tchmi-width="74" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_Valve1_Homing%/s%" data-tchmi-zindex="6">
+</div>
+<div id="TcHmiButton_8" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="484" data-tchmi-left-unit="px" data-tchmi-text="Homing" data-tchmi-top="127" data-tchmi-top-unit="px" data-tchmi-width="74" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_Valve2_Homing%/s%" data-tchmi-zindex="6">
+</div>
+<div id="TcHmiButton_9" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="484" data-tchmi-left-unit="px" data-tchmi-text="Homing" data-tchmi-top="171" data-tchmi-top-unit="px" data-tchmi-width="74" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_Valve3_Homing%/s%" data-tchmi-zindex="6" data-tchmi-is-enabled="True">
+</div>
+<div id="TcHmiIndicatorLight_1" data-tchmi-type="TcHmi.Controls.Beckhoff.Industries.Common.TcHmiIndicatorLight" data-tchmi-height="14" data-tchmi-height-unit="px" data-tchmi-left="5" data-tchmi-left-unit="px" data-tchmi-top="86" data-tchmi-top-unit="px" data-tchmi-width="19" data-tchmi-width-unit="px" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_IO.bTop_position_1%/s%" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-active-color" type="application/json">
 {
-  "left": "Dashed",
-  "right": "Dashed",
-  "top": "Dashed",
-  "bottom": "Dashed"
+  "color": "rgba(244, 12, 12, 1)"
 }
 </script>
+</div>
+</div>
+</div>
 
+
+
+
+<div id="TcHmiContainer_3" data-tchmi-type="TcHmi.Controls.System.TcHmiContainer" data-tchmi-height="231" data-tchmi-height-unit="px" data-tchmi-left="29" data-tchmi-left-unit="px" data-tchmi-top="907" data-tchmi-top-unit="px" data-tchmi-width="589" data-tchmi-width-unit="px" data-tchmi-zindex="7">
+<div id="TcHmiButton_12" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="50" data-tchmi-height-unit="px" data-tchmi-left="47" data-tchmi-left-unit="px" data-tchmi-top="44" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-icon="Images/angles-up-solid-full.svg" data-tchmi-zindex="3" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_IO.bValve1_JogUp_PB%/s%">
 <script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
 {
-  "color": "rgba(224, 244, 182, 1)"
+  "color": "None"
 }
 </script>
 
-<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+<script data-tchmi-target-attribute="data-tchmi-border-color" type="application/json">
 {
-  "left": 4,
-  "right": 4,
-  "top": 4,
-  "bottom": 4,
-  "leftUnit": "px",
-  "rightUnit": "px",
-  "topUnit": "px",
-  "bottomUnit": "px"
+  "color": "None"
 }
 </script>
 </div>
-<div id="TcHmiTextblock_5" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="34" data-tchmi-left-unit="px" data-tchmi-text="Position_Setpoint" data-tchmi-top="62" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center">
-
-<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+<div id="TcHmiButton_13" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="50" data-tchmi-height-unit="px" data-tchmi-left="47" data-tchmi-left-unit="px" data-tchmi-top="140" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-background-image="Images/angles-down-solid-full.svg" data-tchmi-zindex="3" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_IO.bValve1_JogDown_PB%/s%">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
 {
-  "left": "Solid",
-  "right": "Solid",
-  "top": "Solid",
-  "bottom": "Solid"
+  "color": "None"
 }
 </script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-color" type="application/json">
+{
+  "color": "None"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_8" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="30" data-tchmi-left-unit="px" data-tchmi-text="Valve_1" data-tchmi-top="104" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="16" data-tchmi-zindex="3">
+</div>
+<div id="TcHmiButton_14" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="50" data-tchmi-height-unit="px" data-tchmi-left="236" data-tchmi-left-unit="px" data-tchmi-top="44" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-icon="Images/angles-up-solid-full.svg" data-tchmi-zindex="3" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_IO.bValve2_JogUp_PB%/s%">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "None"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-color" type="application/json">
+{
+  "color": "None"
+}
+</script>
+</div>
+<div id="TcHmiButton_15" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="50" data-tchmi-height-unit="px" data-tchmi-left="236" data-tchmi-left-unit="px" data-tchmi-top="140" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-background-image="Images/angles-down-solid-full.svg" data-tchmi-zindex="3" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_IO.bValve2_JogDown_PB%/s%">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "None"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-color" type="application/json">
+{
+  "color": "None"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_9" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="214" data-tchmi-left-unit="px" data-tchmi-text="Valve_2" data-tchmi-top="104" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="16" data-tchmi-zindex="3">
+</div>
+<div id="TcHmiButton_16" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="50" data-tchmi-height-unit="px" data-tchmi-left="419" data-tchmi-left-unit="px" data-tchmi-top="44" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-icon="Images/angles-up-solid-full.svg" data-tchmi-zindex="3" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_IO.bValve3_JogUp_PB%/s%">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "None"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-color" type="application/json">
+{
+  "color": "None"
+}
+</script>
+</div>
+<div id="TcHmiButton_17" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="50" data-tchmi-height-unit="px" data-tchmi-left="419" data-tchmi-left-unit="px" data-tchmi-top="140" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-background-image="Images/angles-down-solid-full.svg" data-tchmi-zindex="3" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_IO.bValve3_JogDown_PB%/s%">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "None"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-color" type="application/json">
+{
+  "color": "None"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_10" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="398" data-tchmi-left-unit="px" data-tchmi-text="Valve_3" data-tchmi-top="104" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="16" data-tchmi-zindex="3">
+</div>
 
 <script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
 {
@@ -295,21 +1034,6 @@
   "bottomUnit": "px"
 }
 </script>
-</div>
-<div id="TcHmiTextblock_6" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="214" data-tchmi-left-unit="px" data-tchmi-text="Actual_Position" data-tchmi-top="62" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center">
-
-<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
-{
-  "left": 1,
-  "right": 1,
-  "top": 1,
-  "bottom": 1,
-  "leftUnit": "px",
-  "rightUnit": "px",
-  "topUnit": "px",
-  "bottomUnit": "px"
-}
-</script>
 
 <script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
 {
@@ -319,158 +1043,49 @@
   "bottom": "Solid"
 }
 </script>
-</div>
-<div id="TcHmiFileExplorer_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiFileExplorer" data-tchmi-height="261" data-tchmi-height-unit="px" data-tchmi-left="569" data-tchmi-left-unit="px" data-tchmi-top="18" data-tchmi-top-unit="px" data-tchmi-width="319" data-tchmi-width-unit="px" data-tchmi-root="/Log Files">
-</div>
-<div id="TcHmiButton_5" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="23" data-tchmi-height-unit="px" data-tchmi-left="346" data-tchmi-left-unit="px" data-tchmi-text="Reset" data-tchmi-top="228" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_ResetAll%/s%">
-</div>
-<div id="TcHmiButton_6" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="591" data-tchmi-left-unit="px" data-tchmi-text="Force Write Log" data-tchmi-top="307" data-tchmi-top-unit="px" data-tchmi-width="175" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.WriteTrigger%/s%">
-</div>
-<div id="TcHmiButton_7" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="467" data-tchmi-left-unit="px" data-tchmi-text="Homing" data-tchmi-top="98" data-tchmi-top-unit="px" data-tchmi-width="74" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_Valve1_Homing%/s%">
-</div>
-<div id="TcHmiButton_8" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="467" data-tchmi-left-unit="px" data-tchmi-text="Homing" data-tchmi-top="141" data-tchmi-top-unit="px" data-tchmi-width="74" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_Valve2_Homing%/s%">
-</div>
-<div id="TcHmiButton_9" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="467" data-tchmi-left-unit="px" data-tchmi-text="Homing" data-tchmi-top="185" data-tchmi-top-unit="px" data-tchmi-width="74" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_Valve3_Homing%/s%">
-</div>
-<div id="TcHmiDatagrid_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiDatagrid" data-tchmi-height="200" data-tchmi-height-unit="px" data-tchmi-left="905" data-tchmi-left-unit="px" data-tchmi-top="18" data-tchmi-top-unit="px" data-tchmi-width="370" data-tchmi-width-unit="px" data-tchmi-is-enabled="True" data-tchmi-is-read-only="False">
-<script data-tchmi-target-attribute="data-tchmi-src-column" type="application/json">
-[
-  {
-    "name": "Valve_1",
-    "label": "Valve_1",
-    "control": "TextBlock",
-    "width": 70,
-    "widthUnit": "px",
-    "resize": true,
-    "minWidth": 100,
-    "minWidthUnit": "px",
-    "editable": false,
-    "horizontalAlignment": "Center",
-    "verticalAlignment": "Center"
-  },
-  {
-    "name": "Valve_2",
-    "label": "Valve_2",
-    "control": "TextBlock",
-    "width": 70,
-    "widthUnit": "px",
-    "resize": true,
-    "minWidth": 70,
-    "minWidthUnit": "px",
-    "editable": false,
-    "horizontalAlignment": "Center",
-    "verticalAlignment": "Center",
-    "sortable": true
-  },
-  {
-    "name": "Valve_3",
-    "label": "Valve_3",
-    "control": "TextBlock",
-    "width": 100,
-    "widthUnit": "px",
-    "resize": true,
-    "minWidth": 70,
-    "minWidthUnit": "px",
-    "editable": false,
-    "horizontalAlignment": "Center",
-    "verticalAlignment": "Center",
-    "headerHorizontalAlignment": "Center",
-    "headerVerticalAlignment": "Center",
-    "ignoreEscapeSequences": false,
-    "autoFocusOut": true,
-    "autoSelectText": false,
-    "sortable": true
-  }
-]
-</script>
-<script data-tchmi-target-attribute="data-tchmi-src-data" type="application/json">
-[
-  {
-    "Valve_1": "%s%ADS.PLC1.MAIN.fbMqttManager.rMqttValveSetpoint.0%/s%",
-    "Valve_2": "%s%ADS.PLC1.MAIN.fbMqttManager.rMqttValveSetpoint.1%/s%",
-    "Valve_3": "%s%ADS.PLC1.MAIN.fbMqttManager.rMqttValveSetpoint.2%/s%"
-  }
-]
-</script>
-<script data-tchmi-target-attribute="data-tchmi-cell-content-padding" type="application/json">
+<div id="TcHmiIndicatorLight_2" data-tchmi-type="TcHmi.Controls.Beckhoff.Industries.Common.TcHmiIndicatorLight" data-tchmi-height="25" data-tchmi-height-unit="px" data-tchmi-left="74" data-tchmi-left-unit="px" data-tchmi-top="18" data-tchmi-top-unit="px" data-tchmi-width="47" data-tchmi-width-unit="px" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_IO.bValve1_JogUp_LED%/s%" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-active-color" type="application/json">
 {
-  "left": 3,
-  "leftUnit": "px",
-  "right": 3,
-  "rightUnit": "px",
-  "top": 0,
-  "topUnit": "px",
-  "bottom": 0,
-  "bottomUnit": "px"
+  "color": "rgba(244, 12, 12, 1)"
 }
 </script>
-
 </div>
-
-<!-- ============================================================
-     ADDED CONTROLS - Sensor displays, MQTT config, status indicators.
-     Open Desktop.view in TcHMI Engineering after import to position
-     these controls visually. All TcHMI properties are pre-bound.
-     ============================================================ -->
-
-<!-- Sensor labels and displays (water level, temperature) -->
-<div id="TcHmiTextblock_Lbl_WL_mm" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="34" data-tchmi-left-unit="px" data-tchmi-top="350" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-text="Water Level (mm)" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center"></div>
-<div id="TcHmiTextblock_WL_mm" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="200" data-tchmi-left-unit="px" data-tchmi-top="350" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-text="%s%ADS.PLC1.GVL_HMI.ACT_WaterLevel_mm%/s%" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center"></div>
-
-<div id="TcHmiTextblock_Lbl_WL_pct" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="34" data-tchmi-left-unit="px" data-tchmi-top="375" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-text="Water Level (%)" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center"></div>
-<div id="TcHmiTextblock_WL_pct" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="200" data-tchmi-left-unit="px" data-tchmi-top="375" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-text="%s%ADS.PLC1.GVL_HMI.ACT_WaterLevel_pct%/s%" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center"></div>
-
-<div id="TcHmiTextblock_Lbl_T1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="34" data-tchmi-left-unit="px" data-tchmi-top="400" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-text="Temperature 1 (C)" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center"></div>
-<div id="TcHmiTextblock_T1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="200" data-tchmi-left-unit="px" data-tchmi-top="400" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-text="%s%ADS.PLC1.GVL_HMI.ACT_Temperature1_C%/s%" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center"></div>
-
-<div id="TcHmiTextblock_Lbl_T2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="34" data-tchmi-left-unit="px" data-tchmi-top="425" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-text="Temperature 2 (C)" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center"></div>
-<div id="TcHmiTextblock_T2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="200" data-tchmi-left-unit="px" data-tchmi-top="425" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-text="%s%ADS.PLC1.GVL_HMI.ACT_Temperature2_C%/s%" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center"></div>
-
-<!-- Per-valve source indicators (HMI / MQTT / NONE) -->
-<div id="TcHmiTextblock_V1_Src" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="700" data-tchmi-left-unit="px" data-tchmi-top="98" data-tchmi-top-unit="px" data-tchmi-width="80" data-tchmi-width-unit="px" data-tchmi-text="%s%ADS.PLC1.GVL_HMI.ACT_Valve1_SourceText%/s%" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center"></div>
-<div id="TcHmiTextblock_V2_Src" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="700" data-tchmi-left-unit="px" data-tchmi-top="141" data-tchmi-top-unit="px" data-tchmi-width="80" data-tchmi-width-unit="px" data-tchmi-text="%s%ADS.PLC1.GVL_HMI.ACT_Valve2_SourceText%/s%" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center"></div>
-<div id="TcHmiTextblock_V3_Src" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="700" data-tchmi-left-unit="px" data-tchmi-top="185" data-tchmi-top-unit="px" data-tchmi-width="80" data-tchmi-width-unit="px" data-tchmi-text="%s%ADS.PLC1.GVL_HMI.ACT_Valve3_SourceText%/s%" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center"></div>
-
-<!-- Per-valve MQTT enable checkboxes -->
-<div id="TcHmiCheckbox_V1_MQTT" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiCheckBox" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="800" data-tchmi-left-unit="px" data-tchmi-top="98" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-text="MQTT" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_Valve1_MQTT_Enable%/s%"></div>
-<div id="TcHmiCheckbox_V2_MQTT" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiCheckBox" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="800" data-tchmi-left-unit="px" data-tchmi-top="141" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-text="MQTT" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_Valve2_MQTT_Enable%/s%"></div>
-<div id="TcHmiCheckbox_V3_MQTT" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiCheckBox" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="800" data-tchmi-left-unit="px" data-tchmi-top="185" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-text="MQTT" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_Valve3_MQTT_Enable%/s%"></div>
-
-<!-- MQTT global enable + connection status -->
-<div id="TcHmiCheckbox_MQTT_Master" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiCheckBox" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="34" data-tchmi-left-unit="px" data-tchmi-top="470" data-tchmi-top-unit="px" data-tchmi-width="200" data-tchmi-width-unit="px" data-tchmi-text="Enable MQTT Commands" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_MQTT_bEnable%/s%"></div>
-<div id="TcHmiTextblock_Lbl_MQTT_Conn" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="250" data-tchmi-left-unit="px" data-tchmi-top="470" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-text="Connected:" data-tchmi-text-horizontal-alignment="Right" data-tchmi-text-vertical-alignment="Center"></div>
-<div id="TcHmiTextblock_MQTT_Conn" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="360" data-tchmi-left-unit="px" data-tchmi-top="470" data-tchmi-top-unit="px" data-tchmi-width="80" data-tchmi-width-unit="px" data-tchmi-text="%s%ADS.PLC1.GVL_HMI.ACT_MQTT_Connected%/s%" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center"></div>
-<div id="TcHmiTextblock_MQTT_ErrMsg" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="450" data-tchmi-left-unit="px" data-tchmi-top="470" data-tchmi-top-unit="px" data-tchmi-width="400" data-tchmi-width-unit="px" data-tchmi-text="%s%ADS.PLC1.GVL_HMI.ACT_MQTT_ErrorMsg%/s%" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center"></div>
-
-<!-- MQTT broker configuration panel -->
-<div id="TcHmiTextblock_Lbl_Broker" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="34" data-tchmi-left-unit="px" data-tchmi-top="510" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-text="Broker:" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center"></div>
-<div id="TcHmiTextbox_Broker" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextbox" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="140" data-tchmi-left-unit="px" data-tchmi-top="510" data-tchmi-top-unit="px" data-tchmi-width="200" data-tchmi-width-unit="px" data-tchmi-text="%s%ADS.PLC1.GVL_HMI.HMI_MQTT_Config.sBrokerAddress%/s%"></div>
-
-<div id="TcHmiTextblock_Lbl_Port" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="350" data-tchmi-left-unit="px" data-tchmi-top="510" data-tchmi-top-unit="px" data-tchmi-width="50" data-tchmi-width-unit="px" data-tchmi-text="Port:" data-tchmi-text-horizontal-alignment="Right" data-tchmi-text-vertical-alignment="Center"></div>
-<div id="TcHmiNumericInput_Port" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiNumericInput" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="410" data-tchmi-left-unit="px" data-tchmi-top="510" data-tchmi-top-unit="px" data-tchmi-width="80" data-tchmi-width-unit="px" data-tchmi-decimal-digits="0" data-tchmi-value-symbol="%s%ADS.PLC1.GVL_HMI.HMI_MQTT_Config.nPort%/s%"></div>
-
-<div id="TcHmiTextblock_Lbl_User" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="34" data-tchmi-left-unit="px" data-tchmi-top="540" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-text="Username:" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center"></div>
-<div id="TcHmiTextbox_User" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextbox" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="140" data-tchmi-left-unit="px" data-tchmi-top="540" data-tchmi-top-unit="px" data-tchmi-width="200" data-tchmi-width-unit="px" data-tchmi-text="%s%ADS.PLC1.GVL_HMI.HMI_MQTT_Config.sUsername%/s%"></div>
-
-<div id="TcHmiTextblock_Lbl_Pass" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="350" data-tchmi-left-unit="px" data-tchmi-top="540" data-tchmi-top-unit="px" data-tchmi-width="80" data-tchmi-width-unit="px" data-tchmi-text="Password:" data-tchmi-text-horizontal-alignment="Right" data-tchmi-text-vertical-alignment="Center"></div>
-<div id="TcHmiTextbox_Pass" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextbox" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="440" data-tchmi-left-unit="px" data-tchmi-top="540" data-tchmi-top-unit="px" data-tchmi-width="200" data-tchmi-width-unit="px" data-tchmi-mask-text="True" data-tchmi-text="%s%ADS.PLC1.GVL_HMI.HMI_MQTT_Config.sPassword%/s%"></div>
-
-<div id="TcHmiTextblock_Lbl_Topic" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="34" data-tchmi-left-unit="px" data-tchmi-top="570" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-text="Pub Topic:" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center"></div>
-<div id="TcHmiTextbox_PubTopic" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextbox" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="140" data-tchmi-left-unit="px" data-tchmi-top="570" data-tchmi-top-unit="px" data-tchmi-width="200" data-tchmi-width-unit="px" data-tchmi-text="%s%ADS.PLC1.GVL_HMI.HMI_MQTT_Config.sMainTopic%/s%"></div>
-
-<div id="TcHmiTextblock_Lbl_SubTopic" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="350" data-tchmi-left-unit="px" data-tchmi-top="570" data-tchmi-top-unit="px" data-tchmi-width="80" data-tchmi-width-unit="px" data-tchmi-text="Sub Topic:" data-tchmi-text-horizontal-alignment="Right" data-tchmi-text-vertical-alignment="Center"></div>
-<div id="TcHmiTextbox_SubTopic" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextbox" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="440" data-tchmi-left-unit="px" data-tchmi-top="570" data-tchmi-top-unit="px" data-tchmi-width="200" data-tchmi-width-unit="px" data-tchmi-text="%s%ADS.PLC1.GVL_HMI.HMI_MQTT_Config.SubscribeTopic%/s%"></div>
-
-<!-- Apply config + Manual publish buttons -->
-<div id="TcHmiButton_Apply" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="34" data-tchmi-left-unit="px" data-tchmi-text="Apply &amp; Reconnect" data-tchmi-top="600" data-tchmi-top-unit="px" data-tchmi-width="200" data-tchmi-width-unit="px" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_MQTT_ApplyConfig%/s%"></div>
-<div id="TcHmiButton_Publish" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="250" data-tchmi-left-unit="px" data-tchmi-text="Publish Now" data-tchmi-top="600" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_MQTT_mPublish%/s%"></div>
-
-<!-- System ready indicator -->
-<div id="TcHmiTextblock_Lbl_Ready" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="591" data-tchmi-left-unit="px" data-tchmi-top="280" data-tchmi-top-unit="px" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-text="System Ready:" data-tchmi-text-horizontal-alignment="Right" data-tchmi-text-vertical-alignment="Center"></div>
-<div id="TcHmiTextblock_Ready" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="720" data-tchmi-left-unit="px" data-tchmi-top="280" data-tchmi-top-unit="px" data-tchmi-width="80" data-tchmi-width-unit="px" data-tchmi-text="%s%ADS.PLC1.GVL_HMI.ACT_SystemReady%/s%" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center"></div>
-
-<!-- CSV logger enable + filename info -->
-<div id="TcHmiCheckbox_CSV_Enable" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiCheckBox" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="591" data-tchmi-left-unit="px" data-tchmi-top="345" data-tchmi-top-unit="px" data-tchmi-width="200" data-tchmi-width-unit="px" data-tchmi-text="CSV Logging Enabled" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.HMI_CSV_Enable%/s%"></div>
-<div id="TcHmiTextblock_CSV_File" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="22" data-tchmi-height-unit="px" data-tchmi-left="591" data-tchmi-left-unit="px" data-tchmi-top="375" data-tchmi-top-unit="px" data-tchmi-width="300" data-tchmi-width-unit="px" data-tchmi-text="%s%ADS.PLC1.GVL_HMI.ACT_CSV_CurrentFile%/s%" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center"></div>
-
+<div id="TcHmiIndicatorLight_3" data-tchmi-type="TcHmi.Controls.Beckhoff.Industries.Common.TcHmiIndicatorLight" data-tchmi-height="25" data-tchmi-height-unit="px" data-tchmi-left="74" data-tchmi-left-unit="px" data-tchmi-top="191" data-tchmi-top-unit="px" data-tchmi-width="47" data-tchmi-width-unit="px" data-tchmi-zindex="6" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_IO.bValve1_JogDown_LED%/s%">
+<script data-tchmi-target-attribute="data-tchmi-active-color" type="application/json">
+{
+  "color": "rgba(244, 12, 12, 1)"
+}
+</script>
+</div>
+<div id="TcHmiIndicatorLight_4" data-tchmi-type="TcHmi.Controls.Beckhoff.Industries.Common.TcHmiIndicatorLight" data-tchmi-height="25" data-tchmi-height-unit="px" data-tchmi-left="262" data-tchmi-left-unit="px" data-tchmi-top="18" data-tchmi-top-unit="px" data-tchmi-width="47" data-tchmi-width-unit="px" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_IO.bValve2_JogUp_LED%/s%" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-active-color" type="application/json">
+{
+  "color": "rgba(244, 12, 12, 1)"
+}
+</script>
+</div>
+<div id="TcHmiIndicatorLight_5" data-tchmi-type="TcHmi.Controls.Beckhoff.Industries.Common.TcHmiIndicatorLight" data-tchmi-height="25" data-tchmi-height-unit="px" data-tchmi-left="262" data-tchmi-left-unit="px" data-tchmi-top="191" data-tchmi-top-unit="px" data-tchmi-width="47" data-tchmi-width-unit="px" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_IO.bValve2_JogDown_LED%/s%" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-active-color" type="application/json">
+{
+  "color": "rgba(244, 12, 12, 1)"
+}
+</script>
+</div>
+<div id="TcHmiIndicatorLight_6" data-tchmi-type="TcHmi.Controls.Beckhoff.Industries.Common.TcHmiIndicatorLight" data-tchmi-height="25" data-tchmi-height-unit="px" data-tchmi-left="446" data-tchmi-left-unit="px" data-tchmi-top="18" data-tchmi-top-unit="px" data-tchmi-width="47" data-tchmi-width-unit="px" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_IO.bValve3_JogUp_LED%/s%" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-active-color" type="application/json">
+{
+  "color": "rgba(244, 12, 12, 1)"
+}
+</script>
+</div>
+<div id="TcHmiIndicatorLight_7" data-tchmi-type="TcHmi.Controls.Beckhoff.Industries.Common.TcHmiIndicatorLight" data-tchmi-height="25" data-tchmi-height-unit="px" data-tchmi-left="446" data-tchmi-left-unit="px" data-tchmi-top="191" data-tchmi-top-unit="px" data-tchmi-width="47" data-tchmi-width-unit="px" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_IO.bValve3_JogDown_LED%/s%" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-active-color" type="application/json">
+{
+  "color": "rgba(244, 12, 12, 1)"
+}
+</script>
+</div>
+</div>
+<div id="TcHmiEcDiagnostics_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiEcDiagnostics" data-tchmi-allow-zoom-and-pan="True" data-tchmi-device="Dev1" data-tchmi-height="851" data-tchmi-height-unit="px" data-tchmi-left="915" data-tchmi-left-unit="px" data-tchmi-toolbox-reset-view="True" data-tchmi-top="16" data-tchmi-top-unit="px" data-tchmi-width="1182" data-tchmi-width-unit="px" data-tchmi-zindex="10">
+</div>
 </div>
