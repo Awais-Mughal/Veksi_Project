@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "definitions": {
+        "TcHmi.Controls.Beckhoff.Industries.Common.TcHmiSevenSegmentDisplay": {
+            "type": "object",
+            "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+            "frameworkControlType": "TcHmiSevenSegmentDisplay",
+            "frameworkControlNamespace": "TcHmi.Controls.Beckhoff.Industries.Common"
+        },
+        "TcHmiSevenSegmentDisplay": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.Industries.Common.TcHmiSevenSegmentDisplay"
+        },
+        "TcHmi.Controls.Beckhoff.Industries.Common.TcHmiSevenSegmentDisplay.ValueSymbol": {
+            "allOf": [
+                {
+                    "$ref": "tchmi:framework#/definitions/Symbol"
+                },
+                {
+                    "frameworkSymbolSubType": {
+                        "$ref": "tchmi:general#/definitions/Number"
+                    }
+                }
+            ]
+        }
+    }
+}

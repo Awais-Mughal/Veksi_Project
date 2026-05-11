@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="E_CommandSource" Id="{541c5b95-c926-4b73-acd9-ae968daee035}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_CommandSource :
+(
+    HMI    := 0,   // Commands are taken from the local HMI
+    MQTT   := 1,   // Commands are taken from MQTT when enabled and connected
+    Manual := 2    // Commands are taken from future local/manual inputs
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

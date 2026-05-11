@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "definitions": {
+        "TcHmi.Controls.Beckhoff.Industries.Common.TcHmiIndicatorLight": {
+            "type": "object",
+            "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+            "frameworkControlType": "TcHmiIndicatorLight",
+            "frameworkControlNamespace": "TcHmi.Controls.Beckhoff.Industries.Common"
+        },
+        "TcHmiIndicatorLight": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.Industries.Common.TcHmiIndicatorLight"
+        },
+        "TcHmi.Controls.Beckhoff.Industries.Common.TcHmiIndicatorLight.StateSymbol": {
+            "allOf": [
+                {
+                    "$ref": "tchmi:framework#/definitions/Symbol"
+                },
+                {
+                    "frameworkSymbolSubType": {
+                        "$ref": "tchmi:general#/definitions/Boolean"
+                    }
+                }
+            ]
+        }
+    }
+}

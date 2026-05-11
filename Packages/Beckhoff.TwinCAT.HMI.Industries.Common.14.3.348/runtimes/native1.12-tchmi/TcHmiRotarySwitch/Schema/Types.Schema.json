@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "definitions": {
+        "TcHmi.Controls.Beckhoff.Industries.Common.TcHmiRotarySwitch": {
+            "$schema": "http://json-schema.org/draft-04/schema",
+            "type": "object",
+            "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+            "frameworkControlType": "TcHmiRotarySwitch",
+            "frameworkControlNamespace": "TcHmi.Controls.Beckhoff.Industries.Common"
+        },
+        "TcHmiRotarySwitch": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.Industries.Common.TcHmiRotarySwitch"
+        }
+    }
+}

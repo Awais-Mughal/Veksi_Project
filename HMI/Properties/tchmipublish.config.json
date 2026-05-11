@@ -7,6 +7,10 @@
       },
       {
         "publishServerExtension": true,
+        "name": "TcHmiEcDiagnostics"
+      },
+      {
+        "publishServerExtension": true,
         "name": "TcHmiLua"
       },
       {
@@ -37,19 +41,19 @@
     "createPublishLog": false,
     "salt": "a3e8eac614b4481fa9f1ae25dab4f3cf",
     "encryptedTcHmiServerPassword": "3T+sC2OPG+QbAtt+m7J1Tw==",
-    "tcHmiServerHost": "192.168.1.122",
-    "tcHmiServerPort": "2010",
+    "tcHmiServerHost": "80.186.150.96",
+    "tcHmiServerPort": "2020",
     "uploadTimeout": "60",
     "connectionTimeout": "5",
     "requestTimeout": "60",
     "extensionStartupTimeout": "120",
     "clientCertificateCN": "",
-    "tcHmiUseTLS": false,
+    "tcHmiUseTLS": true,
     "useClientCertificate": false,
     "launchBrowserAfterPublish": true,
     "createVirtualDirectoriesOnTargetSystem": false,
     "tcHmiServerUserName": "__SystemAdministrator",
-    "tcHmiDestinationUrl": "http://192.168.1.122:2010/",
+    "tcHmiDestinationUrl": "https://80.186.150.96:2020/",
     "publishConfiguration": "remote",
     "tcHmiIgnoreCertificateErrors": true
   }

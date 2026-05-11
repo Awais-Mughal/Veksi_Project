@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="FB_ValveControl" Id="{83e8a007-202b-43ef-a593-2a6bab96e41d}" SpecialFunc="None">
     <Declaration><![CDATA[(*
@@ -18,16 +18,15 @@ STATE MACHINE
   IDLE      — Monitors for setpoint change or homing request
   MOVING    — Executes MC_MoveAbsolute to reach target position
   HOLD      — At target; watches for new setpoint or re-home
+  MANNUAL_JOG — Hardware-panel jog mode while Manual source is selected
   HALT      — Stopping via MC_Halt (operator STOP button)
   FAULT     — Latches fault code; waits for Reset command
   RESET     — Executes MC_Reset; then transitions to HOMING
 
-SETPOINT ARBITRATION
-  MQTT (lower priority): applied when MQTT_Enabled = TRUE AND
-    MQTT_Setpoint changes from last known value.
-  HMI (higher priority): applied on rising edge of UPDATE button.
-  HMI always wins if both arrive in the same PLC cycle.
-  Source output reflects who issued the most recent command.
+SETPOINT HANDLING
+  MAIN selects exactly one command source and passes the resulting
+  Active_Setpoint to this FB. This FB only clamps and tracks that
+  selected setpoint for motion control.
 
 LIBRARIES
   TC2_MC2
@@ -41,10 +40,9 @@ VAR_IN_OUT
 END_VAR
 
 VAR_INPUT
-    // ── Setpoints ─────────────────────────────────────────────
-    HMI_Setpoint        : REAL;             // Target position from HMI   (0.0–100.0 %)
-    MQTT_Setpoint       : REAL;             // Target position from MQTT  (0.0–100.0 %)
-    MQTT_Enabled        : BOOL;             // FALSE = ignore MQTT commands for this valve
+	 // ── Setpoint / source ─────────────────────────────────────
+    Active_Setpoint     : REAL;             // Selected target position from MAIN (0.0–100.0 %)
+	currentcommandsrc	: E_CommandSource;
 
     // ── Homing ────────────────────────────────────────────────
     eHomingSelection    : MC_HomingMode;    // Homing mode (MC_Direct sets position without movement)
@@ -54,8 +52,11 @@ VAR_INPUT
     Enable              : BOOL;             // TRUE = drive powered; FALSE = de-energised
     Reset               : BOOL;             // Rising edge: clear fault and re-home
     Move_Stop           : BOOL;             // TRUE: halt movement immediately
-    UPDATE              : BOOL;             // Rising edge from HMI Apply setpoint button
     ZeroPosition        : BOOL;             // Limit switch at home/zero position
+	TopPosition			: BOOL;
+	bUpdate				: BOOL;
+	JogUp               : BOOL;             // Hardware panel jog-up pushbutton
+    JogDown             : BOOL;             // Hardware panel jog-down pushbutton
 
     // ── Motion parameters ─────────────────────────────────────
     // LREAL type required — matches MC_MoveAbsolute VAR_INPUT types exactly.
@@ -77,16 +78,19 @@ VAR_OUTPUT
     InPosition          : BOOL;             // TRUE when |actual - setpoint| <= PosTolerance
     rActual_mm          : LREAL;            // Raw axis position in mm
     rTarget_mm          : LREAL := 0.0;     // Active target in mm
+	lastcommandsrc		: E_CommandSource;
 
-    // ── State and source ──────────────────────────────────────
+    // ── State ─────────────────────────────────────────────────
     State               : E_ValveState;     // Current state machine state (for HMI display)
-    Source              : E_ValveSource;    // Who issued the last command (HMI / MQTT / NONE)
+	currentState_string : STRING;
 
     // ── Status flags ──────────────────────────────────────────
     IsHomed             : BOOL;             // TRUE once homing completed successfully
     IsMoving            : BOOL;             // TRUE while axis is physically moving
     IsFault             : BOOL;             // TRUE while in FAULT state
     FaultCode           : UDINT;            // MC2 ErrorID — see Beckhoff error code list
+	JogUpLed            : BOOL;             // Hardware panel up LED (blink while jogging, solid at top limit)
+    JogDownLed          : BOOL;             // Hardware panel down LED (blink while jogging, solid at bottom limit)
 END_VAR
 
 VAR
@@ -99,14 +103,16 @@ VAR
     fbReadPos           : MC_ReadActualPosition;
     fbHalt              : MC_Halt;
     fbReset_MC          : MC_Reset;
+	fbSetPos			: MC_SetPosition;
+	fbJog		        : MC_Jog;
+	
 
     // ── State machine ─────────────────────────────────────────
     eState              : E_ValveState := E_ValveState.INIT;
 
-    // ── Setpoint arbitration ──────────────────────────────────
+    // ── Selected setpoint tracking ────────────────────────────
     rActiveSetpoint     : REAL  := 0.0;
-    rPrev_HMI_SP        : REAL  := -999.0;  // -999 ensures first HMI value is always applied
-    rPrev_MQTT_SP       : REAL  := -999.0;  // -999 ensures first MQTT value is always applied
+    rPrev_Active_SP     : REAL  := -999.0;  // -999 ensures first selected value is always applied
 
     // ── PLCopen Execute flags ─────────────────────────────────
     // Set TRUE on state entry → MC FB receives rising edge.
@@ -116,15 +122,24 @@ VAR
     bExecMove           : BOOL;
     bExecReset          : BOOL;
     bExecHalt           : BOOL;
+	bExecJogMove        : BOOL;
 
     // ── Edge detection ────────────────────────────────────────
     rtReset             : R_TRIG;
-    rtUpdate            : R_TRIG;   // Rising edge on HMI Apply button
-    rtZeroPosition      : R_TRIG;
+    rtZeroPosition      : R_TRIG; //not used
     rtHoming            : R_TRIG;
+	rtUpdate			: R_TRIG;
 
     // ── Internal working variables ────────────────────────────
     bAxisReady          : BOOL;
+    bManualMode         : BOOL;
+    bJogUpAllowed       : BOOL;
+    bJogDownAllowed     : BOOL;
+	bJogUpActive        : BOOL;
+    bJogDownActive      : BOOL;
+    bBlink              : BOOL;
+	fbJogBlinkTimer     : TON;
+    nBlinkCounter       : UDINT;
     MoveDone            : BOOL;
     tempSetpoint        : REAL;
 END_VAR
@@ -136,37 +151,31 @@ END_VAR
 // rising edge. Ensures button presses trigger exactly once.
 // ============================================================
 rtReset(CLK := Reset);
-rtUpdate(CLK := UPDATE);
-rtZeroPosition(CLK := ZeroPosition);
 rtHoming(CLK := bHoming);
+rtUpdate(CLK := bUpdate);
+
+
+bManualMode := (currentcommandsrc = E_CommandSource.Manual);
+bJogUpAllowed := bManualMode AND JogUp AND NOT JogDown AND NOT TopPosition AND NOT IsFault;
+bJogDownAllowed := bManualMode AND JogDown AND NOT JogUp AND NOT ZeroPosition AND NOT IsFault;
+
 
 // ReadStatus must be called every cycle to keep Axis state current
 Axis.ReadStatus();
 
 
 // ============================================================
-// SECTION 2 — SETPOINT ARBITRATION & SOURCE TRACKING
-//
-// Priority (lowest to highest):
-//   1. MQTT: applied when MQTT_Enabled=TRUE and value has changed
-//   2. HMI:  applied on rising edge of UPDATE button (always wins)
-//
-// rPrev_* tracks last applied values so repeated identical
-// inputs do not unnecessarily re-trigger motion.
+// SECTION 2 — SELECTED SETPOINT TRACKING
+// MAIN performs command-source arbitration before this FB is called.
+// This FB accepts only the already selected setpoint, clamps it, and
+// updates the motion target when that selected value changes. Manual
+// jog inputs override the selected setpoint only while Manual source
+// is active; simultaneous JogUp/JogDown input is ignored.
 // ============================================================
 
-// MQTT setpoint — only when explicitly enabled and value changed
-IF MQTT_Enabled AND (MQTT_Setpoint <> rPrev_MQTT_SP) THEN
-    rActiveSetpoint := LIMIT(0.0, MQTT_Setpoint, 100.0);
-    rPrev_MQTT_SP   := MQTT_Setpoint;
-    Source          := E_ValveSource.MQTT;
-END_IF
-
-// HMI Update button overrides MQTT if pressed in the same cycle
-IF rtUpdate.Q THEN
-    rActiveSetpoint := LIMIT(0.0, HMI_Setpoint, 100.0);
-    rPrev_HMI_SP    := HMI_Setpoint;
-    Source          := E_ValveSource.HMI;
+IF rtUpdate.Q  THEN  //Active_Setpoint <> rPrev_Active_SP
+    rActiveSetpoint := LIMIT(0.0, Active_Setpoint, 100.0);
+    rPrev_Active_SP := Active_Setpoint;
 END_IF
 
 // Convert percentage setpoint to axis units (mm)
@@ -181,7 +190,7 @@ rTarget_mm := REAL_TO_LREAL(rActiveSetpoint / 100.0 * FullStroke_mm);
 fbPower(
     Axis            := Axis,
     Enable          := Enable AND (eState <> E_ValveState.FAULT),
-    Enable_Positive := TRUE,    // NC software limits protect max travel
+    Enable_Positive := TRUE AND NOT TopPosition,    // NC software limits protect max travel
     Enable_Negative := TRUE,    // NC software limits protect min travel
     Override        := 100.0    // 100 % velocity override = full programmed speed
 );
@@ -203,6 +212,21 @@ END_IF
 // Read current axis position every cycle.
 // rActual_mm is then converted to a percentage.
 // ============================================================
+(*
+IF TopPosition THEN
+	fbSetPos (
+		Axis := Axis,
+		Execute := TRUE,
+		Position := FullStroke_mm
+		//Mode
+		);	
+	IF fbSetPos.Done THEN
+		fbSetPos (Execute := FALSE, Axis := Axis);
+		rActiveSetpoint := Actual_Position;  // Adopt current position as new setpoint
+		rPrev_Active_SP := Active_Setpoint;   // Hold until selected setpoint changes
+	END_IF
+END_IF 
+*)
 fbReadPos(
     Axis   := Axis,
     Enable := fbPower.Status
@@ -223,6 +247,24 @@ END_IF
 InPosition := ABS(Actual_Position - rActiveSetpoint) <= PosTolerance;
 
 
+// Manual source forces the valve into hardware-panel jog mode from normal states.
+// FAULT and RESET remain latched/safe; INIT waits for drive power first.
+IF bManualMode AND
+   eState <> E_ValveState.MANNUAL_JOG AND
+   eState <> E_ValveState.FAULT AND
+   eState <> E_ValveState.RESET AND
+   eState <> E_ValveState.INIT
+THEN
+    bExecHome := FALSE;
+    bExecMove := FALSE;
+    bExecJogMove := FALSE;
+    fbHome(Axis := Axis, Execute := FALSE);
+    fbMoveAbs(Axis := Axis, Execute := FALSE);
+    eState := E_ValveState.MANNUAL_JOG;
+END_IF
+
+
+
 // ============================================================
 // SECTION 5 — STATE MACHINE
 // Each state is responsible for:
@@ -237,13 +279,19 @@ CASE eState OF
     // Drive ready = MC_Power.Status = TRUE, no error.
     // ----------------------------------------------------------
     E_ValveState.INIT:
+		currentState_string := 'INIT';
         bExecHome  := FALSE;
         bExecMove  := FALSE;
         bExecReset := FALSE;
         bExecHalt  := FALSE;
+		bExecJogMove := FALSE;
 
         IF bAxisReady THEN
-            eState := E_ValveState.HOMING;
+            IF bManualMode THEN
+                eState := E_ValveState.MANNUAL_JOG;
+            ELSE
+                eState := E_ValveState.HOMING;
+            END_IF
         END_IF
 
     // ----------------------------------------------------------
@@ -252,6 +300,7 @@ CASE eState OF
     // ZeroPosition (limit switch) is the calibration cam signal.
     // ----------------------------------------------------------
     E_ValveState.HOMING:
+		currentState_string := 'HOMING';
         bExecHome := TRUE;
 
         fbHome(
@@ -261,11 +310,19 @@ CASE eState OF
             HomingMode      := eHomingSelection, // MC_Direct sets position without movement
             bCalibrationCam := ZeroPosition      // Wired to limit switch in GVL_IO
         );
+		
+		        // Operator STOP button: halt cleanly
+        IF Move_Stop THEN
+            bExecHalt := TRUE;
+            eState    := E_ValveState.HALT;
+        END_IF
 
         IF fbHome.Done THEN
             bExecHome := FALSE;
             fbHome(Axis := Axis, Execute := bExecHome);  // Clear Execute cleanly
             IsHomed   := TRUE;
+			rActiveSetpoint := 0;       // Adopt home position as new setpoint
+			rPrev_Active_SP := -999.0; // Reapply selected setpoint on next scan
             eState    := E_ValveState.IDLE;
         ELSIF fbHome.Error THEN
             bExecHome := FALSE;
@@ -279,6 +336,7 @@ CASE eState OF
     // Transition to MOVING only after successful homing.
     // ----------------------------------------------------------
     E_ValveState.IDLE:
+		currentState_string := 'IDLE';
         bExecMove := FALSE;
 
         IF rtHoming.Q THEN
@@ -286,7 +344,7 @@ CASE eState OF
             eState  := E_ValveState.HOMING;
         END_IF
 
-        IF IsHomed AND ABS(rActiveSetpoint - Actual_Position) > PosTolerance THEN
+ 		IF IsHomed AND ABS(rActiveSetpoint - Actual_Position) > PosTolerance THEN
             bExecMove := TRUE;
             eState    := E_ValveState.MOVING;
         END_IF
@@ -300,6 +358,7 @@ CASE eState OF
     //   Move_Stop     → HALT (operator emergency stop)
     // ----------------------------------------------------------
     E_ValveState.MOVING:
+		currentState_string := 'MOVING_ABS';
         fbMoveAbs(
             Axis         := Axis,
             Execute      := bExecMove,
@@ -312,7 +371,7 @@ CASE eState OF
             Active       => IsMoving,
             Done         => MoveDone
         );
-
+		lastcommandsrc := currentcommandsrc;
         // Operator STOP button: halt cleanly
         IF Move_Stop THEN
             bExecHalt := TRUE;
@@ -322,7 +381,8 @@ CASE eState OF
         IF fbMoveAbs.Done THEN
             bExecMove := FALSE;
             fbMoveAbs(Axis := Axis, Execute := bExecMove);  // Clear Execute cleanly
-            eState    := E_ValveState.HOLD;
+            
+			eState    := E_ValveState.HOLD;
         ELSIF fbMoveAbs.CommandAborted THEN
             bExecMove := FALSE;
             fbMoveAbs(Axis := Axis, Execute := bExecMove);  // Clear Execute cleanly
@@ -339,6 +399,7 @@ CASE eState OF
     // Monitors for new setpoint (→ MOVING) or re-home (→ HOMING).
     // ----------------------------------------------------------
     E_ValveState.HOLD:
+	currentState_string := 'HOLD';
         IsMoving  := FALSE;
         bExecMove := FALSE;
 
@@ -353,14 +414,79 @@ CASE eState OF
         END_IF
 
     // ----------------------------------------------------------
+    // MANNUAL_JOG: Hardware-panel jog mode selected by system source.
+    // Up/down pushbuttons move toward travel limits while held.
+    // Bottom limit is NOT tied to MC_Power negative enable because it is the homing cam.
+    // ----------------------------------------------------------
+    E_ValveState.MANNUAL_JOG:
+	currentState_string := 'MANNUAL_JOG';
+	
+	    // Cancel normal absolute motion while in manual jog mode
+    bExecMove := FALSE;
+    bExecHome := FALSE;
+    bExecReset := FALSE;
+
+    fbMoveAbs(Axis := Axis, Execute := FALSE);
+    fbHome(Axis := Axis, Execute := FALSE);
+	
+	fbJog (
+		Axis 			:= Axis,
+		JogForward 		:= bJogUpAllowed,
+		JogBackwards	:= bJogDownAllowed,
+		Mode			:= E_JogMode.MC_JOGMODE_STANDARD_SLOW,
+		Active			=> IsMoving
+	);
+	IF IsMoving THEN
+	lastcommandsrc := currentcommandsrc;
+	END_IF
+	bJogDownActive := IsMoving AND bJogDownAllowed;
+	bJogUpActive   := IsMoving AND bJogUpAllowed;
+	
+        // If the axis was jogging, stop it cleanly
+     IF IsMoving AND NOT bJogDownAllowed AND NOT bJogUpAllowed THEN
+		 //bJogWasActive := FALSE;
+            bExecHalt := TRUE;
+            eState := E_ValveState.HALT;
+        ELSE
+            //IsMoving := FALSE;
+        END_IF
+
+    // Jog motion error handling
+    IF fbJog.Error THEN
+        //bJogWasActive := FALSE;
+        FaultCode := fbJog.ErrorID;
+        eState := E_ValveState.FAULT;
+    END_IF
+
+    // STOP button while jogging
+    IF Move_Stop THEN
+       // bJogWasActive := FALSE;
+        bExecHalt := TRUE;
+        eState := E_ValveState.HALT;
+    END_IF
+
+    // Leave manual jog mode when command source changes
+    IF NOT bManualMode THEN
+       // bJogWasActive := FALSE;
+        // Adopt current position as the new target
+        rActiveSetpoint := Actual_Position;
+        rPrev_Active_SP := Active_Setpoint;
+
+        eState := E_ValveState.IDLE;
+    END_IF
+			
+
+    // ----------------------------------------------------------
     // FAULT: Drive or motion error detected.
     // Latches IsFault = TRUE; waits for Reset command.
     // ──────────────────────────────────────────────────────────
     E_ValveState.FAULT:
+	currentState_string := 'FAULT';
         IsFault   := TRUE;
         IsMoving  := FALSE;
         bExecHome := FALSE;
         bExecMove := FALSE;
+		bExecJogMove := FALSE;
 
         IF rtReset.Q THEN
             bExecReset := TRUE;
@@ -373,6 +499,7 @@ CASE eState OF
     // Reset button returns to IDLE.
     // ----------------------------------------------------------
     E_ValveState.HALT:
+	currentState_string := 'HALT';
         fbHalt(
             Axis         := Axis,
             Execute      := bExecHalt,
@@ -385,22 +512,35 @@ CASE eState OF
             bExecHalt       := FALSE;
             fbHalt(Axis := Axis, Execute := bExecHalt);  // Clear Execute cleanly
             rActiveSetpoint := Actual_Position;  // Adopt current position as new setpoint
+            rPrev_Active_SP := Active_Setpoint;   // Hold until selected setpoint changes
+			
+			// After stopping from manual jog, return to manual jog mode
+			IF bManualMode THEN
+				eState := E_ValveState.MANNUAL_JOG;
+			ELSIF rtReset.Q THEN
+				eState := E_ValveState.IDLE;
+			END_IF
+			
         ELSIF fbHalt.Error THEN
             bExecHalt := FALSE;
             fbHalt(Axis := Axis, Execute := bExecHalt);  // Clear Execute cleanly
             FaultCode := fbHalt.ErrorID;
             eState    := E_ValveState.FAULT;
         END_IF
-
-        IF rtReset.Q THEN
-            eState := E_ValveState.IDLE;
-        END_IF
-
+		
+		IF rtReset.Q THEN
+			IF bManualMode THEN
+				eState := E_ValveState.MANNUAL_JOG;
+			ELSE
+				eState := E_ValveState.IDLE;
+			END_IF
+		END_IF
     // ----------------------------------------------------------
     // RESET: Clear drive error with MC_Reset, then re-home.
     // IsHomed is cleared because stepper may have lost position.
     // ----------------------------------------------------------
     E_ValveState.RESET:
+	currentState_string := 'RESET';
         fbReset_MC(
             Axis    := Axis,
             Execute := bExecReset
@@ -423,6 +563,52 @@ ELSE
     eState := E_ValveState.INIT;
 
 END_CASE
+
+
+
+IF eState <> E_ValveState.MANNUAL_JOG THEN
+    bJogUpActive := FALSE;
+    bJogDownActive := FALSE;
+END_IF
+
+// ============================================================
+// SECTION 5.5 — MANUAL JOG LED LOGIC
+// Blink while jogging.
+// Solid ON when corresponding limit switch is reached.
+// ============================================================
+
+fbJogBlinkTimer(
+    IN := (eState = E_ValveState.MANNUAL_JOG)
+          AND (bJogUpActive OR bJogDownActive)
+          AND NOT fbJogBlinkTimer.Q,
+    PT := T#1MS
+);
+
+IF fbJogBlinkTimer.Q THEN
+    bBlink := NOT bBlink;
+END_IF
+
+// UP / OPEN LED
+// Blinks while jogging up.
+// Solid ON when top/open limit is reached.
+JogUpLed :=
+    TopPosition OR
+    (
+        (eState = E_ValveState.MANNUAL_JOG)
+        AND bJogUpActive
+        AND bBlink
+    );
+
+// DOWN / CLOSE LED
+// Blinks while jogging down.
+// Solid ON when zero/closed limit is reached.
+JogDownLed :=
+    ZeroPosition OR
+    (
+        (eState = E_ValveState.MANNUAL_JOG)
+        AND bJogDownActive
+        AND bBlink
+    );
 
 
 // ============================================================

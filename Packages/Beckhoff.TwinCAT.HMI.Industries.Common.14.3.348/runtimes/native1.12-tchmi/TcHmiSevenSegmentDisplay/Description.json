@@ -1,0 +1,192 @@
+{
+    "$schema": "../../TcHmiFramework/Schema/ControlDescription.Schema.json",
+    "apiVersion": 1,
+    "name": "TcHmiSevenSegmentDisplay",
+    "namespace": "TcHmi.Controls.Beckhoff.Industries.Common",
+    "displayName": "7 Segment Display",
+    "version": {
+        "full": "14.3.348.0",
+        "major": 14,
+        "minor": 3,
+        "build": 348,
+        "revision": 0
+    },
+    "visible": true,
+    "themeable": "Standard",
+    "base": "TcHmi.Controls.System.TcHmiControl",
+    "description": "A 7 segment display.",
+    "defaultDesignerEvent": "",
+    "properties": {
+        "containerControl": false,
+        "geometry": {
+            "width": 230,
+            "height": 110
+        }
+    },
+    "icons": [
+        {
+            "name": "Icons/16x16.png",
+            "width": 16,
+            "height": 16
+        }
+    ],
+    "template": "Template.html",
+    "dependencyFiles": [
+        {
+            "name": "../dist/TcHmiSevenSegmentDisplay/TcHmiSevenSegmentDisplay.esm.js",
+            "type": "EsModule",
+            "description": "Contains all the main logic as ES module."
+        },
+        {
+            "name": "Style.css",
+            "type": "Stylesheet",
+            "description": "Theme independent style"
+        }
+    ],
+    "themes": {
+        "Base": {
+            "resources": [
+                {
+                    "name": "Themes/Base/Style.css",
+                    "type": "Stylesheet",
+                    "description": "Theme dependent style"
+                }
+            ]
+        },
+        "Base-Dark": {
+            "resources": [
+                {
+                    "name": "Themes/Base-Dark/Style.css",
+                    "type": "Stylesheet",
+                    "description": "Theme dependent style"
+                }
+            ]
+        }
+    },
+    "attributes": [
+        {
+            "name": "data-tchmi-active-segment-color",
+            "propertyName": "ActiveSegmentColor",
+            "propertySetterName": "setActiveSegmentColor",
+            "propertyGetterName": "getActiveSegmentColor",
+            "displayName": "Active Segment Color",
+            "visible": true,
+            "themeable": "Standard",
+            "displayPriority": 10,
+            "type": "tchmi:framework#/definitions/SolidColor",
+            "category": "Colors",
+            "description": "The color of an active segment",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "allowSymbolExpressionsInObject": true,
+            "defaultValue": null,
+            "defaultValueInternal": null
+        },
+        {
+            "name": "data-tchmi-inactive-segment-color",
+            "propertyName": "InactiveSegmentColor",
+            "propertySetterName": "setInactiveSegmentColor",
+            "propertyGetterName": "getInactiveSegmentColor",
+            "displayName": "Inactive Segment Color",
+            "visible": true,
+            "themeable": "Standard",
+            "displayPriority": 10,
+            "type": "tchmi:framework#/definitions/SolidColor",
+            "category": "Colors",
+            "description": "The color of an inactive segment",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "allowSymbolExpressionsInObject": true,
+            "defaultValue": null,
+            "defaultValueInternal": null
+        },
+        {
+            "name": "data-tchmi-Value-Symbol",
+            "propertyName": "ValueSymbol",
+            "propertySetterName": "setValueSymbol",
+            "propertyGetterName": "getValueSymbol",
+            "displayName": "Value Symbol",
+            "visible": true,
+            "themeable": "Advanced",
+            "displayPriority": 10,
+            "type": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.Industries.Common.TcHmiSevenSegmentDisplay.ValueSymbol",
+            "category": "Common",
+            "description": "The value displayed in the seven segment display.",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": null,
+            "defaultValueInternal": null
+        },
+        {
+            "name": "data-tchmi-digits",
+            "propertyName": "Digits",
+            "propertySetterName": "setDigits",
+            "propertyGetterName": "getDigits",
+            "displayName": "Digits",
+            "visible": true,
+            "themeable": "Standard",
+            "displayPriority": 20,
+            "type": "tchmi:general#/definitions/Number",
+            "category": "Common",
+            "description": "Number of displayed digits of the non fractional part. Does not affect the value. Digits are added dynamically if unset.",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": 4,
+            "defaultValueInternal": null
+        },
+        {
+            "name": "data-tchmi-decimal-digits",
+            "propertyName": "DecimalDigits",
+            "propertySetterName": "setDecimalDigits",
+            "propertyGetterName": "getDecimalDigits",
+            "displayName": "Decimal Digits",
+            "visible": true,
+            "themeable": "Standard",
+            "displayPriority": 30,
+            "type": "tchmi:general#/definitions/Number",
+            "category": "Common",
+            "description": "Number of displayed decimal digits. Does not affect the value.",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": null,
+            "defaultValueInternal": 0
+        },
+        {
+            "name": "data-tchmi-decimal-precision-mode",
+            "propertyName": "DecimalPrecisionMode",
+            "propertySetterName": "setDecimalPrecisionMode",
+            "propertyGetterName": "getDecimalPrecisionMode",
+            "displayName": "Decimal Precision Mode",
+            "visible": true,
+            "themeable": "Standard",
+            "displayPriority": 50,
+            "type": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiNumericInput.DecimalPrecisionMode",
+            "category": "Common",
+            "description": "Select whether decimal digits are rounded or truncated.",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": null,
+            "defaultValueInternal": "Truncate"
+        }
+    ],
+    "attributeCategories": [],
+    "functions": [],
+    "events": [],
+    "dataTypes": [
+        {
+            "schema": "Schema/Types.Schema.json"
+        }
+    ]
+}

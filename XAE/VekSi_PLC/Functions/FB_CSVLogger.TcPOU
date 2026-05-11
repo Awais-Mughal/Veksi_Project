@@ -258,35 +258,38 @@ CASE eState OF
 
         (* Valve 1 *)
         CASE stValve[1].Source OF
-            E_ValveSource.MQTT: sSource := 'MQTT';
-            E_ValveSource.HMI:  sSource := 'HMI';
-            ELSE                sSource := 'NONE';
+            E_CommandSource.MQTT:   sSource := 'MQTT';
+            E_CommandSource.HMI:    sSource := 'HMI';
+            E_CommandSource.Manual: sSource := 'Manual';
+            ELSE                  sSource := 'NONE';
         END_CASE
         sLine := CONCAT(sLine, REAL_TO_STRING(stValve[1].Active_Setpoint));  sLine := CONCAT(sLine, ',');
         sLine := CONCAT(sLine, REAL_TO_STRING(stValve[1].Actual_Position));  sLine := CONCAT(sLine, ',');
-        sLine := CONCAT(sLine, sSource);                                      sLine := CONCAT(sLine, ',');
+        sLine := CONCAT(sLine, sSource);                                     sLine := CONCAT(sLine, ',');
         sLine := CONCAT(sLine, INT_TO_STRING(stValve[1].State));             sLine := CONCAT(sLine, ',');
 
         (* Valve 2 *)
         CASE stValve[2].Source OF
-            E_ValveSource.MQTT: sSource := 'MQTT';
-            E_ValveSource.HMI:  sSource := 'HMI';
-            ELSE                sSource := 'NONE';
+            E_CommandSource.MQTT:   sSource := 'MQTT';
+            E_CommandSource.HMI:    sSource := 'HMI';
+            E_CommandSource.Manual: sSource := 'Manual';
+            ELSE                  sSource := 'NONE';
         END_CASE
         sLine := CONCAT(sLine, REAL_TO_STRING(stValve[2].Active_Setpoint));  sLine := CONCAT(sLine, ',');
         sLine := CONCAT(sLine, REAL_TO_STRING(stValve[2].Actual_Position));  sLine := CONCAT(sLine, ',');
-        sLine := CONCAT(sLine, sSource);                                      sLine := CONCAT(sLine, ',');
+        sLine := CONCAT(sLine, sSource);                                     sLine := CONCAT(sLine, ',');
         sLine := CONCAT(sLine, INT_TO_STRING(stValve[2].State));             sLine := CONCAT(sLine, ',');
 
         (* Valve 3 *)
         CASE stValve[3].Source OF
-            E_ValveSource.MQTT: sSource := 'MQTT';
-            E_ValveSource.HMI:  sSource := 'HMI';
-            ELSE                sSource := 'NONE';
+            E_CommandSource.MQTT:   sSource := 'MQTT';
+            E_CommandSource.HMI:    sSource := 'HMI';
+            E_CommandSource.Manual: sSource := 'Manual';
+            ELSE                  sSource := 'NONE';
         END_CASE
         sLine := CONCAT(sLine, REAL_TO_STRING(stValve[3].Active_Setpoint));  sLine := CONCAT(sLine, ',');
         sLine := CONCAT(sLine, REAL_TO_STRING(stValve[3].Actual_Position));  sLine := CONCAT(sLine, ',');
-        sLine := CONCAT(sLine, sSource);                                      sLine := CONCAT(sLine, ',');
+        sLine := CONCAT(sLine, sSource);                                     sLine := CONCAT(sLine, ',');
         sLine := CONCAT(sLine, INT_TO_STRING(stValve[3].State));             sLine := CONCAT(sLine, ',');
 
         (* Sensor data — real values from FB_SensorIO, not hardcoded -999 *)

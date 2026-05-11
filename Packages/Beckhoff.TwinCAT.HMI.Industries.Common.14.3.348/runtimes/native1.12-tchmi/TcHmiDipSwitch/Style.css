@@ -1,0 +1,38 @@
+/** Styles for all themes */
+
+.TcHmi_Controls_Beckhoff_Industries_Common_TcHmiDipSwitch.TcHmi_Controls_Beckhoff_TcHmiButton,
+.TcHmi_Controls_Beckhoff_Industries_Common_TcHmiDipSwitch.TcHmi_Controls_Beckhoff_TcHmiButton.down {
+    background: none;
+    border: none;
+    box-shadow: none;
+}
+
+.TcHmi_Controls_Beckhoff_Industries_Common_TcHmiDipSwitch .TcHmi_Controls_Beckhoff_TcHmiButton-template {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.TcHmi_Controls_Beckhoff_Industries_Common_TcHmiDipSwitch svg {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.TcHmi_Controls_Beckhoff_Industries_Common_TcHmiDipSwitch .TcHmi_Controls_Beckhoff_TcHmiButton-template-content-text {
+    display: none;
+}
+
+.TcHmi_Controls_Beckhoff_Industries_Common_TcHmiDipSwitch
+    .TcHmi_Controls_Beckhoff_Industries_Common_TcHmiDipSwitch-lever-on {
+    display: none;
+}
+
+.TcHmi_Controls_Beckhoff_Industries_Common_TcHmiDipSwitch.down
+    .TcHmi_Controls_Beckhoff_Industries_Common_TcHmiDipSwitch-lever-off {
+    display: none;
+}
+
+.TcHmi_Controls_Beckhoff_Industries_Common_TcHmiDipSwitch.down
+    .TcHmi_Controls_Beckhoff_Industries_Common_TcHmiDipSwitch-lever-on {
+    display: inline;
+}
