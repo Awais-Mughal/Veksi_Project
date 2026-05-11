@@ -1,121 +1,90 @@
 # Architecture
 
-## Module overview
+## Scope
 
-The PLC project consists of **5 function blocks** orchestrated by `MAIN`,
-plus 4 GVLs and 6 user-defined types.
+The PLC project is organized around one top-level program, five function blocks, four GVLs, and the DUTs under `State_Var`. `MAIN` is the cycle conductor: it copies HMI/runtime data, selects the command source, runs the function blocks, and mirrors feedback back to TcHMI symbols.
 
-| Module             | Type | File                                     | Responsibility                                                  |
-| ------------------ | ---- | ---------------------------------------- | --------------------------------------------------------------- |
-| `MAIN`             | PRG  | `Functions/MAIN.TcPOU`                   | Orchestrate FBs, copy data between GVLs                         |
-| `FB_ValveControl`  | FB   | `Functions/FB_ValveControl.TcPOU`        | Per-valve TC2_MC2 state machine (instantiated 3x)               |
-| `FB_SensorIO`      | FB   | `Functions/FB_SensorIO.TcPOU`            | Read raw analog inputs, scale, filter, fault-detect             |
-| `FB_MqttManager`   | FB   | `Functions/FB_MqttManager.TcPOU`         | TF6701 MQTT client; publish + subscribe + JSON                  |
-| `FB_CsvLogger`     | FB   | `Functions/FB_CSVLogger.TcPOU`           | Monthly CSV log file; cyclic and forced row writes              |
+## Runtime modules
 
-## Data-flow diagram
+| Module | Type | File | Responsibility |
+| --- | --- | --- | --- |
+| `MAIN` | PROGRAM | `XAE/VekSi_PLC/Functions/MAIN.TcPOU` | Orchestrates every PLC cycle, performs command-source arbitration, calls FBs, mirrors status |
+| `FB_ValveControl` | FB | `XAE/VekSi_PLC/Functions/FB_ValveControl.TcPOU` | Per-valve motion, homing, halt, fault/reset, manual jog and jog LEDs |
+| `FB_SensorIO` | FB | `XAE/VekSi_PLC/Functions/FB_SensorIO.TcPOU` | Raw sensor input scaling, filtering, and fault flags |
+| `FB_MqttManager` | FB | `XAE/VekSi_PLC/Functions/FB_MqttManager.TcPOU` | MQTT connect/reconnect, auto-subscribe, command parsing, status publish |
+| `FB_CsvLogger` | FB | `XAE/VekSi_PLC/Functions/FB_CSVLogger.TcPOU` | Monthly CSV file creation, headers, row writes, forced writes |
+
+## Data flow
 
 ```mermaid
 flowchart TB
-    subgraph IO["Hardware I/O"]
-        AI[GVL_IO<br/>Analog/digital INs]
-    end
-
-    subgraph FBs["Function Blocks"]
-        SIO[FB_SensorIO]
-        VC1[FB_ValveControl<br/>Valve 1]
-        VC2[FB_ValveControl<br/>Valve 2]
-        VC3[FB_ValveControl<br/>Valve 3]
-        MQT[FB_MqttManager]
-        CSV[FB_CsvLogger]
-    end
-
-    subgraph GVLs["Global Variable Lists"]
-        SYS[GVL_System<br/>runtime state]
-        HMI[GVL_HMI<br/>HMI bindings]
-    end
-
-    subgraph EXT["External"]
-        BRK[MQTT Broker]
-        FS[CSV file<br/>C:\TwinCAT\3.1\Boot\Log]
-        WEB[TcHMI client<br/>web browser]
-    end
-
-    AI --> SIO
-    SIO --> SYS
-    HMI -- setpoints/commands --> SYS
-    SYS --> VC1
-    SYS --> VC2
-    SYS --> VC3
-    VC1 --> SYS
-    VC2 --> SYS
-    VC3 --> SYS
-    MQT -- parsed cmds --> SYS
-    SYS --> MQT
-    SYS --> CSV
-    SYS -- mirrors --> HMI
-    HMI <--> WEB
-    MQT <--> BRK
-    CSV --> FS
+    HMI[TcHMI dev/test HMI] <--> GVLH[GVL_HMI\nHMI_* commands / ACT_* feedback]
+    IO[GVL_IO\nraw inputs and physical outputs] --> SIO[FB_SensorIO]
+    SIO --> SYS[GVL_System\nruntime data bus]
+    GVLH --> MAIN[MAIN]
+    MAIN --> SYS
+    SYS --> V1[FB_ValveControl Valve 1]
+    SYS --> V2[FB_ValveControl Valve 2]
+    SYS --> V3[FB_ValveControl Valve 3]
+    IO --> V1
+    IO --> V2
+    IO --> V3
+    V1 --> SYS
+    V2 --> SYS
+    V3 --> SYS
+    SYS --> MQTT[FB_MqttManager]
+    MQTT --> SYS
+    SYS --> CSV[FB_CsvLogger]
+    CSV --> FS[CSV files]
+    MQTT <--> Broker[MQTT broker]
+    MAIN --> GVLH
 ```
 
-## GVL responsibilities
+## GVL roles
 
-| GVL          | Owner / writer        | Reader                         | Purpose                                  |
-| ------------ | --------------------- | ------------------------------ | ---------------------------------------- |
-| `GVL_Config` | (constant)            | All FBs                        | Compile-time tunables                    |
-| `GVL_IO`    | EtherCAT I/O mapping  | `FB_SensorIO`, `FB_ValveControl` | Raw analog/digital inputs              |
-| `GVL_System` | All FBs               | `MAIN`                         | Runtime shared state                     |
-| `GVL_HMI`    | `MAIN` (ACT_*) / TcHMI (HMI_*) | All FBs               | HMI <-> PLC interface                    |
+| GVL | Main writer | Main readers | Purpose |
+| --- | --- | --- | --- |
+| `GVL_Config` | Constants | `MAIN`, FBs | Compile-time configuration: stroke, motion, sensor scaling, MQTT defaults, CSV path |
+| `GVL_IO` | EtherCAT mapping / valve FB LED outputs | `FB_SensorIO`, `FB_ValveControl` | Physical raw inputs, limit switches, jog buttons, jog LEDs |
+| `GVL_System` | `MAIN` and FBs | `MAIN`, MQTT, CSV | Runtime bus for valve data, sensor data, command-update edges, health flags |
+| `GVL_HMI` | TcHMI for `HMI_*`; PLC for `ACT_*` | `MAIN`, TcHMI | HMI/PLC interface symbols |
 
-## Cycle order in `MAIN`
+## PLC cycle order
 
 ```mermaid
 sequenceDiagram
-    participant MAIN
-    participant SensorIO as FB_SensorIO
-    participant Valve as FB_ValveControl x3
-    participant MQTT as FB_MqttManager
-    participant CSV as FB_CsvLogger
+    participant M as MAIN
+    participant S as FB_SensorIO
+    participant V as FB_ValveControl x3
+    participant Q as FB_MqttManager
+    participant C as FB_CsvLogger
 
-    Note over MAIN: First scan only
-    MAIN->>MAIN: Load MQTT defaults into GVL_HMI
-    Note over MAIN: Every cycle
-    MAIN->>MAIN: Copy HMI inputs -> GVL_System
-    MAIN->>SensorIO: Run sensor reading
-    SensorIO-->>MAIN: GVL_System.Sensors populated
-    MAIN->>Valve: Pass setpoints + sensor + MQTT data
-    Valve-->>MAIN: Valve state, position, source
-    MAIN->>MAIN: Auto-clear reset commands
-    MAIN->>MAIN: Build timestamp string
-    MAIN->>MQTT: Run MQTT manager
-    MQTT-->>MAIN: bMqttValveSetpoint, status
-    MAIN->>CSV: Run CSV logger
-    MAIN->>MAIN: Mirror runtime data -> GVL_HMI
-    MAIN->>MAIN: Compute SystemReady, AnyFault flags
+    M->>M: Seed MQTT defaults into HMI_MQTT_Config while init flag is false
+    M->>M: On HMI-mode rising edge, copy actual positions into HMI setpoint boxes
+    M->>M: Copy HMI setpoints/resets and MQTT setpoints into GVL_System
+    M->>M: Select one source: HMI, MQTT, or Manual
+    M->>S: Scale/filter sensor data
+    M->>V: Run valve FBs with selected Active_Setpoint and current source
+    V-->>M: State, position, fault, last command source, jog LEDs
+    M->>M: Auto-clear reset commands
+    M->>Q: Connect/publish/subscribe and parse MQTT commands
+    Q-->>M: Connection status, JSON preview, received command setpoints
+    M->>C: Periodic/forced CSV logging
+    M->>M: Mirror ACT_* symbols and health flags to GVL_HMI
 ```
 
-## Setpoint arbitration (per valve)
+## Command-source arbitration
 
-`FB_ValveControl` decides which setpoint to follow:
+Command selection is now **system-wide** through `GVL_HMI.HMI_CommandSource`:
 
-```mermaid
-flowchart LR
-    A[Cycle start] --> B{MQTT_Enabled<br/>AND<br/>MQTT changed?}
-    B -- yes --> C[ActiveSetpoint = MQTT<br/>Source = MQTT]
-    B -- no --> D{HMI Update<br/>button pressed?}
-    C --> D
-    D -- yes --> E[ActiveSetpoint = HMI<br/>Source = HMI]
-    D -- no --> F[Keep last setpoint]
-    E --> G[Convert pct to mm,<br/>feed into MOVING state]
-    F --> G
-```
+| Selected source | Active setpoint source | Update edge | Notes |
+| --- | --- | --- | --- |
+| `E_CommandSource.HMI` | `HMI_ValveN_Setpoint` | `HMI_UPDATE` | Test HMI numeric boxes drive all valves when Update is pressed |
+| `E_CommandSource.MQTT` | Last parsed MQTT `ValveN` values | `fbMqttManager.bNewRemoteCommand` | Only applied while MQTT is enabled and connected |
+| `E_CommandSource.Manual` | `Manual_Setpoint` / jog behavior | none for absolute move | Valve FB enters `MANNUAL_JOG`; physical jog buttons move valves while held |
 
-HMI always wins if both arrive in the same PLC cycle.
+`FB_ValveControl` no longer chooses between HMI and MQTT itself. It receives an already selected `Active_Setpoint` and `currentcommandsrc` from `MAIN`, clamps the selected setpoint, and uses the source for `lastcommandsrc` while moving or jogging.
 
-## Source-of-truth conventions
+## Development HMI status
 
-- **Operator inputs** flow `GVL_HMI.HMI_*` -> `GVL_System.Valve[n]`
-- **PLC outputs** flow `GVL_System.Valve[n]` -> `GVL_HMI.ACT_*`
-- **MQTT data** uses `GVL_System.MQTT_*` as the runtime mirror
-- **Sensor data** uses `GVL_System.Sensors` (struct) for all consumers
+The current HMI view is intentionally a **development/test HMI**. It exposes raw controls and diagnostics for setpoints, mode radio buttons, MQTT publish/enable actions, forced CSV write, a file browser area, and EtherCAT diagnostics. Treat the attached screenshot as a test bench layout, not the final production HMI design.

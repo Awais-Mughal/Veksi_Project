@@ -1,82 +1,84 @@
 # Veksi Irrigation Control System
 
-A TwinCAT 3 (Beckhoff PLC) project that controls **3 irrigation gate valves**
-with HMI, MQTT, sensor monitoring, and CSV logging.
+TwinCAT 3 / Beckhoff PLC project for a **3-valve irrigation gate system** with local HMI operation, MQTT telemetry/commands, sensor scaling, and CSV logging.
 
-## Features
+> **HMI note:** the current `HMI/Desktop.view` and the screenshot used during development are a **test/development HMI only**. They are useful for exercising bindings, mode selection, MQTT publishing, and CSV logging, but they are not a final production operator screen.
 
-- **3 valves**, position 0-100 % via TC2_MC2 motion control
-- **Water level** monitoring via analog input
-- **Temperature** monitoring via EL3202 RTD card (2 probes)
-- **HMI** (TcHMI) with setpoint inputs, status displays, MQTT config panel
-- **MQTT** (TF6701) bidirectional:
-  - Publishes status JSON every 5 minutes
-  - Subscribes to a command topic for remote setpoints
-  - Per-valve override enable
-- **Source indicator** (HMI / MQTT / NONE) on the HMI for every valve
-- **CSV logging** with monthly file rotation, real timestamps and sensor data
-- **State machines** for valves, MQTT, and CSV logger - all documented
+## Current capabilities
 
-## Hardware (per design picture)
+- Controls **3 stepper-driven gate valves** through TC2_MC2 motion control.
+- Uses a system-wide command source selector: **HMI**, **MQTT**, or **Manual**.
+- Converts valve commands from `0–100 %` to axis travel using `VALVE_FULL_STROKE_MM`.
+- Supports per-valve stop, reset, homing, raw target/position diagnostics, and state/fault display.
+- Supports local/manual jog inputs and jog LEDs through `GVL_IO` when **Manual** source is selected.
+- Reads water level, two temperature probes, and position-feedback channels through `FB_SensorIO`.
+- Publishes status JSON and receives command JSON through `FB_MqttManager`.
+- Logs monthly CSV files through `FB_CsvLogger`, with periodic and forced writes.
 
-| Module          | Purpose                                              |
-| --------------- | ---------------------------------------------------- |
-| CX5140-0195     | Embedded PC (controller)                             |
-| EK1521-0010     | EtherCAT junction (single-mode fibre)                |
-| EL1859          | 16x digital input/output                             |
-| EL3202          | 2x PT100 temperature input                           |
-| EL1004          | 4x digital input                                     |
-| EL3074          | 4x analog input (4-20 mA)                            |
-| EK1322          | EtherCAT P junction                                  |
-| EL9011          | EtherCAT bus end                                     |
-| EPP7041-1002    | Stepper drive (1 per valve)                          |
-| PS2001-2410     | 24 V DC power supply                                 |
+## Hardware represented in the project
 
-## Software prerequisites
+| Module | Purpose |
+| --- | --- |
+| CX5140 / TwinCAT runtime | PLC controller |
+| EL3074 | 4-channel analog input, used for water-level / feedback raw inputs |
+| EL3202 | 2-channel PT100 temperature input |
+| EL1859 / EL1004 | Digital I/O for limits, buttons, lamps, and auxiliary inputs |
+| EK1322 / EK1521 / EL9011 | EtherCAT / EtherCAT P topology components |
+| EPP7041-1002 | Stepper drives, one per valve |
 
-- **TwinCAT 3.1** build 4026.x (Engineering + XAR)
-- **TC2_MC2** library (motion control)
-- **TF6701** IoT MQTT supplement
-- **Tc3_IotBase** + **Tc3_JsonXml** libraries
-- **Visual Studio 2019/2022** with TwinCAT XAE
-- An MQTT broker (Mosquitto recommended for testing)
+## Important defaults
+
+| Area | Current default |
+| --- | --- |
+| Full valve stroke | `126 mm` (`GVL_Config.VALVE_FULL_STROKE_MM`) |
+| Position tolerance | `0.5 %` |
+| CSV path | `C:\TwinCAT\3.1\Boot\Log\` |
+| CSV file pattern | `IrrigationLog_YYYY-MM.csv` |
+| MQTT broker | `imsiot.aws.thinger.io` |
+| MQTT port | `8883` |
+| MQTT publish topic | `irrigation/status` |
+| MQTT subscribe topic | `irrigation/command` |
+| MQTT publish interval | `300 s` / 5 minutes |
+
+Review and calibrate these values before using real hardware.
 
 ## Quick start
 
 ```text
-git clone <this-repo>
-# Open VeKsi_Project.sln in Visual Studio + TwinCAT XAE
-# Configure 3 NC axes (see docs/SETUP.md)
-# Build + Activate Configuration
-# Open HMI/HMI.hmiproj and deploy
-# Edit MQTT broker settings from the HMI panel and click Apply
+# Open VeKsi_Project.sln in Visual Studio with TwinCAT XAE
+# Link the three MAIN.Axis_ValveN references to NC axes
+# Link GVL_IO physical inputs/outputs to the EtherCAT terminals
+# Build and Activate Configuration
+# Open/deploy HMI/HMI.hmiproj for test operation
+# Select HMI, MQTT, or Manual mode from the HMI/test panel
 ```
 
 ## Documentation
 
-See [docs/](docs/) for the full documentation set:
-
-| File                                            | Content                           |
-| ----------------------------------------------- | --------------------------------- |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)    | Module layout and data flow       |
-| [docs/SETUP.md](docs/SETUP.md)                  | Recreate the project from scratch |
-| [docs/CONFIGURATION.md](docs/CONFIGURATION.md)  | Tunable constants reference       |
-| [docs/STATE_MACHINES.md](docs/STATE_MACHINES.md)| Valve, MQTT, CSV state diagrams   |
-| [docs/HMI_FLOW.md](docs/HMI_FLOW.md)            | HMI screens + operator workflow   |
-| [docs/MQTT_PROTOCOL.md](docs/MQTT_PROTOCOL.md)  | Topic schema + JSON examples      |
-| [docs/CSV_FORMAT.md](docs/CSV_FORMAT.md)        | CSV columns + rotation rules      |
+| File | Content |
+| --- | --- |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Module layout, data flow, and command-source arbitration |
+| [docs/SETUP.md](docs/SETUP.md) | Build, link, deploy, and smoke-test checklist |
+| [docs/CONFIGURATION.md](docs/CONFIGURATION.md) | Compile-time constants and runtime HMI/MQTT settings |
+| [docs/STATE_MACHINES.md](docs/STATE_MACHINES.md) | Valve, MQTT, and CSV state machines |
+| [docs/HMI_FLOW.md](docs/HMI_FLOW.md) | Development HMI workflow and symbol bindings |
+| [docs/MQTT_PROTOCOL.md](docs/MQTT_PROTOCOL.md) | Topics, payloads, and behavior |
+| [docs/CSV_FORMAT.md](docs/CSV_FORMAT.md) | CSV filename, columns, and state values |
+| [docs/CODE_WALKTHROUGH.md](docs/CODE_WALKTHROUGH.md) | Practical code walkthrough by module |
+| [docs/CODE_LINE_BY_LINE.md](docs/CODE_LINE_BY_LINE.md) | Code-reading reference for key PLC files |
+| [docs/CHANGELOG.md](docs/CHANGELOG.md) | Documentation update history |
 
 ## Repository layout
 
 ```text
 Veksi_Project/
-|-- XAE/VekSi_PLC/           # TwinCAT 3 PLC project
-|   |-- Functions/           # POUs (FB_ValveControl, FB_SensorIO, FB_MqttManager, FB_CsvLogger, MAIN)
-|   |-- State_Var/           # DUTs (enums + structs)
-|   `-- Variables_Lists/     # GVLs (Config, IO, System, HMI)
-|-- HMI/                     # TcHMI project (Desktop.view)
+|-- XAE/VekSi_PLC/
+|   |-- Functions/           # MAIN and function blocks
+|   |-- State_Var/           # DUTs: enums and structs
+|   `-- Variables_Lists/     # GVL_Config, GVL_IO, GVL_System, GVL_HMI
+|-- HMI/                     # TcHMI development/test project
 |-- docs/                    # Project documentation
-`-- VeKsi_Project.sln        # Visual Studio solution
+`-- VeKsi_Project.sln        # Visual Studio / TwinCAT solution
 ```
 
 ## License
