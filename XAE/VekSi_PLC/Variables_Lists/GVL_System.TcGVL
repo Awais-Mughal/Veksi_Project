@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <GVL Name="GVL_System" Id="{aa1e9a6c-afe5-4d88-aef5-1834e6cbe9ad}">
     <Declaration><![CDATA[(*
@@ -22,6 +22,11 @@ VAR_GLOBAL
 
     // ── Valve runtime data ───────────────────────────────────────
     Valve                   : ARRAY[1..3] OF ST_ValveData;  // Index 1=V1, 2=V2, 3=V3
+	bCommandUpdate_MQTT			: BOOL;
+	bCommandUpdate_HMI			: BOOL;
+	bCommandUpdate_Mannual		: BOOL;
+
+	bCommandUpdate			: BOOL;
 
     // ── Sensor data (written by FB_SensorIO) ─────────────────────
     Sensors                 : ST_SensorData;

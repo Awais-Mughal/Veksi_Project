@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="FB_MqttManager" Id="{a85faad5-c4ce-456e-ac7f-31861d0adeef}" SpecialFunc="None">
     <Declaration><![CDATA[(*
@@ -87,7 +87,7 @@ VAR_OUTPUT
 	
 	(* Connection state machine *)
 	eState : E_MQTTState;
-	currentState	: STRING;
+	currentState_strng	: STRING;
 	
 	LastmsgPub : STRING;
 	LastmsgRcv : STRING;
@@ -151,7 +151,7 @@ CASE eState OF
        DISABLED — MQTT off, waiting for operator enable
        ----------------------------------------------------------- *)
     E_MQTTState.DISABLED:
-		currentState := 'DISABLED';
+		currentState_strng := 'DISABLED';
         bConnectCmd               := FALSE;
         bAutoSubscribed           := FALSE;
         sErrorMsg                 := '';
@@ -167,7 +167,7 @@ CASE eState OF
        Config must be assigned before Execute(TRUE) is called.
        ----------------------------------------------------------- *)
     E_MQTTState.CONNECTING:
-		currentState := 'CONNECTING';
+		currentState_strng := 'CONNECTING';
         fbMqttClient.sHostName      := stConfig.sBrokerAddress;
         fbMqttClient.nHostPort      := stConfig.nPort;
         fbMqttClient.sClientId      := stConfig.sClientId;
@@ -203,7 +203,7 @@ CASE eState OF
        Monitor for config change, enable toggle, or dropout.
        ----------------------------------------------------------- *)
     E_MQTTState.CONNECTED:
-		currentState := 'CONNECTED';
+		currentState_strng := 'CONNECTED';
         bConnectCmd := TRUE;
 
         (* Auto-subscribe to command topic once per connection.
@@ -232,7 +232,7 @@ CASE eState OF
        DISCONNECTING — Execute(FALSE) closes the connection.
        ----------------------------------------------------------- *)
     E_MQTTState.DISCONNECTING:
-		currentState := 'DISCONNECTING';
+		currentState_strng := 'DISCONNECTING';
         bConnectCmd := FALSE;
 
         IF NOT fbMqttClient.bConnected THEN
@@ -249,7 +249,7 @@ CASE eState OF
        WAIT_RECONNECT — back-off delay before next attempt.
        ----------------------------------------------------------- *)
     E_MQTTState.WAIT_RECONNECT:
-		currentState := 'WAIT_RECONNECT';
+		currentState_strng := 'WAIT_RECONNECT';
         bConnectCmd := FALSE;
         tonReconnect(IN := TRUE, PT := stConfig.tReconnectDelay);
 

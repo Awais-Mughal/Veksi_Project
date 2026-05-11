@@ -148,6 +148,12 @@
     <Content Include=".eslintrc.json">
       <Visible>false</Visible>
     </Content>
+    <Content Include="Images\angles-down-solid-full.svg">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Images\angles-up-solid-full.svg">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Server\TcHmiEcDiagnostics\TcHmiEcDiagnostics.Config.default.json">
       <SubType>Content</SubType>
     </Content>

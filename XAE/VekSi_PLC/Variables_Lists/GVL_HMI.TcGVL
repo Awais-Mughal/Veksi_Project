@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <GVL Name="GVL_HMI" Id="{0e0ac9c9-f341-4ef2-89c2-f9614e406c1b}">
     <Declaration><![CDATA[(*
@@ -36,13 +36,14 @@ VAR_GLOBAL
     HMI_UPDATE                  : BOOL;             // HMI button: apply setpoint(s)
 
     ACT_Valve1_Position         : REAL;             // PLC output: actual position 0–100 %
-    ACT_Valve1_State            : E_ValveState;     // PLC output: current state machine state
+    ACT_Valve1_State            : STRING;     // PLC output: current state machine state
     ACT_Valve1_Source           : E_CommandSource;    // PLC output: last command source enum
     ACT_Valve1_SourceText       : STRING(8);        // PLC output: 'HMI', 'MQTT', 'Manual', or 'NONE'
     ACT_Valve1_Fault            : BOOL;             // PLC output: fault active flag
     ACT_Valve1_FaultCode        : UDINT;            // PLC output: MC2 fault code
     Raw_Valve1_Setpoint         : LREAL;            // PLC output: active setpoint in mm
     Raw_Valve1_Position         : LREAL;            // PLC output: actual position in mm
+	
 
     // ══════════════════════════════════════════════════════════
     // VALVE 2 — HMI Interface
@@ -53,7 +54,7 @@ VAR_GLOBAL
     HMI_Valve2_Homing           : BOOL;             // HMI button: trigger re-homing valve 2
 
     ACT_Valve2_Position         : REAL;             // PLC output: actual position 0–100 %
-    ACT_Valve2_State            : E_ValveState;     // PLC output: current state machine state
+    ACT_Valve2_State            : STRING;     // PLC output: current state machine state
     ACT_Valve2_Source           : E_CommandSource;    // PLC output: last command source enum
     ACT_Valve2_SourceText       : STRING(8);        // PLC output: 'HMI', 'MQTT', 'Manual', or 'NONE'
     ACT_Valve2_Fault            : BOOL;             // PLC output: fault active flag
@@ -70,7 +71,7 @@ VAR_GLOBAL
     HMI_Valve3_Homing           : BOOL;             // HMI button: trigger re-homing valve 3
 
     ACT_Valve3_Position         : REAL;             // PLC output: actual position 0–100 %
-    ACT_Valve3_State            : E_ValveState;     // PLC output: current state machine state
+    ACT_Valve3_State            : STRING;     // PLC output: current state machine state
     ACT_Valve3_Source           : E_CommandSource;    // PLC output: last command source enum
     ACT_Valve3_SourceText       : STRING(8);        // PLC output: 'HMI', 'MQTT', 'Manual', or 'NONE'
     ACT_Valve3_Fault            : BOOL;             // PLC output: fault active flag
@@ -120,6 +121,18 @@ VAR_GLOBAL
     // ══════════════════════════════════════════════════════════
     HMI_ResetAll                : BOOL;             // HMI button: reset all valve faults
     ACT_SystemReady             : BOOL;             // PLC output: all homed, no faults
+	
+	
+	///////HMI Control signals
+	
+	sHMI_mode		: BOOL;
+	sMqtt_mode		: BOOL;
+	sMannual_mode	: BOOL;
+	
+	
+	
+	
+	
 
 END_VAR
 ]]></Declaration>

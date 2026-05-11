@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <DUT Name="ST_ValveData" Id="{cbd16f96-e975-4a78-8ab5-965d19f24af6}">
     <Declaration><![CDATA[
@@ -15,14 +15,17 @@ STRUCT
     Actual_Pos_Raw  : LREAL;        // Raw axis position in mm or steps (from MC2)
 
     // --- Command source tracking ---
-    Source          : E_CommandSource;  // Who issued the last command
+    Source          : E_CommandSource;  
+	lastsrc			: E_CommandSource; // Who issued the last command
+	
 
     // --- State machine status ---
-    State           : E_ValveState;  // Current state of FB_ValveControl
-    IsHomed         : BOOL;          // TRUE once homing has been completed
-    InPosition      : BOOL;          // TRUE when actual ≈ setpoint (within tolerance)
-    IsFault         : BOOL;          // TRUE when in FAULT state
-    FaultCode       : UDINT;         // MC or drive error code for diagnostics
+    State           	: E_ValveState;  // Current state of FB_ValveControl
+	currentState_string : STRING;
+    IsHomed         	: BOOL;          // TRUE once homing has been completed
+    InPosition      	: BOOL;          // TRUE when actual ≈ setpoint (within tolerance)
+    IsFault         	: BOOL;          // TRUE when in FAULT state
+    FaultCode       	: UDINT;         // MC or drive error code for diagnostics
 	
 
 	

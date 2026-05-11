@@ -1551,7 +1551,7 @@ External Setpoint Generation:
 					<Name>Axis 2</Name>
 					<AxisPara>
 						<Dynamic Acceleration="16.9085" Deceleration="16.9085" Jerk="53.5391"/>
-						<Velo RefSearch="3" RefSync="3" SlowManual="3" FastManual="3" Fast="3" Maximum="6"/>
+						<Velo RefSearch="3" RefSync="3" SlowManual="2" FastManual="3" Fast="3" Maximum="6"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="1">
@@ -1712,7 +1712,7 @@ External Setpoint Generation:
 					<Name>Axis 3</Name>
 					<AxisPara>
 						<Dynamic Acceleration="16.9085" Deceleration="16.9085" Jerk="53.5391"/>
-						<Velo Maximum="6"/>
+						<Velo RefSearch="3" RefSync="3" SlowManual="2" FastManual="3" Maximum="6"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="1">
@@ -1873,7 +1873,7 @@ External Setpoint Generation:
 					<Name>Axis 1</Name>
 					<AxisPara>
 						<Dynamic Acceleration="16.9085" Deceleration="16.9085" Jerk="53.5391"/>
-						<Velo RefSearch="3" RefSync="3" SlowManual="1" FastManual="3" Maximum="6"/>
+						<Velo RefSearch="3" RefSync="3" SlowManual="2" FastManual="3" Maximum="6"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="1">
@@ -2034,7 +2034,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{1DA7BD83-29A5-425E-BED6-F25BE9F7A34D}" Name="VekSi_PLC" PrjFilePath="VekSi_PLC\VekSi_PLC.plcproj" TmcFilePath="VekSi_PLC\VekSi_PLC.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{BB8B96FC-1673-9390-10BE-9CF09F14B10B}" TmcPath="VekSi_PLC\VekSi_PLC.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{BE0429DA-6F73-9A4D-9AB4-8F9CDDEB1244}" TmcPath="VekSi_PLC\VekSi_PLC.tmc">
 					<Name>VekSi_PLC Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -5733,8 +5733,9 @@ External Setpoint Generation:
 			</Device>
 		</Io>
 		<SymbolWatch>
-			<Variable>TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1322)^Box 8 (EPP7041-1002)^STM Status^Status^Digital input 1</Variable>
 			<Variable>TIPC^VekSi_PLC^VekSi_PLC Instance^PlcTask Inputs^GVL_IO.bBottom_position_1</Variable>
+			<Variable>TIPC^VekSi_PLC^VekSi_PLC Instance^PlcTask Inputs^GVL_IO.bTop_position_1</Variable>
+			<Variable>TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1322)^Box 8 (EPP7041-1002)^STM Status^Status^Digital input 1</Variable>
 		</SymbolWatch>
 	</Project>
 	<Mappings>
@@ -5852,8 +5853,8 @@ External Setpoint Generation:
 		</OwnerA>
 		<OwnerA Name="TIPC^VekSi_PLC^VekSi_PLC Instance">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1322)^Box 8 (EPP7041-1002)">
-				<Link VarA="PlcTask Inputs^GVL_IO.bBottom_position_1" VarB="STM Status^Status^Digital input 2"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.bTop_position_1" VarB="STM Status^Status^Digital input 1"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.bBottom_position_1" VarB="STM Status^Status^Digital input 1"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.bTop_position_1" VarB="STM Status^Status^Digital input 2"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis 1">
 				<Link VarA="PlcTask Inputs^MAIN.Axis_Valve1.NcToPlc" VarB="Outputs^ToPlc"/>
