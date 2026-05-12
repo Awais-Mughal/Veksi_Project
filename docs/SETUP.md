@@ -1,168 +1,103 @@
-# Setup Guide
+# Setup and Commissioning
 
-Step-by-step recreation of the project from scratch on a new
-target IPC.
+## Prerequisites
 
-## 1. Hardware
+- TwinCAT 3.1 Engineering / XAE compatible with the project files.
+- TwinCAT runtime / XAR on the target IPC or development runtime.
+- TC2_MC2 library for motion control.
+- TF6701 / Tc3_IotBase and Tc3_JsonXml libraries for MQTT/JSON.
+- Tc2_Utilities and Tc2_System for file I/O/time functions.
+- Visual Studio with TwinCAT integration.
+- MQTT broker for MQTT testing.
 
-Per the design picture, the panel includes:
+## Open the solution
 
-| Position | Module          | Quantity | Function                       |
-| -------- | --------------- | -------- | ------------------------------ |
-| 100      | PS2001-2410     | 1        | 24 V DC PSU                    |
-| 200      | CX5140-0195     | 1        | Embedded PC                    |
-| 300      | EK1521-0010     | 1        | EtherCAT fibre junction        |
-| 400      | EL1859          | 1        | 16x DI/DO                      |
-| 500      | EL3202          | 1        | 2x PT100 RTD                   |
-| 600      | EL1004          | 1        | 4x DI                          |
-| 700      | EL3074          | 1        | 4x AI 4-20 mA                  |
-| 800      | EK1322          | 1        | EtherCAT P junction            |
-| 900      | EL9011          | 1        | Bus end terminal               |
-| 1000-1200| EPP7041-1002    | 3        | Stepper drives (one per valve) |
+1. Open `VeKsi_Project.sln` in Visual Studio / TwinCAT XAE.
+2. Restore/resolve TwinCAT libraries if prompted.
+3. Open the PLC project under `XAE/VekSi_PLC`.
+4. Confirm `Functions/`, `State_Var/`, and `Variables_Lists/` compile paths are intact.
 
-Wire each gate-valve actuator to its own EPP7041-1002 drive,
-connect the 3 limit switches to digital inputs (we map the
-bottom switch as the homing-cam input), and route water-level
-+ temperature sensors to the EL3074 + EL3202 channels per the
-`GVL_IO` declarations.
+## Link motion axes
 
-## 2. Software prerequisites
+Create or verify three NC axes and link them to the PLC axis references:
 
-Install on the engineering PC:
+| PLC axis ref | Physical / NC axis |
+| --- | --- |
+| `MAIN.Axis_Valve1` | Valve 1 EPP7041 axis |
+| `MAIN.Axis_Valve2` | Valve 2 EPP7041 axis |
+| `MAIN.Axis_Valve3` | Valve 3 EPP7041 axis |
 
-- TwinCAT XAE Shell (3.1.4026.x or later) — Visual Studio
-  integrated edition is fine.
-- TwinCAT XAR runtime on the CX5140 (matching version).
-- Beckhoff Function: **TF6701** (IoT MQTT) — license required.
-- Libraries used:
-  - **Tc2_MC2** (motion control)
-  - **Tc2_Standard, Tc2_System, Tc2_Utilities**
-  - **Tc3_IotBase**, **Tc3_JsonXml**, **Tc3_Module**
+Verify units so `MC_MoveAbsolute.Position` is interpreted in the same axis units expected by `VALVE_FULL_STROKE_MM`.
 
-These are listed under `<PlaceholderReference>` in
-`XAE/VekSi_PLC/VekSi_PLC.plcproj`.
+## Link I/O
 
-## 3. Open the project
+At minimum, verify these `GVL_IO` groups:
 
-```text
-git clone <this-repo>
-cd Veksi_Project
-# Open VeKsi_Project.sln in Visual Studio
-```
+| Group | Variables |
+| --- | --- |
+| Water level / analog | `AI_L1V11`, `AI_L1V20`, `AI_L2V21` |
+| Temperature | `AI_Tmp_1`, `AI_Tmp_2` |
+| Position feedback | `AI_PosFeedback_1..3` |
+| Limits | `bTop_position_N`, `bBottom_position_N` |
+| Jog buttons | `bValveN_JogUp_PB`, `bValveN_JogDown_PB` |
+| Jog LEDs | `bValveN_JogUp_LED`, `bValveN_JogDown_LED` |
 
-The solution contains:
+Some variables are currently placeholders without explicit `AT %I*` / `%Q*` mapping. Link them in the TwinCAT I/O tree before real hardware tests.
 
-- The TwinCAT project (`XAE/`)
-- The TcHMI project (`HMI/`)
+## Calibrate before real motion
 
-## 4. Configure NC axes (3 valves)
+1. Set `VALVE_FULL_STROKE_MM` to the measured full valve travel. Current default is `126` mm.
+2. Confirm top and bottom limit switch polarity.
+3. Confirm homing mode per valve. Valve 1 currently uses `MC_DefaultHoming`; valves 2 and 3 use `MC_Direct` in `MAIN`.
+4. Start with slow velocity/acceleration values.
+5. Test with mechanical travel clear and emergency stop available.
 
-For each of the 3 valves:
+## Configure MQTT
 
-1. Right-click **MOTION** -> Add new Axis -> NC Axis -> Continuous Axis
-2. Set **Encoder** -> linked to encoder input from EPP7041 (or
-   simulation for first test)
-3. Set **Drive** -> linked to EPP7041 drive
-4. **Scaling tab**: set scaling factor so that 1 PLC unit = 1 mm.
-5. **Homing tab**: select your homing mode (the project uses
-   `MC_Direct` by default; switch in `MAIN.TcPOU` if you have
-   a real reference cam).
-6. **Soft limits tab**: set min = 0.0 mm, max = `VALVE_FULL_STROKE_MM`
-   (default 6.096 mm — calibrate to your actuator).
-
-In the PLC project, link each `AXIS_REF` to its NC axis:
-
-- `MAIN.Axis_Valve1` -> Axes->Axis1
-- `MAIN.Axis_Valve2` -> Axes->Axis2
-- `MAIN.Axis_Valve3` -> Axes->Axis3
-
-## 5. Link analog and digital I/O
-
-Open `GVL_IO.TcGVL` and link each `AT %I*` symbol to its real
-EtherCAT terminal channel:
-
-| GVL_IO symbol         | Hardware channel              | Notes                               |
-| --------------------- | ----------------------------- | ----------------------------------- |
-| `AI_L1V11`            | EL3074 ch 1                   | Primary water level sensor          |
-| `AI_L1V20`            | EL3074 ch 2                   | Secondary water level (optional)    |
-| `AI_L2V21`            | EL3074 ch 3                   | Tertiary water level (optional)     |
-| `AI_Tmp_1`            | EL3202 ch 1                   | Temperature probe 1 (PT100)         |
-| `AI_Tmp_2`            | EL3202 ch 2                   | Temperature probe 2 (PT100)         |
-| `AI_PosFeedback_1..3` | (optional supplementary AI)   | Not used by NC; logged for diagnostics |
-| `bTop_position_1`     | EL1004 / EL1859 DI            | Top limit switch (over-travel)      |
-| `bBottom_position_1`  | EL1004 / EL1859 DI            | Bottom limit / homing cam           |
-
-If you run out of DI channels for separate per-valve limit
-switches, share one cam (current default in `MAIN.TcPOU`)
-or wire 6 inputs and update the FB call sites.
-
-## 6. Calibrate sensor scaling
-
-In `GVL_Config.TcGVL` adjust:
+Defaults are in `GVL_Config` and copied to `HMI_MQTT_Config`:
 
 ```iecst
-WATER_LEVEL_RAW_MIN     := 0;       // ADC count at 0% (4 mA)
-WATER_LEVEL_RAW_MAX     := 32767;   // ADC count at 100% (20 mA)
-WATER_LEVEL_ENG_MAX_MM  := 1000.0;  // Tank height in mm — calibrate!
-TEMP_RAW_SCALE_FACTOR   := 0.1;     // EL3202 outputs 0.1 °C per count
-SENSOR_FAULT_THRESHOLD  := -100;    // raw <= this means disconnected
+MQTT_DEFAULT_BROKER_IP := 'imsiot.aws.thinger.io';
+MQTT_DEFAULT_PORT := 8883;
+MQTT_DEFAULT_CLIENT_ID := 'Beckhoff';
+MQTT_DEFAULT_MAIN_TOPIC := 'irrigation/status';
+MQTT_DEFAULT_SUB_TOPIC := 'irrigation/command';
 ```
 
-The EL3074 raw range depends on its configuration tab — verify
-in the I/O Mapping screen.
+For development, update broker/credentials from the HMI test panel or directly in `GVL_Config`, then press/apply the HMI reconnect trigger.
 
-## 7. Configure MQTT broker
+## Build, activate, and run
 
-Defaults are set in `GVL_Config`:
+1. Build the PLC project.
+2. Activate the TwinCAT configuration.
+3. Login to the PLC.
+4. Start the runtime.
+5. Watch the valve states, MQTT state, CSV status, and sensor fault flags.
 
-```iecst
-MQTT_DEFAULT_BROKER_IP   := '192.168.1.100';
-MQTT_DEFAULT_PORT        := 1883;
-MQTT_DEFAULT_USERNAME    := '';
-MQTT_DEFAULT_PASSWORD    := '';
-```
+## Deploy / use the HMI
 
-After build + activate, open the HMI -> MQTT panel ->
-edit broker IP / port / credentials -> click **Apply & Reconnect**.
+1. Open `HMI/HMI.hmiproj`.
+2. Publish to the local engineering HMI server or the target IPC HMI server.
+3. Browse to the HMI live view.
+4. Remember that the current HMI is a **development/test HMI**, not a final production screen.
 
-For local testing run Mosquitto on the engineering PC:
+## Smoke tests
 
-```text
-mosquitto -v -p 1883
-```
+| Test | Expected result |
+| --- | --- |
+| Select HMI mode, enter 50% for Valve 1, press Update | Valve 1 moves toward 50%; state goes `MOVING` then `HOLD`. |
+| Press Stop during a move | Valve enters `HALT` and adopts current position after halt. |
+| Press Homing | Valve re-enters `HOMING`, then returns to `IDLE` when complete. |
+| Select MQTT mode, enable MQTT, send command JSON | Parsed setpoints become active when connected; source shows MQTT during movement. |
+| Select Manual mode and use jog buttons | Valve enters `MANNUAL_JOG`; jog LEDs blink/limit LEDs latch as coded. |
+| Click Force Write Log | A row is appended to `IrrigationLog_YYYY-MM.csv` or an error flag appears. |
 
-Set broker IP to the engineering PC's IP and click Apply.
+## Troubleshooting
 
-## 8. Build and download
-
-1. **Build** -> Build Solution (resolves all libraries)
-2. **TwinCAT** -> Activate Configuration
-3. **Login** to PLC and **Start**
-
-Verify in the **Solution Explorer**:
-
-- 3 valves transition INIT -> HOMING -> IDLE
-- `GVL_System.SystemReady` becomes TRUE
-- `GVL_System.Sensors.bAnySensorFault` is FALSE (assuming the
-  sensors are wired)
-
-## 9. Deploy the HMI
-
-1. Open `HMI/HMI.hmiproj`
-2. **Publish** to the IPC's HMI server (or the engineering PC
-   for local testing)
-3. Browse to `http://<ipc-ip>:1010/Live` and you should see
-   the Desktop view
-
-## 10. Smoke test
-
-| Test                                                             | Expected                                            |
-| ---------------------------------------------------------------- | --------------------------------------------------- |
-| Enter setpoint 50 % on Valve 1, click **Update**                 | Valve moves to ~3.05 mm, position display updates   |
-| Click **Stop** during a move                                     | Valve transitions to HALT state, halts cleanly      |
-| Trigger a fault (e.g. unplug encoder), click **Reset**           | Valve recovers, re-homes, returns to IDLE           |
-| Tick **Enable MQTT Commands** + per-valve MQTT, send command JSON| Valve moves; Source indicator says "MQTT"           |
-| Click **Force Write Log**                                        | A row appended to `IrrigationLog_YYYY-MM.csv`       |
-
-If any step fails, check `GVL_System.MQTT_LastErrorMsg`,
-`CSV_FileError`, or the relevant fault code on the HMI.
+| Symptom | Check |
+| --- | --- |
+| Valve does not move | NC axis link, drive power, top/bottom limit polarity, selected command source, update edge. |
+| MQTT does not connect | Broker host/port/credentials, firewall, `ACT_MQTT_State`, `ACT_MQTT_ErrorMsg`. |
+| MQTT command received but no move | `HMI_CommandSource` must be MQTT, `HMI_MQTT_bEnable` true, connection active, command values changed. |
+| CSV not written | `HMI_CSV_Enable`, path permissions, disk space, `ACT_CSV_Error`. |
+| Sensor fault active | Raw values in `GVL_IO`, sensor wiring, `SENSOR_FAULT_THRESHOLD`. |

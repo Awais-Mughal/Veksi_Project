@@ -1,103 +1,87 @@
 # HMI Flow
 
-The HMI is a single TcHMI view (`HMI/Desktop.view`) that exposes
-all operator controls and runtime status.
+## Development-HMI status
 
-## Screen layout
+The current `HMI/Desktop.view` and the attached screenshot are a **test/development HMI**, not the final production operator screen. The layout is intended to validate ADS bindings, mode selection, MQTT behavior, CSV logging, EtherCAT diagnostics, and manual/jog signals during development.
 
-```text
-+------------------------------------------------------------+
-| VALVES                                                     |
-| ----------------------------------------------------------|
-| Valve 1: [setpoint input]  [position display]  [Stop] [Homing] [Source: HMI/MQTT]  [MQTT]
-| Valve 2: [setpoint input]  [position display]  [Stop] [Homing] [Source: HMI/MQTT]  [MQTT]
-| Valve 3: [setpoint input]  [position display]  [Stop] [Homing] [Source: HMI/MQTT]  [MQTT]
-|                                                            |
-| [Update]   [Reset All]                System Ready: Y/N    |
-| ----------------------------------------------------------|
-| SENSORS                                                    |
-| Water Level (mm): [val]    Water Level (%): [val]          |
-| Temperature 1   : [val]    Temperature 2   : [val]         |
-| ----------------------------------------------------------|
-| MQTT                                                       |
-| [x] Enable MQTT Commands     Connected: Y    [error msg]   |
-| Broker: [----]   Port: [----]                              |
-| Username: [----] Password: [****]                          |
-| Pub Topic: [----]   Sub Topic: [----]                      |
-| [Apply & Reconnect]   [Publish Now]                        |
-| ----------------------------------------------------------|
-| LOGGING                                                    |
-| [x] CSV Logging Enabled                                    |
-| Current file: IrrigationLog_2026-04.csv                    |
-| [Force Write Log]                                          |
-+------------------------------------------------------------+
-```
+## Main areas in the current test HMI
 
-> **Note:** the Desktop.view file as shipped places the new
-> controls programmatically. Open the view in TcHMI Engineering
-> after import to fine-tune positioning.
+| Area | Purpose | Key PLC symbols |
+| --- | --- | --- |
+| Valve setpoint/position rows | Enter HMI setpoints, show actual positions, stop/home valves | `HMI_ValveN_Setpoint`, `ACT_ValveN_Position`, `HMI_ValveN_Stop`, `HMI_ValveN_Homing` |
+| Update/reset buttons | Apply HMI source setpoints or reset commands | `HMI_UPDATE`, `HMI_ValveN_Reset`, `HMI_ResetAll` |
+| CSV/file area | Force CSV write and inspect log files during testing | `WriteTrigger`, `ACT_CSV_CurrentFile`, `ACT_CSV_Error` |
+| MQTT area | Enable/disable MQTT and publish a status payload manually | `HMI_MQTT_bEnable`, `HMI_MQTT_mPublish`, `ACT_MQTT_*` |
+| Mode selection | Select system command authority | `HMI_CommandSource`, `sHMI_mode`, `sMqtt_mode`, `sMannual_mode` |
+| Manual valve panel | Test manual/jog indicators for each valve | `GVL_IO.bValveN_JogUp_PB`, `bValveN_JogDown_PB`, `bValveN_JogUp_LED`, `bValveN_JogDown_LED` |
+| EtherCAT diagnostics | Development view of terminals/drives | TwinCAT HMI EtherCAT diagnostics controls |
 
-## Operator workflow
+## Mode workflow
 
 ```mermaid
 flowchart TD
-    A[Login to HMI] --> B[See valve positions, sensors]
-    B --> C{Need to move<br/>a valve?}
-    C -- yes --> D[Enter setpoint % in numeric input]
-    D --> E[Click Update]
-    E --> F[Valve moves<br/>Source = HMI]
-    C -- no --> G{Allow<br/>MQTT control?}
-    G -- yes --> H[Tick Enable MQTT Commands<br/>and per-valve MQTT checkbox]
-    H --> I[External system publishes setpoint]
-    I --> J[Valve moves<br/>Source = MQTT]
-    G -- no --> B
-
-    F --> K{Fault<br/>indicator?}
-    J --> K
-    K -- yes --> L[Click Reset on faulted valve]
-    L --> M[Valve auto-homes, returns to IDLE]
-    K -- no --> B
+    A[Operator selects mode] --> B{HMI_CommandSource}
+    B -- HMI --> C[Enter ValveN setpoints]
+    C --> D[Press Update]
+    D --> E[MAIN copies HMI setpoints to Active_Setpoint]
+    E --> F[Valve FB moves with source HMI]
+    B -- MQTT --> G[Enable MQTT connection]
+    G --> H[MQTT command received]
+    H --> I[MAIN copies parsed ValveN values to Active_Setpoint]
+    I --> J[Valve FB moves with source MQTT]
+    B -- Manual --> K[Valve FB enters MANNUAL_JOG]
+    K --> L[Physical jog pushbuttons move valves while held]
 ```
 
-## MQTT broker setup workflow
+## HMI setpoint workflow
 
-```mermaid
-flowchart TD
-    A[Open MQTT panel] --> B[Edit broker IP/port/credentials]
-    B --> C[Click Apply & Reconnect]
-    C --> D[Connection state machine:<br/>CONNECTED -> DISCONNECTING -> CONNECTING]
-    D --> E{New connection<br/>OK?}
-    E -- yes --> F[Connected indicator: green<br/>Auto-subscribe to command topic]
-    E -- no --> G[Error message displayed<br/>Retry after tReconnectDelay]
-    G --> D
-```
+1. Select **HMI** mode.
+2. Enter desired `0–100 %` setpoints for one or more valves.
+3. Press **Update** (`HMI_UPDATE`).
+4. `MAIN` copies the setpoints to `GVL_System.Valve[N].Active_Setpoint`.
+5. Each valve FB converts percent to mm using `VALVE_FULL_STROKE_MM` and moves when outside tolerance.
 
-## Emergency stop / fault recovery
+When the system switches into HMI mode, `MAIN` copies the current actual positions into the HMI setpoint boxes so the operator starts from the current valve positions instead of stale setpoints.
+
+## MQTT workflow
+
+1. Configure broker fields in `HMI_MQTT_Config` if needed.
+2. Enable MQTT with `HMI_MQTT_bEnable`.
+3. Press Apply/Reconnect if config changed.
+4. Select **MQTT** command source.
+5. Publish command JSON to `SubscribeTopic`.
+6. Watch `ACT_MQTT_State`, `ACT_MQTT_LastRxTopic`, `ACT_MQTT_NewCommand`, source text, and actual position displays.
+
+## Manual/jog workflow
+
+1. Select **Manual** command source.
+2. Each valve FB transitions into `MANNUAL_JOG` from normal states.
+3. Use the physical jog up/down pushbuttons.
+4. Jog up is blocked at the top limit; jog down is blocked at the bottom/zero limit.
+5. Jog LEDs blink while jogging and stay solid at the corresponding limit.
+6. Leaving Manual mode adopts the current actual position as the next held target before returning to normal automatic states.
+
+## Fault / stop recovery
 
 ```mermaid
 flowchart LR
-    A[Operator notices issue] --> B{Type?}
-    B -- physical --> C[Press Stop on valve row]
-    B -- drive fault --> D[See red Fault lamp]
-    C --> E[Valve transitions to HALT,<br/>holds at current position]
-    E --> F[Click Reset to return to IDLE]
-    D --> G[Click Reset on that valve]
-    G --> H[FB_ValveControl runs MC_Reset]
-    H --> I[Auto-rehome via HOMING state]
-    I --> J[IDLE - ready for new setpoints]
+    A[Fault or operator stop] --> B{Condition}
+    B -- Stop button --> C[HALT]
+    C --> D[Axis halts and adopts current position]
+    D --> E[Reset or return to manual mode]
+    B -- Drive/motion error --> F[FAULT]
+    F --> G[Reset]
+    G --> H[MC_Reset]
+    H --> I[HOMING]
+    I --> J[IDLE]
 ```
 
-## HMI symbol bindings reference
+## Binding reference
 
-All controls bind to `GVL_HMI` symbols via the ADS bridge:
+All current controls should bind through ADS symbols under:
 
-`%s%ADS.PLC1.GVL_HMI.<VariableName>%/s%`
+```text
+%s%ADS.PLC1.GVL_HMI.<VariableName>%/s%
+```
 
-| HMI control type        | GVL_HMI variable family             |
-| ----------------------- | ----------------------------------- |
-| Numeric input (setpoint)| `HMI_ValveN_Setpoint`               |
-| Numeric input (port)    | `HMI_MQTT_Config.nPort`             |
-| Textbox                 | `HMI_MQTT_Config.s*`                |
-| Checkbox                | `HMI_MQTT_bEnable`, `HMI_ValveN_MQTT_Enable`, `HMI_CSV_Enable` |
-| Button (momentary)      | `HMI_*_Reset`, `HMI_*_Homing`, `HMI_UPDATE`, `HMI_MQTT_mPublish`, `HMI_MQTT_ApplyConfig`, `WriteTrigger` |
-| Read-only display       | `ACT_*` family                      |
+Use `GVL_IO` symbols only for hardware-test/jog-panel inputs and outputs. Production HMI controls should prefer `GVL_HMI` so `MAIN` remains the single coordinator.

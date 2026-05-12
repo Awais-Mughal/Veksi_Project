@@ -1,121 +1,107 @@
 # State Machines
 
-This project contains three explicit state machines.
-All transitions are documented inline in the corresponding `.TcPOU`.
+## `FB_ValveControl`
 
----
-
-## 1. FB_ValveControl (per valve)
-
-8 states implemented in `Functions/FB_ValveControl.TcPOU` (SECTION 5).
+`FB_ValveControl` implements the valve motion state machine with TC2_MC2 function blocks, physical limit inputs, and manual jog handling.
 
 ```mermaid
 stateDiagram-v2
     [*] --> INIT
-    INIT --> HOMING: bAxisReady = TRUE
-    HOMING --> IDLE: fbHome.Done
-    HOMING --> FAULT: fbHome.Error
-    IDLE --> MOVING: setpoint changed AND IsHomed
-    IDLE --> HOMING: bHoming rising edge
-    MOVING --> HOLD: fbMoveAbs.Done
-    MOVING --> IDLE: fbMoveAbs.CommandAborted
-    MOVING --> FAULT: fbMoveAbs.Error
-    MOVING --> HALT: Move_Stop = TRUE
-    HOLD --> MOVING: setpoint changed
-    HOLD --> HOMING: bHoming rising edge
-    HALT --> IDLE: rtReset.Q
-    HALT --> FAULT: fbHalt.Error
-    FAULT --> RESET: rtReset.Q
-    RESET --> HOMING: fbReset_MC.Done
-    state INIT { description: Clear flags, wait for drive ready }
-    state HOMING { description: MC_Home to position 0.0 }
-    state IDLE { description: Watch for setpoint or homing }
-    state MOVING { description: MC_MoveAbsolute in progress }
-    state HOLD { description: At target, monitoring }
-    state HALT { description: MC_Halt graceful stop }
-    state FAULT { description: Latched, awaiting Reset }
-    state RESET { description: MC_Reset then re-home }
+    INIT --> HOMING: axis ready and not Manual
+    INIT --> MANNUAL_JOG: axis ready and Manual
+    HOMING --> IDLE: MC_Home Done
+    HOMING --> HALT: Move_Stop
+    HOMING --> FAULT: MC_Home Error
+    IDLE --> MOVING: homed and target outside tolerance
+    IDLE --> HOMING: homing edge
+    IDLE --> MANNUAL_JOG: Manual selected
+    MOVING --> HOLD: MC_MoveAbsolute Done
+    MOVING --> IDLE: CommandAborted
+    MOVING --> HALT: Move_Stop
+    MOVING --> FAULT: MC_MoveAbsolute Error
+    HOLD --> MOVING: target outside tolerance
+    HOLD --> HOMING: homing edge
+    HOLD --> MANNUAL_JOG: Manual selected
+    MANNUAL_JOG --> HALT: jog released after motion or Stop
+    MANNUAL_JOG --> IDLE: Manual deselected
+    MANNUAL_JOG --> FAULT: MC_Jog Error
+    HALT --> MANNUAL_JOG: halt done while Manual
+    HALT --> IDLE: Reset / non-manual recovery
+    HALT --> FAULT: MC_Halt Error
+    FAULT --> RESET: Reset edge
+    RESET --> HOMING: MC_Reset Done
 ```
 
-### Transition triggers
+### Valve states
 
-| From   | To     | Trigger                             |
-| ------ | ------ | ----------------------------------- |
-| INIT   | HOMING | `bAxisReady` (drive powered, no error) |
-| HOMING | IDLE   | `fbHome.Done`                       |
-| HOMING | FAULT  | `fbHome.Error`                      |
-| IDLE   | MOVING | New setpoint outside tolerance band |
-| IDLE   | HOMING | `rtHoming.Q` (HMI Homing button)    |
-| MOVING | HOLD   | `fbMoveAbs.Done`                    |
-| MOVING | IDLE   | `fbMoveAbs.CommandAborted`          |
-| MOVING | FAULT  | `fbMoveAbs.Error`                   |
-| MOVING | HALT   | `Move_Stop` (operator STOP)         |
-| HOLD   | MOVING | New setpoint outside tolerance      |
-| HOLD   | HOMING | `rtHoming.Q`                        |
-| HALT   | IDLE   | `rtReset.Q`                         |
-| FAULT  | RESET  | `rtReset.Q`                         |
-| RESET  | HOMING | `fbReset_MC.Done`                   |
+| State | Value | Main behavior |
+| --- | ---: | --- |
+| `INIT` | 0 | Clears execute flags and waits for drive power/status. |
+| `HOMING` | 1 | Runs `MC_Home` using the configured homing mode and zero-position input. |
+| `IDLE` | 2 | Waits for a target change or homing request. |
+| `MOVING` | 3 | Runs `MC_MoveAbsolute` to `rTarget_mm`. |
+| `HALT` | 4 | Runs `MC_Halt`, adopts actual position as held target. |
+| `HOLD` | 5 | Holds at target and watches for target changes. |
+| `MANNUAL_JOG` | 6 | Manual hardware-panel jog mode. Name is spelled this way in the current enum/code. |
+| `FAULT` | 7 | Latched fault; waits for reset. |
+| `RESET` | 8 | Runs `MC_Reset`; then re-homes. |
 
-A drive error in any non-FAULT/RESET/INIT state forces a transition
-to FAULT (caught at the top of the cyclic code, SECTION 3).
+### Manual jog rules
 
----
+- Manual mode is selected by `currentcommandsrc = E_CommandSource.Manual`.
+- Jog up requires Manual mode, jog-up pressed, jog-down not pressed, no top limit, and no fault.
+- Jog down requires Manual mode, jog-down pressed, jog-up not pressed, no zero/bottom limit, and no fault.
+- LEDs blink while jogging and are solid on at their corresponding limit.
 
-## 2. FB_MqttManager
-
-5 states implemented in `Functions/FB_MqttManager.TcPOU`.
+## `FB_MqttManager`
 
 ```mermaid
 stateDiagram-v2
     [*] --> DISABLED
-    DISABLED --> CONNECTING: bEnable = TRUE
-    CONNECTING --> CONNECTED: fbMqttClient.bConnected
-    CONNECTING --> WAIT_RECONNECT: fbMqttClient.bError
-    CONNECTED --> DISCONNECTING: bEnable = FALSE
-    CONNECTED --> DISCONNECTING: rtApplyConfig rising edge
+    DISABLED --> CONNECTING: bEnable
+    CONNECTING --> CONNECTED: client connected
+    CONNECTING --> WAIT_RECONNECT: client error
+    CONNECTING --> DISCONNECTING: bEnable false
+    CONNECTED --> DISCONNECTING: bEnable false
+    CONNECTED --> DISCONNECTING: Apply config edge
     CONNECTED --> WAIT_RECONNECT: connection lost
-    DISCONNECTING --> CONNECTING: bReconnectAfterDisconnect
+    DISCONNECTING --> CONNECTING: reconnect requested
     DISCONNECTING --> DISABLED: otherwise
-    WAIT_RECONNECT --> CONNECTING: tonReconnect.Q
-    WAIT_RECONNECT --> DISABLED: bEnable = FALSE
+    WAIT_RECONNECT --> CONNECTING: reconnect timer done
+    WAIT_RECONNECT --> DISABLED: bEnable false
 ```
 
-When entering `CONNECTED`, the FB **automatically subscribes** to
-`stConfig.SubscribeTopic` once per connection. No external trigger
-required.
+| State | Behavior |
+| --- | --- |
+| `DISABLED` | Clears connect command and waits for MQTT enable. |
+| `CONNECTING` | Applies host, port, client ID, credentials, TLS fields, and executes the MQTT client. |
+| `CONNECTED` | Maintains connection, auto-subscribes once, handles config changes/dropouts. |
+| `DISCONNECTING` | Executes client with connect command false until disconnected. |
+| `WAIT_RECONNECT` | Waits `tReconnectDelay` before retrying. |
 
-The `bApplyConfig` rising edge causes a clean disconnect-reconnect
-cycle so the new broker settings take effect.
-
----
-
-## 3. FB_CsvLogger
-
-7 states implemented in `Functions/FB_CSVLogger.TcPOU`.
+## `FB_CsvLogger`
 
 ```mermaid
 stateDiagram-v2
     [*] --> CSV_IDLE
-    CSV_IDLE --> CSV_PREPARE: tIntervalTimer.Q OR bForceWrite
-    CSV_PREPARE --> CSV_OPEN: file existence check done
+    CSV_IDLE --> CSV_PREPARE: timer or force write
+    CSV_PREPARE --> CSV_OPEN: filename prepared / file check complete
     CSV_OPEN --> CSV_WRITE_HDR: new file
     CSV_OPEN --> CSV_WRITE_ROW: existing file
     CSV_OPEN --> CSV_ERROR: open failed
     CSV_WRITE_HDR --> CSV_WRITE_ROW: header written
-    CSV_WRITE_HDR --> CSV_CLOSE: write error
-    CSV_WRITE_ROW --> CSV_CLOSE: row written or error
-    CSV_CLOSE --> CSV_IDLE: file closed
+    CSV_WRITE_HDR --> CSV_CLOSE: write failed
+    CSV_WRITE_ROW --> CSV_CLOSE: row written or write failed
+    CSV_CLOSE --> CSV_IDLE: close complete
     CSV_ERROR --> CSV_IDLE: trigger cleared
 ```
 
-### Trigger sources
-
-- **Timer** (`tLogInterval`, default 15 minutes from `GVL_Config`)
-- **Manual** (`bForceWrite` rising edge from HMI "Force Write Log")
-
-### File rotation
-
-Filename pattern: `IrrigationLog_YYYY-MM.csv` (monthly rotation).
-A new file is automatically created at the start of each month.
-On the first write to a new file, the header row is written before
-any data rows.
+| State | Behavior |
+| --- | --- |
+| `CSV_IDLE` | Waits for interval timer or forced-write edge. |
+| `CSV_PREPARE` | Builds `IrrigationLog_YYYY-MM.csv` and checks if it exists. |
+| `CSV_OPEN` | Opens the file in append mode. |
+| `CSV_WRITE_HDR` | Writes the header for new files. |
+| `CSV_WRITE_ROW` | Builds and writes one data row. |
+| `CSV_CLOSE` | Closes file handle. |
+| `CSV_ERROR` | Reports error and waits for next trigger cycle. |

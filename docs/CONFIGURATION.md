@@ -1,99 +1,72 @@
 # Configuration Reference
 
-All compile-time tunables live in `GVL_Config.TcGVL`.
-Runtime-adjustable values are in `GVL_HMI.HMI_MQTT_Config`
-(loaded from defaults on first scan).
+Compile-time constants live in `XAE/VekSi_PLC/Variables_Lists/GVL_Config.TcGVL`. Runtime HMI-facing controls live in `GVL_HMI`, especially `HMI_CommandSource`, `HMI_MQTT_*`, `HMI_CSV_Enable`, and `WriteTrigger`.
 
-## Valve motion parameters
+## Valve motion constants
 
-| Constant                    | Type  | Default     | Unit  | Tuning notes                                              |
-| --------------------------- | ----- | ----------- | ----- | --------------------------------------------------------- |
-| `VALVE_FULL_STROKE_MM`      | REAL  | 6.096       | mm    | Measure actuator travel at 100 % open. **Must calibrate.** |
-| `VALVE_POSITION_TOLERANCE`  | REAL  | 0.5         | %     | In-position dead band. Larger -> faster IDLE, less precision. |
-| `VALVE_MOVE_VELOCITY`       | LREAL | 1.5         | mm/s  | Increase for faster moves. Watch for stepper stall on EPP7041. |
-| `VALVE_MOVE_ACCELERATION`   | LREAL | 16.9085     | mm/s² | Acceleration ramp.                                       |
-| `VALVE_MOVE_DECELERATION`   | LREAL | 16.9085     | mm/s² | Deceleration ramp.                                       |
-| `VALVE_MOVE_JERK`           | LREAL | 53.5391     | mm/s³ | 0 = trapezoidal profile; >0 = S-curve.                  |
-| `VALVE_HOMING_VELOCITY`     | LREAL | 1.0         | mm/s  | Reference only — actual speed is set in NC Homing tab.   |
+| Constant | Type | Current default | Unit | Notes |
+| --- | --- | ---: | --- | --- |
+| `VALVE_FULL_STROKE_MM` | `REAL` | `126` | mm | Full valve travel for 100% command. Must be calibrated to the actual actuator. |
+| `VALVE_POSITION_TOLERANCE` | `REAL` | `0.5` | % | Dead-band for `InPosition` and move decisions. |
+| `VALVE_MOVE_VELOCITY` | `LREAL` | `1.5` | mm/s | Normal absolute move speed. |
+| `VALVE_MOVE_ACCELERATION` | `LREAL` | `16.9085` | mm/s² | Acceleration ramp. |
+| `VALVE_MOVE_DECELERATION` | `LREAL` | `16.9085` | mm/s² | Deceleration / halt ramp. |
+| `VALVE_MOVE_JERK` | `LREAL` | `53.5391` | mm/s³ | Jerk value passed to MC2 move/halt FBs. |
+| `VALVE_HOMING_VELOCITY` | `LREAL` | `1.0` | mm/s | Reference value passed to valve FB; verify NC homing settings too. |
 
-## Sensor scaling
+## Sensor scaling constants
 
-```iecst
-// Water level — linear from raw INT to mm
-WATER_LEVEL_RAW_MIN      : INT  := 0;       // ADC count at 4 mA  (or 0 V)
-WATER_LEVEL_RAW_MAX      : INT  := 32767;   // ADC count at 20 mA (or 10 V)
-WATER_LEVEL_ENG_MIN_MM   : REAL := 0.0;
-WATER_LEVEL_ENG_MAX_MM   : REAL := 1000.0;  // Tank height — CALIBRATE
+| Constant | Type | Default | Notes |
+| --- | --- | ---: | --- |
+| `WATER_LEVEL_RAW_MIN` | `INT` | `0` | Raw count at engineering minimum. |
+| `WATER_LEVEL_RAW_MAX` | `INT` | `32767` | Raw count at engineering maximum. |
+| `WATER_LEVEL_ENG_MIN_MM` | `REAL` | `0.0` | Water-level engineering minimum. |
+| `WATER_LEVEL_ENG_MAX_MM` | `REAL` | `1000.0` | Water-level engineering maximum; calibrate to tank/canal height. |
+| `TEMP_RAW_SCALE_FACTOR` | `REAL` | `0.1` | EL3202 tenths-of-degree scaling. |
+| `TEMP_OFFSET_C` | `REAL` | `0.0` | Temperature trim. |
+| `SENSOR_FAULT_THRESHOLD` | `INT` | `-100` | Raw values at/below this are treated as disconnected/faulted. |
 
-// Temperature — EL3202 PT100 scaling (0.1 °C per count typical)
-TEMP_RAW_SCALE_FACTOR    : REAL := 0.1;
-TEMP_OFFSET_C            : REAL := 0.0;     // Trim offset if needed
+## CSV logging constants
 
-// Fault threshold
-SENSOR_FAULT_THRESHOLD   : INT  := -100;    // raw <= this means disconnected
-```
+| Constant | Default | Notes |
+| --- | --- | --- |
+| `CSV_LOG_INTERVAL_S` | `T#15M` | Periodic row interval. |
+| `CSV_FILE_PATH` | `C:\TwinCAT\3.1\Boot\Log\` | Base folder; keep trailing backslash. |
+| `CSV_FILENAME_PREFIX` | `IrrigationLog_` | Combined with `YYYY-MM.csv`. |
 
-### Calibration procedure
-
-1. With the sensor disconnected, note the raw value
-   (`GVL_System.Sensors.rWaterLevel_raw`). It should be at or
-   below `SENSOR_FAULT_THRESHOLD`.
-2. Apply known minimum (e.g. empty tank), record raw -> set
-   `WATER_LEVEL_RAW_MIN`.
-3. Apply known maximum (e.g. full tank), record raw -> set
-   `WATER_LEVEL_RAW_MAX`.
-4. Set `WATER_LEVEL_ENG_MAX_MM` to the physical full-scale
-   height in mm.
-5. Verify the displayed `ACT_WaterLevel_mm` matches a manual
-   measurement at intermediate fill levels.
-
-## CSV logging
-
-| Constant              | Default                              | Notes                              |
-| --------------------- | ------------------------------------ | ---------------------------------- |
-| `CSV_LOG_INTERVAL_S`  | `T#15M`                              | Time between automatic log rows    |
-| `CSV_FILE_PATH`       | `C:\TwinCAT\3.1\Boot\Log\`           | Trailing backslash required        |
-| `CSV_FILENAME_PREFIX` | `IrrigationLog_`                     | Filename starts with this          |
-
-The actual filename also includes `YYYY-MM.csv` (monthly
-rotation) -> `IrrigationLog_2026-04.csv`.
+Final filename pattern: `C:\TwinCAT\3.1\Boot\Log\IrrigationLog_YYYY-MM.csv`.
 
 ## MQTT defaults
 
-These defaults populate `GVL_HMI.HMI_MQTT_Config` on the first
-PLC scan. Operators can edit them at runtime from the HMI.
+These constants are copied into `GVL_HMI.HMI_MQTT_Config` by `MAIN` during startup initialization.
 
-| Constant                          | Default                  |
-| --------------------------------- | ------------------------ |
-| `MQTT_DEFAULT_BROKER_IP`          | `192.168.1.100`          |
-| `MQTT_DEFAULT_PORT`               | `1883`                   |
-| `MQTT_DEFAULT_CLIENT_ID`          | `BeckhoffIrrigationPLC`  |
-| `MQTT_DEFAULT_USERNAME`           | (empty)                  |
-| `MQTT_DEFAULT_PASSWORD`           | (empty)                  |
-| `MQTT_DEFAULT_TOPIC_PREFIX`       | `irrigation`             |
-| `MQTT_DEFAULT_MAIN_TOPIC`         | `irrigation/status`      |
-| `MQTT_DEFAULT_SUB_TOPIC`          | `irrigation/command`     |
-| `MQTT_DEFAULT_PUBLISH_INTERVAL`   | `300` (seconds = 5 min)  |
+| Constant | Current default |
+| --- | --- |
+| `MQTT_DEFAULT_BROKER_IP` | `imsiot.aws.thinger.io` |
+| `MQTT_DEFAULT_PORT` | `8883` |
+| `MQTT_DEFAULT_CLIENT_ID` | `Beckhoff` |
+| `MQTT_DEFAULT_USERNAME` | `ims_iot` |
+| `MQTT_DEFAULT_PASSWORD` | `123456789` |
+| `MQTT_DEFAULT_TOPIC_PREFIX` | `irrigation` |
+| `MQTT_DEFAULT_MAIN_TOPIC` | `irrigation/status` |
+| `MQTT_DEFAULT_SUB_TOPIC` | `irrigation/command` |
+| `MQTT_DEFAULT_PUBLISH_INTERVAL` | `300` seconds |
+
+> Security note: credentials in PLC source are visible to anyone with repository or symbol access. Replace development credentials before production use.
+
+## Runtime controls in `GVL_HMI`
+
+| Variable | Purpose |
+| --- | --- |
+| `HMI_CommandSource` | System command source: `HMI`, `MQTT`, or `Manual`. |
+| `HMI_UPDATE` | Applies HMI numeric setpoints when HMI source is selected. |
+| `HMI_MQTT_bEnable` | Master MQTT connection enable. |
+| `HMI_MQTT_mPublish` | Manual publish trigger. |
+| `HMI_MQTT_ApplyConfig` | Reconnect trigger after MQTT config edits. |
+| `HMI_CSV_Enable` | Master CSV logging enable. |
+| `WriteTrigger` | Force one CSV row. |
+| `sHMI_mode`, `sMqtt_mode`, `sMannual_mode` | PLC-written booleans for HMI mode indication. |
 
 ## Task cycle
 
-| Constant         | Default | Notes                                         |
-| ---------------- | ------- | --------------------------------------------- |
-| `TASK_CYCLE_MS`  | 10      | Must match the TwinCAT task setting.          |
-
-If you change the task cycle in TwinCAT (Real-Time -> Tasks ->
-PlcTask -> Cycle ticks), update this constant to match for
-documentation accuracy.
-
-## Where each constant is used
-
-| Constant                      | Used in                                   |
-| ----------------------------- | ----------------------------------------- |
-| `VALVE_FULL_STROKE_MM`        | `MAIN` -> `FB_ValveControl.FullStroke_mm` |
-| `VALVE_POSITION_TOLERANCE`    | `MAIN` -> `FB_ValveControl.PosTolerance`  |
-| `VALVE_MOVE_*`                | `MAIN` -> `FB_ValveControl` motion inputs |
-| `VALVE_HOMING_VELOCITY`       | `MAIN` -> `FB_ValveControl.HomeVelocity`  |
-| `WATER_LEVEL_*`, `TEMP_*`     | `FB_SensorIO.ScaleLinear`                 |
-| `SENSOR_FAULT_THRESHOLD`      | `FB_SensorIO` fault detection             |
-| `CSV_LOG_INTERVAL_S`, `CSV_FILE_PATH`, `CSV_FILENAME_PREFIX` | `MAIN` -> `FB_CsvLogger` |
-| `MQTT_DEFAULT_*`              | `MAIN` step 0 (one-time init)             |
+`TASK_CYCLE_MS` is documented as `10 ms` and should match the TwinCAT task period. If the task period changes in XAE, update the constant/documentation together.
