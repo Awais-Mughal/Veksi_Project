@@ -18,21 +18,21 @@
 <script data-tchmi-target-attribute="data-tchmi-column-options" type="application/json">
 [
   {
-    "minWidth": 320.0,
+    "minWidth": 745.0,
     "overflow": false,
     "width": 1,
     "widthMode": "Value",
     "widthUnit": "factor"
   },
   {
-    "minWidth": 320.0,
+    "minWidth": 745.0,
     "overflow": false,
     "width": 1,
     "widthMode": "Value",
     "widthUnit": "factor"
   },
   {
-    "minWidth": 320.0,
+    "minWidth": 745.0,
     "overflow": false,
     "width": 1,
     "widthMode": "Value",
