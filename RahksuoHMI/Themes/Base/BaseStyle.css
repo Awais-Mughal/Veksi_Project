@@ -369,50 +369,60 @@ div[data-tchmi-type="TcHmi.Controls.System.TcHmiView"] {
 }
 
 /* Rahksuo dashboard responsive tuning
- * Avoid CSS transforms on TrendLineChart controls: the historize control reads
- * its rendered display width during startup and can fail if a transformed grid
- * reports an invalid width. Keep controls at real pixel sizes and let the
- * dashboard viewport scroll when the screen is smaller than the operator panel.
+ * Layout-only scaling for the dashboard. Do not add data bindings here.
+ * Use browser zoom instead of CSS transforms so TwinCAT controls keep concrete
+ * layout sizes while the dashboard visually scales to smaller screens.
  */
 #Additional_Info_1 {
     width: 100%;
     max-width: 100%;
+    min-height: 100%;
     overflow: auto;
     box-sizing: border-box;
 }
 
 #TcHmiContainer_Additional_Info_27 {
-    right: 8px !important;
-    left: 8px !important;
-    max-width: calc(100% - 16px);
+    left: 12px !important;
+    right: 12px !important;
+    max-width: calc(100% - 24px);
+    min-height: calc(100vh - 95px);
     overflow: auto;
     box-sizing: border-box;
 }
 
 #TcHmiGrid_20 {
-    min-width: 1720px;
+    transform: none !important;
+    transform-origin: initial !important;
     max-width: none;
-}
-
-#TcHmiGrid_18,
-#TcHmiTrendLineChart_13,
-#TcHmiTrendLineChart_14,
-#TcHmiTrendLineChart_15,
-#TcHmiTrendLineChart_16 {
-    min-width: 730px;
+    min-width: 0;
+    width: 100% !important;
+    zoom: 1;
 }
 
 #TcHmiGrid_17,
 #TcHmiContainer_27,
 #TcHmiImage_4 {
-    min-width: 380px;
+    min-width: 320px;
 }
 
-@media screen and (min-width: 1800px) {
-    #TcHmiContainer_Additional_Info_27 {
-        left: 16px !important;
-        right: 16px !important;
-        max-width: calc(100% - 32px);
+@media screen and (max-width: 1760px) {
+    #TcHmiGrid_20 {
+        width: 111.12% !important;
+        zoom: 0.9;
+    }
+}
+
+@media screen and (max-width: 1440px) {
+    #TcHmiGrid_20 {
+        width: 128.21% !important;
+        zoom: 0.78;
+    }
+}
+
+@media screen and (max-width: 1180px) {
+    #TcHmiGrid_20 {
+        width: 153.85% !important;
+        zoom: 0.65;
     }
 }
 
@@ -426,5 +436,11 @@ div[data-tchmi-type="TcHmi.Controls.System.TcHmiView"] {
         left: 4px !important;
         right: 4px !important;
         max-width: calc(100% - 8px);
+        min-height: calc(100vh - 80px);
+    }
+
+    #TcHmiGrid_20 {
+        width: 181.82% !important;
+        zoom: 0.55;
     }
 }
