@@ -1,0 +1,142 @@
+{
+    "$schema": "../../TcHmiFramework/Schema/ControlDescription.Schema.json",
+    "apiVersion": 1,
+    "name": "TcHmiCalculator",
+    "namespace": "TcHmi.Controls.Beckhoff",
+    "displayName": "Calculator",
+    "version": {
+        "full": "14.5.1.0",
+        "fullSemVer": "14.5.1",
+        "major": 14,
+        "minor": 5,
+        "build": 1,
+        "revision": 0
+    },
+    "visible": true,
+    "themeable": "Standard",
+    "base": "TcHmi.Controls.System.TcHmiControl",
+    "description": "A calculator control.",
+    "defaultDesignerEvent": ".onValueChanged",
+    "properties": {
+        "containerControl": false,
+        "geometry": {
+            "width": 350,
+            "height": 400
+        }
+    },
+    "icons": [
+        {
+            "name": "Icons/16x16.png",
+            "width": 16,
+            "height": 16
+        }
+    ],
+    "template": "Template.html",
+    "dependencyFiles": [
+        {
+            "name": "Style.css",
+            "type": "Stylesheet"
+        },
+        {
+            "name": "../dist/TcHmiCalculator/TcHmiCalculator.esm.js",
+            "type": "EsModule",
+            "description": "Contains all the main logic as ES module."
+        },
+        {
+            "name": "./Lib/math.js",
+            "type": "JavaScript"
+        },
+        {
+            "name": "ContextMenu.css",
+            "type": "Stylesheet"
+        }
+    ],
+    "themes": {
+        "Base": {
+            "resources": [
+                {
+                    "name": "Themes/Base/Style.css",
+                    "type": "Stylesheet",
+                    "description": "Theme dependent style"
+                },
+                {
+                    "name": "Themes/Base/ContextMenu.css",
+                    "type": "Stylesheet",
+                    "description": "Theme dependent style"
+                }
+            ]
+        },
+        "Base-Dark": {
+            "resources": [
+                {
+                    "name": "Themes/Base-Dark/Style.css",
+                    "type": "Stylesheet",
+                    "description": "Theme dependent style"
+                },
+                {
+                    "name": "Themes/Base-Dark/ContextMenu.css",
+                    "type": "Stylesheet",
+                    "description": "Theme dependent style"
+                }
+            ]
+        }
+    },
+    "attributes": [
+        {
+            "name": "data-tchmi-result",
+            "propertyName": "Result",
+            "propertyGetterName": "getResult",
+            "displayName": "Result",
+            "visible": true,
+            "type": "tchmi:general#/definitions/Number",
+            "category": "Common",
+            "description": "Result of the calculated term",
+            "readOnly": true,
+            "bindable": false,
+            "defaultBindingMode": "OneWay",
+            "heritable": true
+        },
+        {
+            "name": "data-tchmi-layout",
+            "propertyName": "Layout",
+            "propertySetterName": "setLayout",
+            "propertyGetterName": "getLayout",
+            "displayName": "Layout",
+            "visible": true,
+            "themeable": "Advanced",
+            "displayPriority": 10,
+            "type": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiCalculator.LayoutName",
+            "category": "Common",
+            "description": "The layout of the calculator.",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": null,
+            "defaultValueInternal": "Standard"
+        }
+    ],
+    "attributeCategories": [],
+    "functions": [],
+    "events": [
+        {
+            "name": ".onValueChanged",
+            "displayName": ".onValueChanged",
+            "visible": true,
+            "displayPriority": 10,
+            "category": "Control",
+            "description": "The valuechanged event is fired when the result was changed. This event could be fired multiples times during a user interaction.",
+            "heritable": true,
+            "arguments": []
+        }
+    ],
+    "languages": {
+        "en": "Lang/Language.en.json",
+        "de": "Lang/Language.de.json"
+    },
+    "dataTypes": [
+        {
+            "schema": "Schema/Types.Schema.json"
+        }
+    ]
+}

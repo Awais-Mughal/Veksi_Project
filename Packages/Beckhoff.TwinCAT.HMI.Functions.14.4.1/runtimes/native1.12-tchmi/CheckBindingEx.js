@@ -1,0 +1,1 @@
+import{Binding,Functions}from"Beckhoff.TwinCAT.HMI.Framework/index.esm.js";export function CheckBindingEx(control,propertyName,symbol){if(!symbol)return!1;let s=Binding.resolveEx(propertyName,control);return!(!s||s.toString()!==symbol.getExpression().toString())}Functions.registerFunctionEx("CheckBindingEx","TcHmi.Functions.Beckhoff",CheckBindingEx,{injectInGlobalObject:!0});

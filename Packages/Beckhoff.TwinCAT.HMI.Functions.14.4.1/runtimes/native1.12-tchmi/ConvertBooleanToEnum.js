@@ -1,0 +1,1 @@
+import{Functions,ValueConverter}from"Beckhoff.TwinCAT.HMI.Framework/index.esm.js";export function ConvertBooleanToEnum(value,trueValue,falseValue){return!0===ValueConverter.toBoolean(value)?trueValue:falseValue}Functions.registerFunctionEx("ConvertBooleanToEnum","TcHmi.Functions.Beckhoff",ConvertBooleanToEnum,{injectInGlobalObject:!0});

@@ -1,0 +1,70 @@
+{
+    "$schema": "../../TcHmiFramework/Schema/ControlDescription.Schema.json",
+    "apiVersion": 1,
+    "name": "TcHmiPolyline",
+    "namespace": "TcHmi.Controls.Beckhoff",
+    "displayName": "Polyline",
+    "version": {
+        "full": "14.5.1.0",
+        "fullSemVer": "14.5.1",
+        "major": 14,
+        "minor": 5,
+        "build": 1,
+        "revision": 0
+    },
+    "visible": true,
+    "themeable": "Standard",
+    "base": "TcHmi.Controls.Beckhoff.TcHmiPolygon",
+    "description": "The polyline control defines an open shape consisting of a set of connected straight line segments.\nThe last point is not necessarily connected to the first point.",
+    "defaultDesignerEvent": ".onPressed",
+    "properties": {
+        "containerControl": false,
+        "geometry": {
+            "width": 200,
+            "height": 200
+        }
+    },
+    "icons": [
+        {
+            "name": "Icons/16x16.png",
+            "width": 16,
+            "height": 16
+        }
+    ],
+    "template": "Template.html",
+    "dependencyFiles": [
+        {
+            "name": "../dist/TcHmiPolyline/TcHmiPolyline.esm.js",
+            "type": "EsModule",
+            "description": "Contains all the main logic as ES module."
+        }
+    ],
+    "attributes": [
+        {
+            "name": "data-tchmi-stroke-linecap",
+            "propertyName": "StrokeLinecap",
+            "propertySetterName": "setStrokeLinecap",
+            "propertyGetterName": "getStrokeLinecap",
+            "displayName": "Stroke Linecap",
+            "visible": true,
+            "themeable": "Standard",
+            "displayPriority": 20,
+            "type": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiPolyline.Linecap",
+            "category": "Shape",
+            "description": "Defines the shape at the end of the line (butt, round or square can be used).",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": null,
+            "defaultValueInternal": "butt"
+        }
+    ],
+    "attributeCategories": [],
+    "functions": [],
+    "dataTypes": [
+        {
+            "schema": "Schema/Types.Schema.json"
+        }
+    ]
+}

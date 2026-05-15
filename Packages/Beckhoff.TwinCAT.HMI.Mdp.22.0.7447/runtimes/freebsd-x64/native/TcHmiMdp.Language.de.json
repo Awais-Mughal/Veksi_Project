@@ -1,0 +1,20 @@
+{
+  "locale": "de",
+  "localizedText": {
+    "targetSystems": "Zielsysteme",
+    "descTargetSystems": "Zielsysteme, von denen Daten abgefragt werden können.",
+    "descTargetSystem": "Zielsystem",
+    "timeout": "Timeout",
+    "descTimeout": "Timeout für ADS-Anfragen.",
+    "address": "AmsNetId",
+    "enabled": "Aktiviert",
+    "readOnly": "Nur Lesezugriff erlauben",
+    "descReadOnly": "Verhindert den Schreibzugriff auf Variablen sowie auf alle Service-Transfer-Objekte.",
+    "connectionState": "Verbindungsstatus",
+    "domainState": "Domain-Status",
+    "domainError": "Domain-Fehler",
+    "connectError": "Fehler",
+    "connectErrorMessage": "Fehlermeldung",
+    "availableModulesCount": "Anzahl verfügbarer Module"
+  }
+}

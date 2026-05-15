@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "definitions": {
+        "TcHmi.Controls.Beckhoff.TcHmiCalculator": {
+            "$schema": "http://json-schema.org/draft-04/schema",
+            "type": "object",
+            "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+            "frameworkControlType": "TcHmiCalculator",
+            "frameworkControlNamespace": "TcHmi.Controls.Beckhoff"
+        },
+        "TcHmiCalculator": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiCalculator"
+        },
+        "TcHmi.Controls.Beckhoff.TcHmiCalculator.LayoutName": {
+            "title": "LayoutName",
+            "type": "string",
+            "enum": ["Standard", "Scientific"],
+            "default": "Standard"
+        }
+    }
+}

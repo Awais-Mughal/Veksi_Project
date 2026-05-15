@@ -1,0 +1,1 @@
+import{Functions}from"Beckhoff.TwinCAT.HMI.Framework/index.esm.js";export function GaugeValueFormatter(value,maxDecimals=1/0){return null==value?"":(isFinite(maxDecimals)||(maxDecimals=3),value.toFixed(maxDecimals))}Functions.registerFunctionEx("GaugeValueFormatter","TcHmi.Functions.Beckhoff",GaugeValueFormatter,{injectInGlobalObject:!0});

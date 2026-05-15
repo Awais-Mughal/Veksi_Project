@@ -1,0 +1,1 @@
+import{Functions}from"Beckhoff.TwinCAT.HMI.Framework/index.esm.js";export function EnumToString(value,mapping){return mapping?.[value]??""}Functions.registerFunctionEx("EnumToString","TcHmi.Functions.Beckhoff",EnumToString,{injectInGlobalObject:!0});

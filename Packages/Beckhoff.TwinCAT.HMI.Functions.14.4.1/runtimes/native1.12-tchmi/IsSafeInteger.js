@@ -1,0 +1,1 @@
+import{Functions}from"Beckhoff.TwinCAT.HMI.Framework/index.esm.js";export function IsSafeInteger(value){return!(value>Number.MAX_SAFE_INTEGER)&&!(value<Number.MIN_SAFE_INTEGER)}Functions.registerFunctionEx("IsSafeInteger","TcHmi.Functions.Beckhoff",IsSafeInteger,{injectInGlobalObject:!0});

@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "targetSystems": {
+      "configDescription": "descTargetSystems",
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "configDescription": "descTargetSystem",
+        "properties": {
+          "address": {
+            "$ref": "tchmi:server#/definitions/adsRoute"
+          },
+          "readOnly": {
+            "type": "boolean",
+            "default": false,
+            "configDescription": "descReadOnly"
+          },
+          "enabled": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "address",
+          "enabled",
+          "readOnly"
+        ]
+      },
+      "default": {
+        "Local": {
+          "address": "127.0.0.1.1.1"
+        }
+      },
+      "defaultConfigurable": true
+    },
+    "timeout": {
+      "configDescription": "descTimeout",
+      "type": "string",
+      "format": "timespan",
+      "default": "PT1S",
+      "formatMinimum": "PT0.1S",
+      "formatMaximum": "PT30S"
+    }
+  },
+  "required": [
+    "targetSystems",
+    "timeout"
+  ],
+  "additionalProperties": false
+}

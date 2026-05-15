@@ -1,0 +1,1 @@
+import{Functions,Interval}from"Beckhoff.TwinCAT.HMI.Framework/index.esm.js";export function StartInterval(name){Interval.start(name)}Functions.registerFunctionEx("StartInterval","TcHmi.Functions.Beckhoff",StartInterval,{injectInGlobalObject:!0});

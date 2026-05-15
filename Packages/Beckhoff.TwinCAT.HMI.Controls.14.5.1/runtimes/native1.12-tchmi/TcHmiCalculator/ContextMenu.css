@@ -1,0 +1,28 @@
+/** Context Menu */
+beckhoff-tchmi-context-menu-calculator {
+    position: absolute;
+    height: auto;
+    padding: 2px;
+    border-radius: 3px;
+}
+
+beckhoff-tchmi-context-menu-calculator.hide {
+    display: none;
+}
+
+beckhoff-tchmi-context-menu-calculator button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 5px;
+    padding: 6px;
+    text-align: left;
+    width: 100%;
+}
+
+beckhoff-tchmi-context-menu-calculator hr {
+    width: 60%;
+    border: none;
+    height: 1px;
+}

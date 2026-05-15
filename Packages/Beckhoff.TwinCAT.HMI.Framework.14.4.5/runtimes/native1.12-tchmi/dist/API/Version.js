@@ -1,0 +1,1 @@
+export let version;export function setVersion(newValue){version=newValue,TcHmi.version=newValue}

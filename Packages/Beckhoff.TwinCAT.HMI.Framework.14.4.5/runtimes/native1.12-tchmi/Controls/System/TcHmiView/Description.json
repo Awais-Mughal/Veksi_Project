@@ -1,0 +1,73 @@
+{
+    "$schema": "../../../Schema/ControlDescription.Schema.json",
+    "apiVersion": 1,
+    "name": "TcHmiView",
+    "namespace": "TcHmi.Controls.System",
+    "displayName": "View",
+    "version": {
+        "full": "14.4.5.0",
+        "fullSemVer": "14.4.5",
+        "major": 14,
+        "minor": 4,
+        "build": 5,
+        "revision": 0
+    },
+    "visible": false,
+    "themeable": "Standard",
+    "base": "TcHmi.Controls.System.TcHmiPartial",
+    "description": "A top level control for a TcHmi visualization.",
+    "defaultDesignerEvent": "",
+    "properties": {
+        "containerControl": true,
+        "geometry": {
+            "width": 500,
+            "height": 500
+        }
+    },
+    "icons": [
+        {
+            "name": "Icons/16x16.png",
+            "width": 16,
+            "height": 16
+        }
+    ],
+    "dependencyFiles": [
+        {
+            "name": "Style.css",
+            "type": "Stylesheet"
+        },
+        {
+            "name": "../../../dist/Controls/System/TcHmiView/TcHmiView.esm.js",
+            "type": "EsModule",
+            "description": "Contains all the main logic as ES module."
+        }
+    ],
+    "themes": {},
+    "attributes": [],
+    "access": [
+        {
+            "name": "operate",
+            "displayName": "Operate",
+            "description": "Controls the ability to operate. This defaults to true.",
+            "visible": true,
+            "defaultValueInternal": true
+        },
+        {
+            "name": "observe",
+            "displayName": "Observe",
+            "description": "Controls the ability to observe. This defaults to true.",
+            "visible": true,
+            "defaultValueInternal": true
+        }
+    ],
+    "functions": [],
+    "dataTypes": [
+        {
+            "schema": "Schema/Types.Schema.json"
+        }
+    ],
+    "languages": {
+        "en": "Lang/Language.en.json",
+        "de": "Lang/Language.de.json"
+    }
+}

@@ -1,0 +1,1 @@
+import{Functions,Theme}from"Beckhoff.TwinCAT.HMI.Framework/index.esm.js";export function SetAttributeToThemeValue(control,propertyName){Theme.Properties.setThemeValue(control,propertyName)}Functions.registerFunctionEx("SetAttributeToThemeValue","TcHmi.Functions.Beckhoff",SetAttributeToThemeValue,{injectInGlobalObject:!0});

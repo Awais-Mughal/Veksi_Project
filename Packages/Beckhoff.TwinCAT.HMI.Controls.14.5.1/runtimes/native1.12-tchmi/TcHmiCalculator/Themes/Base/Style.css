@@ -1,0 +1,104 @@
+/** Styles for the theme: Base */
+.TcHmi_Controls_Beckhoff_TcHmiCalculator {
+    --tchmi-background: var(--tchmi-background-color-1);
+    --tchmi-background-transparent: rgba(246, 247, 248, 0.8);
+    --tchmi-display-background: var(--tchmi-background-color-4);
+    --tchmi-display-border: var(--tchmi-background-color-2);
+    --tchmi-button-text-color: var(--tchmi-foreground-color-1);
+    --tchmi-button-background: var(--tchmi-background-color-2);
+    --tchmi-button-border: 1px solid var(--tchmi-foreground-color-3);
+    --tchmi-icon-background-pressed: rgba(192, 192, 197, 0.3);
+}
+
+.TcHmi_Controls_Beckhoff_TcHmiCalculator-template {
+    .key-svg-element {
+        stroke: var(--tchmi-button-text-color);
+
+        &:active {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    .key-span-element {
+        color: var(--tchmi-button-text-color);
+    }
+
+    .key-element {
+        background-color: var(--tchmi-button-background);
+        border: var(--tchmi-button-border);
+
+        &.down {
+            background: var(--tchmi-button-background-pressed);
+            color: var(--tchmi-button-text-color-pressed);
+            border: var(--tchmi-button-border-pressed);
+            box-shadow: var(--tchmi-button-shadow-pressed);
+        }
+
+        &.number:not(.down) {
+            background: rgb(205 201 201);
+        }
+    }
+
+    .menu-bar-container {
+        background-color: var(--tchmi-display-background);
+        border-top: 1px solid var(--tchmi-display-border);
+        border-left: 1px solid var(--tchmi-display-border);
+        border-right: 1px solid var(--tchmi-display-border);
+    }
+
+    .full-display-container {
+        background-color: var(--tchmi-background);
+    }
+
+    .display-term-container {
+        background-color: var(--tchmi-display-background);
+        border-left: 1px solid var(--tchmi-display-border);
+        border-right: 1px solid var(--tchmi-display-border);
+    }
+
+    .display-result-term-container {
+        background-color: var(--tchmi-display-background);
+        border-bottom: 1px solid var(--tchmi-display-border);
+        border-left: 1px solid var(--tchmi-display-border);
+        border-right: 1px solid var(--tchmi-display-border);
+    }
+
+    .display-result-term-input {
+        background-color: var(--tchmi-display-background);
+        color: black;
+    }
+
+    .keyboard-container {
+        background-color: var(--tchmi-background);
+    }
+
+    .svg-icon-container {
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    .svg-scientific-icon-container {
+        background-image: url('Images/activate-recipe.svg');
+
+        &.active {
+            background-color: var(--tchmi-icon-background-pressed);
+        }
+    }
+
+    .svg-history-icon-container {
+        &.active {
+            background-color: var(--tchmi-icon-background-pressed);
+        }
+    }
+
+    .history-container {
+        background-color: var(--tchmi-background-transparent);
+    }
+
+    .history-element {
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+}

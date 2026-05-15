@@ -1,0 +1,20 @@
+{
+  "locale": "en",
+  "localizedText": {
+    "targetSystems": "Target systems",
+    "descTargetSystems": "Target systems from which data can be queried.",
+    "descTargetSystem": "Target system",
+    "timeout": "Timeout",
+    "descTimeout": "Timeout for ADS requests.",
+    "address": "AmsNetId",
+    "enabled": "Enabled",
+    "readOnly": "Allow only read access",
+    "descReadOnly": "Prevents write access to variables, as well as to all service transfer objects.",
+    "connectionState": "Connection state",
+    "domainState": "Domain state",
+    "domainError": "Domain error",
+    "connectError": "Error",
+    "connectErrorMessage": "Error message",
+    "availableModulesCount": "Number of available modules"
+  }
+}

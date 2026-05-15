@@ -1,0 +1,15 @@
+/* Base Theme */
+beckhoff-tchmi-context-menu-calculator {
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.1);
+}
+
+beckhoff-tchmi-context-menu-calculator button:hover {
+    background: #eee;
+}
+
+beckhoff-tchmi-context-menu-calculator hr {
+    background: #fff;
+    border-top: 1px solid #ddd;
+}
