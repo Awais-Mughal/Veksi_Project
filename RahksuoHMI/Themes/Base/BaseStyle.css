@@ -370,8 +370,8 @@ div[data-tchmi-type="TcHmi.Controls.System.TcHmiView"] {
 
 /* Rahksuo dashboard responsive tuning
  * Layout-only scaling for the dashboard. Do not add data bindings here.
- * Use browser zoom instead of CSS transforms so TwinCAT controls keep concrete
- * layout sizes while the dashboard visually scales to smaller screens.
+ * 1920x1200 is the 1:1 base size. Smaller viewports scale down and larger
+ * viewports scale up while avoiding CSS transforms on TwinCAT controls.
  */
 #Additional_Info_1 {
     width: 100%;
@@ -403,6 +403,48 @@ div[data-tchmi-type="TcHmi.Controls.System.TcHmiView"] {
 #TcHmiContainer_27,
 #TcHmiImage_4 {
     min-width: 320px;
+}
+
+@media screen and (min-width: 2200px) and (min-height: 1300px) {
+    #TcHmiGrid_20 {
+        width: 90.91% !important;
+        zoom: 1.1;
+    }
+}
+
+@media screen and (min-width: 2560px) and (min-height: 1440px) {
+    #TcHmiGrid_20 {
+        width: 83.34% !important;
+        zoom: 1.2;
+    }
+}
+
+@media screen and (min-width: 3000px) and (min-height: 1700px) {
+    #TcHmiGrid_20 {
+        width: 71.43% !important;
+        zoom: 1.4;
+    }
+}
+
+@media screen and (min-width: 3840px) and (min-height: 2160px) {
+    #TcHmiGrid_20 {
+        width: 55.56% !important;
+        zoom: 1.8;
+    }
+}
+
+@media screen and (min-width: 1761px) and (max-height: 1199px) {
+    #TcHmiGrid_20 {
+        width: 111.12% !important;
+        zoom: 0.9;
+    }
+}
+
+@media screen and (min-width: 1761px) and (max-height: 1000px) {
+    #TcHmiGrid_20 {
+        width: 128.21% !important;
+        zoom: 0.78;
+    }
 }
 
 @media screen and (max-width: 1760px) {
