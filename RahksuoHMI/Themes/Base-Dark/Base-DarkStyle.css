@@ -368,3 +368,73 @@ div[data-tchmi-type="TcHmi.Controls.System.TcHmiView"] {
 #TcHmiNavBarMenu {
     box-shadow: rgba(0, 0, 0, 0.6) 0px 3px 2px -1px;
 }
+
+/* Rahksuo dashboard responsive tuning
+ * Keeps the operator dashboard usable on laptop and tablet displays while
+ * preserving the existing TwinCAT HMI controls and bindings.
+ */
+#Additional_Info_1 {
+    min-height: 100%;
+    overflow: auto;
+}
+
+#TcHmiContainer_Additional_Info_27 {
+    min-height: calc(100vh - 95px);
+    overflow: auto;
+}
+
+#TcHmiGrid_20 {
+    max-width: 100%;
+    min-height: 1045px;
+    transform-origin: top left;
+}
+
+#TcHmiGrid_17 img,
+#TcHmiImage_4 img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+@media screen and (max-width: 1760px) {
+    #TcHmiGrid_20 {
+        transform: scale(0.88);
+        width: 113.64% !important;
+        min-height: 920px;
+    }
+}
+
+@media screen and (max-width: 1440px) {
+    #TcHmiGrid_20 {
+        transform: scale(0.74);
+        width: 135.14% !important;
+        min-height: 790px;
+    }
+}
+
+@media screen and (max-width: 1180px) {
+    #TcHmiGrid_20 {
+        transform: scale(0.62);
+        width: 161.29% !important;
+        min-height: 670px;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    #TcHmiGrid_20 {
+        transform: scale(0.5);
+        width: 200% !important;
+        min-height: 560px;
+    }
+
+    #TcHmiTextblock_Additional_Info_24 {
+        left: 16px !important;
+        right: 16px !important;
+    }
+
+    #TcHmiContainer_Additional_Info_27 {
+        left: 8px !important;
+        right: 8px !important;
+        min-height: calc(100vh - 80px);
+    }
+}
