@@ -94,6 +94,24 @@
 ]
 </script>
 
+<script data-tchmi-target-attribute="data-tchmi-line-graph-descriptions" type="application/json">
+[
+  {
+    "yAxisId": 1,
+    "symbol": "ADS.PLC1.GVL_HMI.ACT_Valve1_Position",
+    "lineWidth": 2,
+    "pointDot": false,
+    "pointDotRadius": 3,
+    "pointDotStrokeWidth": 1,
+    "pointDotInStopMode": false,
+    "lineColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::LineGraphDescriptionLineColor%/tr%",
+    "pointDotFillColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::LineGraphDescriptionPointDotFillColor%/tr%",
+    "pointDotStrokeColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::LineGraphDescriptionPointDotStrokeColor%/tr%",
+    "fillColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiLineChart::LineGraphDescriptionFillColor%/tr%"
+  }
+]
+</script>
+
 </div>
 <div id="TcHmiTrendLineChart_15" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTrendLineChart" data-tchmi-end="Latest" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="1" data-tchmi-height="256" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-start="First" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="730" data-tchmi-width-unit="px" data-tchmi-x-axis-name="x-axis 1" data-tchmi-x-sub-tick-steps="4" data-tchmi-y-sub-tick-steps="4" data-tchmi-creator-visibility="Visible" data-tchmi-right="5" data-tchmi-width-mode="Parent">
 <script data-tchmi-target-attribute="data-tchmi-y-axis" type="application/json">
@@ -118,6 +136,24 @@
     "axisNameFontColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::YAxisAxisNameFontColor%/tr%",
     "decimalPlaces": 2,
     "autoScaling": false
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-line-graph-descriptions" type="application/json">
+[
+  {
+    "yAxisId": 1,
+    "symbol": "ADS.PLC1.GVL_HMI.ACT_Valve2_Position",
+    "lineWidth": 2,
+    "pointDot": false,
+    "pointDotRadius": 3,
+    "pointDotStrokeWidth": 1,
+    "pointDotInStopMode": false,
+    "lineColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::LineGraphDescriptionLineColor%/tr%",
+    "pointDotFillColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::LineGraphDescriptionPointDotFillColor%/tr%",
+    "pointDotStrokeColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::LineGraphDescriptionPointDotStrokeColor%/tr%",
+    "fillColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiLineChart::LineGraphDescriptionFillColor%/tr%"
   }
 ]
 </script>
@@ -150,6 +186,24 @@
 ]
 </script>
 
+<script data-tchmi-target-attribute="data-tchmi-line-graph-descriptions" type="application/json">
+[
+  {
+    "yAxisId": 1,
+    "symbol": "ADS.PLC1.GVL_HMI.ACT_Valve3_Position",
+    "lineWidth": 2,
+    "pointDot": false,
+    "pointDotRadius": 3,
+    "pointDotStrokeWidth": 1,
+    "pointDotInStopMode": false,
+    "lineColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::LineGraphDescriptionLineColor%/tr%",
+    "pointDotFillColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::LineGraphDescriptionPointDotFillColor%/tr%",
+    "pointDotStrokeColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::LineGraphDescriptionPointDotStrokeColor%/tr%",
+    "fillColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiLineChart::LineGraphDescriptionFillColor%/tr%"
+  }
+]
+</script>
+
 </div>
 <div id="TcHmiTrendLineChart_13" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTrendLineChart" data-tchmi-end="Latest" data-tchmi-height="256" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-start="First" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="730" data-tchmi-width-unit="px" data-tchmi-x-axis-name="x-axis 1" data-tchmi-x-sub-tick-steps="4" data-tchmi-y-sub-tick-steps="4" data-tchmi-grid-row-index="3" data-tchmi-right="5" data-tchmi-width-mode="Parent">
 <script data-tchmi-target-attribute="data-tchmi-y-axis" type="application/json">
@@ -174,6 +228,24 @@
     "axisNameFontColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::YAxisAxisNameFontColor%/tr%",
     "decimalPlaces": 2,
     "autoScaling": false
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-line-graph-descriptions" type="application/json">
+[
+  {
+    "yAxisId": 1,
+    "symbol": "ADS.PLC1.GVL_HMI.ACT_WaterLevel_pct",
+    "lineWidth": 2,
+    "pointDot": false,
+    "pointDotRadius": 3,
+    "pointDotStrokeWidth": 1,
+    "pointDotInStopMode": false,
+    "lineColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::LineGraphDescriptionLineColor%/tr%",
+    "pointDotFillColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::LineGraphDescriptionPointDotFillColor%/tr%",
+    "pointDotStrokeColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::LineGraphDescriptionPointDotStrokeColor%/tr%",
+    "fillColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiLineChart::LineGraphDescriptionFillColor%/tr%"
   }
 ]
 </script>
