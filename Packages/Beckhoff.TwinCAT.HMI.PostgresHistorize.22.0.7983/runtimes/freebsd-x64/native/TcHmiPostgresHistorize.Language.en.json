@@ -1,0 +1,64 @@
+{
+  "locale": "en",
+  "localizedText": {
+    "historizedSymbolList": "Historized symbols",
+    "descHistorizedSymbolList": "List containing all historized symbols.",
+    "descHistorizedSymbol": "Symbol",
+    "historizeSymbol": "Symbol-Mapping",
+    "maxEntries": "Maximum number of entries",
+    "deletionInterval": "Frequency of scheduled data deletions",
+    "descDeletionInterval": "Lower frequencies cause larger deletions, while higher frequencies ensure smoother charts.",
+    "interval": "Interval for data recording",
+    "recordingEnabled": "Recording enabled",
+    "version": "Symbol version",
+    "databaseSettingsCategory": "Database settings",
+    "descResetDatabase": "Reset the database",
+
+    "chunkTimeInterval": "Chunk time interval",
+    "enableCompression": "Compression enabled",
+    "compressAfter": "Compress after",
+    "compressionScheduleInterval": "Compression frequency",
+    "descChunkTimeInterval": "Configures TimescaleDB's chunk_time_interval for the historization table (time span per chunk). Applies only to future chunks. Match the interval to your ingest rate: too small creates overhead, too large slows scans and increases memory usage.",
+    "descCompressionScheduleInterval": "Scheduled intervals for data compression",
+    "descCompressAfter": "The interval of TimescaleDB's add_compression_policy determines when chunks older than the specified interval are compressed.",
+    "descCompression": "Compression on large tables can take a significant amount of time. Compression affects storage efficiency and query performance.",
+
+    "databaseSettings": "Current database connection",
+    "descDatabaseSettings": "PostgreSQL database settings",
+    "connectionString": "Connection string",
+    "descConnectionString": "ODBC connection string to the PostgreSQL database",
+    "password": "Password",
+    "tableId": "Table-ID",
+    "descTableId": "Identifies the currently used tables.",
+
+    "connectionState": "Connection state",
+    "domainState": "Domain state",
+    "domainError": "Domain error",
+    "databaseSize": "Database size",
+    "descDatabaseSize": "The size of the hypertable used by this configuration. Database size is refreshed every 60 seconds.",
+    "numEntries": "Number of entries",
+
+    "descPointInTime": "Configure  timestamp, timespan, 'First' or 'Latest'",
+    "descPointInTimeTimespan": "Configure timespan.",
+    "descPointInTimeTimestamp": "Configure timestamp",
+    "descPointInTimeKeywords": "Set to 'First' or 'Latest'",
+
+    "descGetTrendLineData": "Retrieves an array of timestamps and data points for the requested symbol(s).",
+    "descAnalyticsType": "Specifies which analytics calculations to perform on the retrieved data.",
+    "descDeleteDatabaseEntries": "Delete records from the historized database.",
+    "descGetTrendLineWindow": "Retrieves the time window for a specific TrendLineChart.",
+    "descDiagnostics": "Retrieves information about the historized data that is stored in the database.",
+    "descDeleteDatabaseEntriesValues": "Disable recording and delete database entries of 'MySymbol'. If 'symbolName' is not set, all entries in the database will be deleted. 'disableRecording' disables the recording of one or all historize symbols depending if 'symbolName' is set.",
+    "descHistorizeData": "Retrieves the historized data.",
+
+    "configHintInitError": "Initializing database failed: {0}",
+    "configHintInactiveDatabase": "The database is inactive.",
+    "configHintCompressionError": "Changing the compression status failed.",
+    "configHintInvalidDataInDatabase": "Invalid data in the database.",
+
+    "msgShutdown": "Shutdown extension {0} succeeded.",
+    "msgSourceError": "Error: Symbol {0}, Error code: {1}",
+    "msgGroupEmptyReadValue": "One or more symbols contain no data [Execution result: {0}, Result: {1}, Extension result: {2}]. Symbol(s): {3}",
+    "msgGroupSourceError": "Error code: {0}, Symbol(s): {1}"
+  }
+}

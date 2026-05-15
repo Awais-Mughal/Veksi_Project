@@ -1,0 +1,158 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "pointInTime": {
+      "configDescription": "descPointInTime",
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "timespan",
+          "configDescription": "descPointInTimeTimespan"
+        },
+        {
+          "type": "string",
+          "format": "date-time",
+          "configDescription": "descPointInTimeTimestamp"
+        },
+        {
+          "type": "string",
+          "enum": [
+            "Null",
+            "First",
+            "Latest"
+          ],
+          "configDescription": "descPointInTimeKeywords"
+        }
+      ]
+    }
+  },
+  "properties": {
+    "databaseSettings": {
+      "category": "database",
+      "configDescription": "descDatabaseSettings",
+      "defaultConfigurable": true,
+      "type": "object",
+      "properties": {
+        "connectionString": {
+          "type": "string",
+          "format": "multiline",
+          "default": "Server=localhost; Port=5432; Database=historize_postgres; Uid=postgres; Pwd=@{password};Timeout=10;",
+          "configDescription": "descConnectionString"
+        },
+        "password": {
+          "type": "string",
+          "format": "masked",
+          "propertyOrder": 5
+        },
+        "tableId": {
+          "configDescription": "descTableId",
+          "type": "number",
+          "default": 1,
+          "propertyOrder": 7
+        }
+      },
+      "required": [
+        "connectionString",
+        "tableId",
+        "password"
+      ]
+    },
+    "historizedSymbolList": {
+      "configDescription": "descHistorizedSymbolList",
+      "defaultConfigurable": true,
+      "type": "object",
+      "propertyOrder": 1,
+      "additionalProperties": {
+        "configDescription": "descHistorizedSymbol",
+        "title": "historizeSymbol",
+        "keyOptionMethod": {
+          "symbol": "ListSymbolNames"
+        },
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "number",
+            "optionMethodAllowCustom": false,
+            "optionMethod": {
+              "symbol": "GetSchema::{key}",
+              "version": 2.0,
+              "writeValue": {
+                "symbol": {
+                  "$data": "#/properties/historizedSymbolList/additionalProperties"
+                },
+                "resolve": "AllVersions"
+              },
+              "orderBy": "DESC"
+            },
+            "default": 1.0
+          },
+          "maxEntries": {
+            "type": "integer",
+            "default": 10000
+          },
+          "interval": {
+            "type": "string",
+            "format": "timespan",
+            "default": "PT1S",
+            "formatMinimum": "PT0.01S"
+          },
+          "recordingEnabled": {
+            "type": "boolean",
+            "default": true
+          },
+          "deletionInterval": {
+            "configDescription": "descDeletionInterval",
+            "type": "string",
+            "format": "timespan",
+            "default": "PT1M",
+            "formatMinimum": "PT1S"
+          }
+        },
+        "required": [
+          "maxEntries",
+          "interval",
+          "recordingEnabled",
+          "deletionInterval"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "chunkTimeInterval": {
+      "configDescription": "descChunkTimeInterval",
+      "propertyOrder": 2,
+      "type": "string",
+      "format": "timespan",
+      "formatMinimum": "PT1M",
+      "default": "P1D"
+    },
+    "enableCompression": {
+      "configDescription": "descCompression",
+      "propertyOrder": 3,
+      "type": "boolean",
+      "default": false
+    },
+    "compressAfter": {
+      "configDescription": "descCompressAfter",
+      "propertyOrder": 4,
+      "type": "string",
+      "format": "timespan",
+      "formatMinimum": "PT30M",
+      "default": "P30D"
+    },
+    "compressionScheduleInterval": {
+      "configDescription": "descCompressionScheduleInterval",
+      "propertyOrder": 5,
+      "type": "string",
+      "format": "timespan",
+      "formatMinimum": "PT30M",
+      "default": "P30D"
+    }
+  },
+  "required": [
+    "databaseSettings",
+    "historizedSymbolList",
+    "chunkTimeInterval"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}

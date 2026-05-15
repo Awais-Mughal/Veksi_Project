@@ -1,0 +1,1 @@
+import{Access,Functions}from"Beckhoff.TwinCAT.HMI.Framework/index.esm.js";export function CheckAccess(control,AccessRightToCheck){if(!control||!AccessRightToCheck)return!1;let res=Access.checkAccess(control,AccessRightToCheck);return null!==res&&res}Functions.registerFunctionEx("CheckAccess","TcHmi.Functions.Beckhoff",CheckAccess,{injectInGlobalObject:!0});

@@ -1,5 +1,5 @@
 {
-  "$schema": "./../../Packages/Beckhoff.TwinCAT.HMI.Framework.14.3.500/runtimes/native1.12-tchmi/Schema/TchmiConfig.Schema.json",
+  "$schema": "./../../Packages/Beckhoff.TwinCAT.HMI.Framework.14.4.5/runtimes/native1.12-tchmi/Schema/TchmiConfig.Schema.json",
   "basePath": "./Beckhoff.TwinCAT.HMI.Framework",
   "scaleMode": "None",
   "startupView": "Desktop.view",
@@ -59,7 +59,15 @@
   ],
   "userControls": [],
   "controls": [],
-  "content": [],
+  "content": [
+    {
+      "url": "pages/Content1.content",
+      "preload": false,
+      "keepAlive": false,
+      "loadSync": false,
+      "preloadBindings": false
+    }
+  ],
   "views": [
     {
       "url": "Desktop.view",
@@ -95,6 +103,13 @@
     "symbolWriteError": "ReadBack"
   },
   "packages": [
+    {
+      "name": "Beckhoff.TwinCAT.HMI.BaseTemplate",
+      "basePath": "/Beckhoff.TwinCAT.HMI.BaseTemplate",
+      "symbols": {
+        "package": {}
+      }
+    },
     {
       "name": "Beckhoff.TwinCAT.HMI.Controls",
       "basePath": "/Beckhoff.TwinCAT.HMI.Controls",

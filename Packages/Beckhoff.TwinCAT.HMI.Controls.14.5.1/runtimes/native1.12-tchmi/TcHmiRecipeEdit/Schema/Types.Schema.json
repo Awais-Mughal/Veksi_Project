@@ -1,0 +1,52 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "definitions": {
+        "TcHmi.Controls.Beckhoff.TcHmiRecipeEdit": {
+            "$schema": "http://json-schema.org/draft-04/schema",
+            "type": "object",
+            "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+            "frameworkControlType": "TcHmiRecipeEdit",
+            "frameworkControlNamespace": "TcHmi.Controls.Beckhoff"
+        },
+        "TcHmi.Controls.Beckhoff.TcHmiRecipeEdit.NameArray": {
+            "title": "NameArray",
+            "type": "array",
+            "items": {
+                "type": "string",
+                "minLength": 1
+            }
+        },
+        "TcHmiRecipeEdit": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiRecipeEdit"
+        },
+        "TcHmi.Controls.Beckhoff.TcHmiRecipeEdit.RecipeEventObject": {
+            "title": "RecipeEventObject",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "recipe": {
+                    "type": "object"
+                }
+            },
+            "additionalProperties": false
+        },
+        "TcHmiRecipeEditRecipeEventObject": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiRecipeEdit.RecipeEventObject"
+        },
+        "TcHmi.Controls.Beckhoff.TcHmiRecipeEdit.RecipeNameEventObject": {
+            "title": "RecipeNameEventObject",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "TcHmiRecipeEditRecipeNameEventObject": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiRecipeEdit.RecipeNameEventObject"
+        }
+    }
+}

@@ -1,0 +1,282 @@
+{
+  "$schema": "../../TcHmiSrv/schema/ExtensionSettings.Schema.json",
+  "version": "14.5.73.0",
+  "configVersion": "1.0.0.6",
+  "guid": "C038F8C1-35BB-4197-964E-2F9E3B511F93",
+  "symbolCategories": [
+    {
+      "name": "database",
+      "localization": "databaseSettingsCategory"
+    }
+  ],
+  "visibility": "AlwaysShow",
+  "policies": [
+    "StrictPropertyValidation"
+  ],
+  "symbols": {
+    "GetTrendLineData": {
+      "userGroups": [
+        "__SystemUsers"
+      ],
+      "writeValue": {
+        "versions": [
+          1.0,
+          2.0
+        ],
+        "type": "object",
+        "properties": {
+          "chartName": {
+            "type": "string",
+            "description": "TrendLineChart name."
+          },
+          "xAxisStart": {
+            "$ref": "#/definitions/pointInTime"
+          },
+          "xAxisEnd": {
+            "$ref": "#/definitions/pointInTime"
+          },
+          "displayWidth": {
+            "type": "number",
+            "minimum": 2.0,
+            "maximum": 10240.0,
+            "description": "Display width of the TrendLineChart in pixels."
+          },
+          "yAxes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "symbol"
+              ],
+              "properties": {
+                "symbol": {
+                  "type": "string",
+                  "description": "Symbol name."
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "analyticsType": {
+            "description": "Specifies which analytics calculations to perform on the retrieved data.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "minimum",
+                "maximum",
+                "average"
+              ]
+            }
+          }
+        },
+        "required": [
+          "chartName",
+          "yAxes",
+          "xAxisStart",
+          "displayWidth"
+        ]
+      },
+      "readValue": {
+        "function": true,
+        "versions": [
+          1.0,
+          2.0
+        ],
+        "type": "object",
+        "properties": {
+          "analyticsData": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "minimum": {
+                  "type": "number",
+                  "description": "The minimum value of all data points in the requested time range."
+                },
+                "maximum": {
+                  "type": "number",
+                  "description": "The maximum value of all data points in the requested time range."
+                },
+                "average": {
+                  "type": "number",
+                  "description": "The average value of all data points in the requested time range."
+                }
+              }
+            },
+            "description": "Array with analytics data for each symbol."
+          },
+          "axesData": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Recording time of data point."
+                  },
+                  "y": {
+                    "type": "number",
+                    "description": "Historized value."
+                  },
+                  "error": {
+                    "type": "integer",
+                    "description": "Error code associated with the data point."
+                  },
+                  "flags": {
+                    "type": "string",
+                    "description": "Recording state flags indicating when data recording started or stopped."
+                  }
+                }
+              }
+            },
+            "description": "Array with sub-array for each symbol."
+          }
+        }
+      }
+    },
+    "GetTrendLineWindow": {
+      "userGroups": [
+        "__SystemUsers"
+      ],
+      "writeValue": {
+        "type": "object",
+        "properties": {
+          "chartName": {
+            "type": "string",
+            "description": "TrendLineChart name."
+          },
+          "xAxisStart": {
+            "$ref": "#/definitions/pointInTime"
+          },
+          "xAxisEnd": {
+            "$ref": "#/definitions/pointInTime"
+          },
+          "yAxes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "symbol"
+              ],
+              "properties": {
+                "symbol": {
+                  "type": "string",
+                  "description": "Symbol name."
+                }
+              },
+              "additionalProperties": false
+            },
+            "description": "Start and end time for TrendLineChart."
+          }
+        },
+        "required": [
+          "chartName",
+          "yAxes",
+          "xAxisStart"
+        ]
+      },
+      "readValue": {
+        "function": true,
+        "type": "object",
+        "properties": {
+          "xAxisStart": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp from recording."
+          },
+          "xAxisEnd": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp from recording."
+          }
+        }
+      }
+    },
+    "DeleteDatabaseEntries": {
+      "userGroups": [
+        "__SystemUsers"
+      ],
+      "readValue": {
+        "function": true
+      },
+      "writeValue": {
+        "type": "object",
+        "properties": {
+          "symbolName": {
+            "type": "string",
+            "description": "Delete database entries of symbol. If 'symbolName' is not set, all entries in the database will be deleted."
+          },
+          "disableRecording": {
+            "type": "boolean",
+            "description": "Disables the recording of one or all historize symbols depending if 'symbolName' is set."
+          }
+        }
+      }
+    },
+    "ResetDatabase": {
+      "readValue": {
+        "function": true
+      }
+    },
+    "Diagnostics": {
+      "readValue": {
+        "function": true,
+        "type": "object",
+        "properties": {
+          "connectionState": {
+            "propertyOrder": 1,
+            "type": "string",
+            "enum": [
+              "Connected",
+              "Not Connected",
+              "Pending"
+            ],
+            "readOnly": true
+          },
+          "domainState": {
+            "propertyOrder": 2,
+            "type": "string",
+            "enum": [
+              "Good",
+              "Bad"
+            ]
+          },
+          "domainError": {
+            "propertyOrder": 3,
+            "type": "string",
+            "format": "multiline"
+          },
+          "databaseSize": {
+            "allOf": [
+              {
+                "$ref": "tchmi:general#/definitions/INT64"
+              },
+              {
+                "displayClass": "byte",
+                "propertyOrder": 4,
+                "readOnly": true,
+                "configDescription": "descDatabaseSize"
+              }
+            ]
+          },
+          "numEntries": {
+            "type": "integer",
+            "propertyOrder": 5,
+            "readOnly": true
+          }
+        },
+        "required": [
+          "domainState",
+          "connectionState"
+        ]
+      }
+    }
+  },
+  "packageVersion": "22.0.7983",
+  "productVersion": "14.5.73.0",
+  "signature": "O2i06IycWwj+kaF2+T0Hy0Re57Jzh2gTQ2MpMhila8TbLoGnE3+ejHsFkOSL5fEjkV5JltytQcpkSLGIj68HDhKXoDrmujpYkjXPjU6UmSi+fg92Gqh0lg++jCtI0neKKhIk0m1jPAEJYGinHJKV2smcN4Tzbt+vxg02oSpePHKyhovbt1aaIos0ouybxzg/wL7aWVkzHBpkMGRzmdl6NzD4B6+5g36yU7sRvqbg6boQ+3sG1bU2ti93znd3FPEjbIpeh/lrympNR4YH3tSpm2PzQTHTVT09IvWhoS9AZ/+WpCQ/XYlHmJBGABMnws6JZW50TYEyhPjJuO4RKsu/Tw=="
+}

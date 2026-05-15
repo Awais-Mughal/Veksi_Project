@@ -1,7 +1,14 @@
 {
     "commitInterval": "PT10S",
-    "enableBackup": false,
-    "historizedSymbolList": {},
+    "enableBackup": true,
+    "historizedSymbolList": {
+        "ADS.PLC1.GVL_HMI.ACT_Valve1_Position": {
+            "interval": "PT1S",
+            "maxEntries": 10000,
+            "recordingEnabled": true,
+            "rowLimit": 100000
+        }
+    },
     "inMemory": false,
     "maxBackups": 1,
     "mode": 3,

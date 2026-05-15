@@ -1,0 +1,444 @@
+{
+    "$schema": "../../TcHmiFramework/Schema/ControlDescription.Schema.json",
+    "apiVersion": 1,
+    "name": "TcHmiIFrame",
+    "namespace": "TcHmi.Controls.Beckhoff",
+    "displayName": "IFrame",
+    "version": {
+        "full": "14.5.1.0",
+        "fullSemVer": "14.5.1",
+        "major": 14,
+        "minor": 5,
+        "build": 1,
+        "revision": 0
+    },
+    "visible": true,
+    "themeable": "Standard",
+    "base": "TcHmi.Controls.System.TcHmiControl",
+    "description": "Represents a nested browsing context, effectively embedding another HTML page into the current visualization.",
+    "defaultDesignerEvent": "",
+    "properties": {
+        "containerControl": false,
+        "geometry": {
+            "width": 300,
+            "height": 200
+        }
+    },
+    "icons": [
+        {
+            "name": "Icons/16x16.png",
+            "width": 16,
+            "height": 16
+        }
+    ],
+    "template": "Template.html",
+    "dependencyFiles": [
+        {
+            "name": "Style.css",
+            "type": "Stylesheet"
+        },
+        {
+            "name": "../dist/TcHmiIFrame/TcHmiIFrame.esm.js",
+            "type": "EsModule",
+            "description": "Contains all the main logic as ES module."
+        }
+    ],
+    "themes": {},
+    "attributes": [
+        {
+            "name": "data-tchmi-src",
+            "propertyName": "Src",
+            "propertySetterName": "setSrc",
+            "propertyGetterName": "getSrc",
+            "displayName": "Src",
+            "searchTerms": [
+                "getSource",
+                "setSource",
+                "source",
+                "getContent",
+                "setContent",
+                "content"
+            ],
+            "visible": true,
+            "themeable": "Standard",
+            "displayPriority": 10,
+            "type": "tchmi:general#/definitions/String",
+            "category": "Common",
+            "description": "The url to embed.",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": null,
+            "defaultValueInternal": ""
+        },
+        {
+            "name": "data-tchmi-show-loading-spinner",
+            "propertyName": "ShowLoadingSpinner",
+            "propertySetterName": "setShowLoadingSpinner",
+            "propertyGetterName": "getShowLoadingSpinner",
+            "displayName": "Show Loading Spinner",
+            "visible": true,
+            "themeable": "Advanced",
+            "displayPriority": 60,
+            "type": "tchmi:general#/definitions/Boolean",
+            "category": "Common",
+            "description": "Defines whether the loading spinner is displayed or not.",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": null,
+            "defaultValueInternal": true
+        }
+    ],
+    "functions": [],
+    "events": [
+        {
+            "name": ".onLoad",
+            "displayName": ".onLoad",
+            "displayPriority": 30,
+            "visible": true,
+            "category": "Control",
+            "description": "The load event is fired when the iframe was loaded successfully.",
+            "heritable": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMEvent",
+                    "description": "The Event object of the underlying load dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onError",
+            "displayName": ".onError",
+            "displayPriority": 30,
+            "visible": true,
+            "category": "Control",
+            "description": "The error event is fired when the iframe was not loaded successfully.",
+            "heritable": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMErrorEvent",
+                    "description": "The ErrorEvent object of the underlying error dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onMouseOver",
+            "displayName": ".onMouseOver",
+            "visible": false,
+            "category": "Operator",
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "allowsPreventDefault": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMMouseEvent",
+                    "description": "The MouseEvent object of the underlying mouseover dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onMouseEnter",
+            "displayName": ".onMouseEnter",
+            "visible": false,
+            "category": "Operator",
+            "displayPriority": 50,
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "allowsPreventDefault": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMMouseEvent",
+                    "description": "The MouseEvent object of the underlying mouseenter dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onMouseDown",
+            "displayName": ".onMouseDown",
+            "visible": false,
+            "category": "Operator",
+            "displayPriority": 50,
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "allowsPreventDefault": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMMouseEvent",
+                    "description": "The MouseEvent object of the underlying mousedown dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onMouseDownLeft",
+            "displayName": ".onMouseDownLeft",
+            "visible": false,
+            "category": "Operator",
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "allowsPreventDefault": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMMouseEvent",
+                    "description": "The MouseEvent object of the underlying mousedown dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onMouseDownRight",
+            "displayName": ".onMouseDownRight",
+            "visible": false,
+            "category": "Operator",
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "allowsPreventDefault": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMMouseEvent",
+                    "description": "The MouseEvent object of the underlying mousedown dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onMouseMove",
+            "displayName": ".onMouseMove",
+            "visible": false,
+            "category": "Operator",
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "allowsPreventDefault": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMMouseEvent",
+                    "description": "The MouseEvent object of the underlying mousemove dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onMouseUp",
+            "displayName": ".onMouseUp",
+            "visible": false,
+            "category": "Operator",
+            "displayPriority": 50,
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "allowsPreventDefault": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMMouseEvent",
+                    "description": "The MouseEvent object of the underlying mouseup dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onMouseUpLeft",
+            "displayName": ".onMouseUpLeft",
+            "visible": false,
+            "category": "Operator",
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "allowsPreventDefault": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMMouseEvent",
+                    "description": "The MouseEvent object of the underlying mouseup dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onMouseUpRight",
+            "displayName": ".onMouseUpRight",
+            "visible": false,
+            "category": "Operator",
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "allowsPreventDefault": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMMouseEvent",
+                    "description": "The MouseEvent object of the underlying mouseup dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onMouseClick",
+            "displayName": ".onMouseClick",
+            "visible": false,
+            "category": "Operator",
+            "displayPriority": 15,
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "allowsPreventDefault": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMPointerEvent",
+                    "description": "The PointerEvent object of the underlying click dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onMouseRightClick",
+            "displayName": ".onMouseRightClick",
+            "visible": false,
+            "category": "Operator",
+            "displayPriority": 15,
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "allowsPreventDefault": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMPointerEvent",
+                    "description": "The PointerEvent object of the underlying contextmenu dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onMouseDoubleClick",
+            "displayName": ".onMouseDoubleClick",
+            "visible": false,
+            "category": "Operator",
+            "displayPriority": 15,
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "allowsPreventDefault": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMMouseEvent",
+                    "description": "The MouseEvent object of the underlying dblclick dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onMouseOut",
+            "displayName": ".onMouseOut",
+            "visible": false,
+            "category": "Operator",
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "allowsPreventDefault": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMMouseEvent",
+                    "description": "The MouseEvent object of the underlying mouseout dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onMouseLeave",
+            "displayName": ".onMouseLeave",
+            "visible": false,
+            "category": "Operator",
+            "displayPriority": 50,
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "allowsPreventDefault": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMMouseEvent",
+                    "description": "The MouseEvent object of the underlying mouseleave dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onMouseWheel",
+            "displayName": ".onMouseWheel",
+            "visible": false,
+            "category": "Operator",
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "allowsPreventDefault": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMWheelEvent",
+                    "description": "The WheelEvent object of the underlying wheel dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onTouchStart",
+            "displayName": ".onTouchStart",
+            "visible": false,
+            "category": "Operator",
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "allowsPreventDefault": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMTouchEvent",
+                    "description": "The TouchEvent object of the underlying touchstart dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onTouchMove",
+            "displayName": ".onTouchMove",
+            "visible": false,
+            "category": "Operator",
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "allowsPreventDefault": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMTouchEvent",
+                    "description": "The TouchEvent object of the underlying touchmove dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onTouchEnd",
+            "displayName": ".onTouchEnd",
+            "visible": false,
+            "category": "Operator",
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "allowsPreventDefault": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMTouchEvent",
+                    "description": "The TouchEvent object of the underlying touchend dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onTouchCancel",
+            "displayName": ".onTouchCancel",
+            "visible": false,
+            "category": "Operator",
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "allowsPreventDefault": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMTouchEvent",
+                    "description": "The TouchEvent object of the underlying touchcancel dom event."
+                }
+            ]
+        },
+        {
+            "name": ".onPressed",
+            "displayName": ".onPressed",
+            "visible": false,
+            "category": "Operator",
+            "displayPriority": 10,
+            "description": "Operator events inside an iframe does not reach twincat hmi itself.",
+            "heritable": true,
+            "arguments": [
+                {
+                    "type": "tchmi:framework#/definitions/DOMPointerEvent",
+                    "description": "The PointerEvent object of the underlying click dom event."
+                }
+            ]
+        }
+    ],
+    "dataTypes": [
+        {
+            "schema": "Schema/Types.Schema.json"
+        }
+    ],
+    "languages": {
+        "en": "Lang/Language.en.json",
+        "de": "Lang/Language.de.json"
+    }
+}

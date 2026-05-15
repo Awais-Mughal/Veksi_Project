@@ -1,0 +1,55 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "definitions": {
+        "TcHmi.Controls.Beckhoff.TcHmiCheckbox": {
+            "$schema": "http://json-schema.org/draft-04/schema",
+            "type": "object",
+            "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+            "frameworkControlType": "TcHmiCheckbox",
+            "frameworkControlNamespace": "TcHmi.Controls.Beckhoff"
+        },
+        "TcHmi.Controls.Beckhoff.TcHmiCheckbox.StateSymbol": {
+            "title": "StateSymbol",
+            "allOf": [
+                {
+                    "$ref": "tchmi:framework#/definitions/Symbol"
+                },
+                {
+                    "frameworkSymbolSubType": {
+                        "$ref": "tchmi:general#/definitions/Boolean"
+                    }
+                }
+            ]
+        },
+        "TcHmi.Controls.Beckhoff.TcHmiCheckbox.TextPosition": {
+            "title": "TextPosition",
+            "type": "string",
+            "enum": ["Left", "Right"]
+        },
+        "TcHmi.Controls.Beckhoff.TcHmiCheckbox.StateChangedEventObject": {
+            "title": "StateChangedEventObject",
+            "type": "object",
+            "properties": {
+                "control": {
+                    "$ref": "tchmi:framework#/definitions/Control"
+                },
+                "state": {
+                    "type": "boolean"
+                },
+                "stateOld": {
+                    "type": "boolean"
+                }
+            },
+            "additionalProperties": false
+        },
+        "TcHmiCheckbox": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiCheckbox"
+        },
+        "TcHmiCheckboxStateSymbol": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiCheckbox.StateSymbol"
+        },
+        "TcHmiCheckboxStateChangedEventObject": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiCheckbox.StateChangedEventObject"
+        }
+    }
+}

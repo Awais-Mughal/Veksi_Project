@@ -1,0 +1,64 @@
+{
+  "locale": "de",
+  "localizedText": {
+    "historizedSymbolList": "Historisierte Symbole",
+    "descHistorizedSymbolList": "Liste mit allen historisierten Symbolen.",
+    "descHistorizedSymbol": "Symbol",
+    "historizeSymbol": "Symbol-Mapping",
+    "maxEntries": "Maximale Anzahl an Einträgen",
+    "deletionInterval": "Zeitintervall für regelmäßige Datenbereinigung.",
+    "descDeletionInterval": "Lange Zeitintervalle führen zu größeren Löschungen, während kürzere Zeitintervalle gleichmäßigere Diagramme gewährleisten.",
+    "interval": "Zeitintervall zum Aufzeichnen der Daten",
+    "recordingEnabled": "Aufzeichnung aktiviert",
+    "version": "Symbol-Version",
+    "databaseSettingsCategory": "Datenbankeinstellungen",
+    "descResetDatabase": "Datenbank zurücksetzen",
+
+    "chunkTimeInterval": "Chunk-Zeitintervall",
+    "enableCompression": "Komprimierung aktiviert",
+    "compressAfter": "Zeitpunkt, ab dem komprimiert wird",
+    "compressionScheduleInterval": "Komprimierungsintervall",
+    "descChunkTimeInterval": "Legt das chunk_time_interval von TimescaleDB für die Historisierungstabelle fest (Zeitspanne pro Chunk). Änderungen gelten nur für neu erstellte Chunks. Zu kleine Intervalle verursachen Overhead, zu große verlangsamen Scans und erhöhen den RAM-Bedarf.",
+    "descCompressionScheduleInterval": "Intervall für die Datenkomprimierung.",
+    "descCompressAfter": "Das Intervall von TimescaleDBs add_compression_policy legt fest, wann Chunks, die älter als das angegebene Intervall sind, komprimiert werden.",
+    "descCompression": "Komprimierung beeinflusst sowohl die Speichereffizienz als auch die Abfrageleistung.",
+
+    "databaseSettings": "Aktuelle Datenbankverbindung",
+    "descDatabaseSettings": "PostgreSQL-Datenbankeinstellungen",
+    "connectionString": "Verbindung",
+    "descConnectionString": "ODBC-Verbindung zur PostgreSQL-Datenbank",
+    "password": "Passwort",
+    "tableId": "Tabellen-ID",
+    "descTableId": "Identifiziert die aktuell benutzten Tabellen.",
+
+    "connectionState": "Verbindungsstatus",
+    "domainState": "Domain-Status",
+    "domainError": "Domain-Fehler",
+    "databaseSize": "Datenbankgröße",
+    "descDatabaseSize": "Größe der Hypertabelle, die in dieser Konfiguration verwendet wird. Die Datenbankgröße wird alle 60 Sekunden aktualisiert.",
+    "numEntries": "Anzahl der Einträge",
+
+    "descPointInTime": "Zeitstempel, Zeitspanne, 'First' oder 'Latest' konfigurieren.",
+    "descPointInTimeTimespan": "Zeitspanne wählen.",
+    "descPointInTimeTimestamp": "Zeitstempel wählen.",
+    "descPointInTimeKeywords": "'First' oder 'Latest' wählen.",
+
+    "descGetTrendLineData": "Ruft ein Array mit Zeitstempeln und Datenpunkten für die angeforderten Symbole ab.",
+    "descAnalyticsType": "Legt fest, welche Analysefunktionen auf die abgerufenen Daten angewendet werden sollen.",
+    "descDeleteDatabaseEntries": "Löscht Einträge in der Historize-Datenbank.",
+    "descDeleteDatabaseEntriesValues": "Deaktiviert die Aufzeichnung und löscht Datenbankeinträge von 'MySymbol'. Wenn 'symbolName' nicht gesetzt ist, werden alle Einträge in der Datenbank gelöscht. 'disableRecording' deaktiviert die Aufzeichnung eines oder aller Historize-Symbole, abhängig davon, ob 'symbolName' gesetzt ist.",
+    "descGetTrendLineWindow": "Ruft das Zeitfenster für ein spezifisches TrendLineChart ab.",
+    "descDiagnostics": "Ruft Informationen über die in der Datenbank gespeicherten historisierten Daten ab.",
+    "descHistorizeData": "Ruft historisierte Daten ab.",
+
+    "configHintInitError": "Initialisieren der Datenbank ist fehlgeschlagen: {0}",
+    "configHintInactiveDatabase": "Die Datenbank ist inaktiv.",
+    "configHintCompressionError": "Ändern des Komprimierungsstatus ist fehlgeschlagen.",
+    "configHintInvalidDataInDatabase": "Ungültige Daten in der Datenbank.",
+
+    "msgShutdown": "Herunterfahren der Erweiterung {0} war erfolgreich.",
+    "msgSourceError": "Fehler: Symbol {0}, Fehlercode: {1}",
+    "msgGroupEmptyReadValue": "Ein oder mehrere Symbole enthalten keine Daten [Fehlercodes: Ausführung {0}, Server {1}, Erweiterung {2}], Symbol(e): {3}",
+    "msgGroupSourceError": "Fehlercode: {0}, Symbol(e): {1}"
+  }
+}

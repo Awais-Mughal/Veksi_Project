@@ -1,0 +1,1 @@
+import{Functions,Locale}from"Beckhoff.TwinCAT.HMI.Framework/index.esm.js";export function GetRegisteredLocales(){return Locale.getRegisteredLocales()}Functions.registerFunctionEx("GetRegisteredLocales","TcHmi.Functions.Beckhoff",GetRegisteredLocales,{injectInGlobalObject:!0});

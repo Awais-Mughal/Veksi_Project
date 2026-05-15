@@ -379,10 +379,13 @@ PURPOSE
 
 OUTPUT FORMAT EXAMPLE
   {"timestamp":"2026-04-28 12:00:00",
-   "valve_1_setpoint":50.0,"valve_1_actual":49.8,"valve_1_source":"HMI",
-   "valve_2_setpoint":25.0,"valve_2_actual":25.1,"valve_2_source":"MQTT",
-   "valve_3_setpoint":75.0,"valve_3_actual":74.9,"valve_3_source":"HMI",
-   "temperature_c":22.5,"water_level_pct":65.3,"water_level_mm":653.0}
+   "valve_1_setpoint":50.0,"valve_1_actual":49.8,"valve_1_lastsource":"HMI",
+   "valve_2_setpoint":25.0,"valve_2_actual":25.1,"valve_2_lastsource":"MQTT",
+   "valve_3_setpoint":75.0,"valve_3_actual":74.9,"valve_3_lastsource":"HMI",
+   "temperature_1_c":22.5,"water_level_1_mm":653.0,
+   "temperature_2_c":22.5,"water_level_2_mm":653.0,
+   "temperature_3_c":22.5,"water_level_3_mm":653.0,
+   "Current Source":}
 ============================================================
 *)
 METHOD BuildStatusJson

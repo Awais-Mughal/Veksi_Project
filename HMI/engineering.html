@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>HMI</title>
-  <meta name="tchmi-buildtime" content="2026-05-08T11:40:27">
+  <meta name="tchmi-buildtime" content="2026-05-13T14:36:53">
 
   <!-- target-densitydpi=device-dpi -->
   <meta name="viewport" content="initial-scale=1.0"><script>
@@ -14,8 +14,14 @@
 </script><script>
 	TCHMI_TARGET_PARTIAL = new URL(window.location.href).searchParams.get('TargetPartial') ?? undefined;
 </script><script>TCHMI_NUGET_METADATA = {
+  "Beckhoff.TwinCAT.HMI.BaseTemplate": {
+    "version": "14.4.1",
+    "authors": "Beckhoff",
+    "title": "BaseTemplate",
+    "description": "TwinCAT HMI is a development environment for web-based HMIs (Human Machine Interfaces). This package provides controls for TwinCAT HMI project templates."
+  },
   "Beckhoff.TwinCAT.HMI.Controls": {
-    "version": "14.4.64",
+    "version": "14.5.1",
     "authors": "Beckhoff",
     "title": "Controls",
     "description": "TwinCAT HMI is a development environment for web-based HMIs (Human Machine Interfaces). This package provides the controls for the TwinCAT HMI client."
@@ -27,25 +33,25 @@
     "description": "TwinCAT HMI is a development environment for web-based HMIs (Human Machine Interfaces). This package provides the extension for the TwinCAT HMI Server to enable the fieldbus diagnostics of EtherCAT topologies in TwinCAT HMI applications."
   },
   "Beckhoff.TwinCAT.HMI.EcDiagnosticsControl": {
-    "version": "14.3.345",
+    "version": "14.4.1",
     "authors": "Beckhoff",
     "title": "EcDiagnosticsControl",
     "description": "TwinCAT HMI is a development environment for web-based HMIs (Human Machine Interfaces). This package provides a control for fieldbus diagnostics of EtherCAT topologies in TwinCAT HMI applications."
   },
   "Beckhoff.TwinCAT.HMI.Framework": {
-    "version": "14.3.500",
+    "version": "14.4.5",
     "authors": "Beckhoff",
     "title": "Framework",
     "description": "TwinCAT HMI is a development environment for web-based HMIs (Human Machine Interfaces). This package provides the client framework for the TwinCAT HMI."
   },
   "Beckhoff.TwinCAT.HMI.Functions": {
-    "version": "14.3.347",
+    "version": "14.4.1",
     "authors": "Beckhoff",
     "title": "Functions",
     "description": "TwinCAT HMI is a development environment for web-based HMIs (Human Machine Interfaces). This package provides functions for use in the \"Actions and Conditions Editor\" and symbol expressions."
   },
   "Beckhoff.TwinCAT.HMI.Industries.Common": {
-    "version": "14.3.348",
+    "version": "14.4.1",
     "authors": "Beckhoff",
     "title": "Industries Common",
     "description": "TwinCAT HMI is a development environment for web-based HMIs (Human Machine Interfaces). This package provides a set of basic machine controls that are usefull for most industries."
@@ -67,6 +73,12 @@
     "authors": "Microsoft",
     "title": "Microsoft.TypeScript.MSBuild",
     "description": "The TypeScript MSBuild task, and matching compiler version."
+  },
+  "Volo.Abp.UI.Navigation": {
+    "version": "10.3.0",
+    "authors": "Volo.Abp.UI.Navigation",
+    "title": "",
+    "description": "Package Description"
   }
 };
 </script>
@@ -96,6 +108,8 @@
   <script type="importmap">
 {
   "imports": {
+    "Beckhoff.TwinCAT.HMI.BaseTemplate/": "./Beckhoff.TwinCAT.HMI.BaseTemplate/",
+    "Beckhoff.TwinCAT.HMI.BaseTemplate": "./Beckhoff.TwinCAT.HMI.BaseTemplate/index.esm.js",
     "Beckhoff.TwinCAT.HMI.Controls/": "./Beckhoff.TwinCAT.HMI.Controls/",
     "Beckhoff.TwinCAT.HMI.Controls": "./Beckhoff.TwinCAT.HMI.Controls/index.esm.js",
     "Beckhoff.TwinCAT.HMI.EcDiagnosticsControl/": "./Beckhoff.TwinCAT.HMI.EcDiagnosticsControl/",
@@ -191,6 +205,12 @@
 <script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiUserGuidance/TcHmiUserGuidance.esm.js" type="module"></script>
 <script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiUserManagement/TcHmiUserManagement.esm.js" type="module"></script>
 <script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiVideo/TcHmiVideo.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.BaseTemplate/dist/TcHmiAccordionNavigation/TcHmiAccordionNavigation.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.BaseTemplate/dist/TcHmiBreadcrumb/TcHmiBreadcrumb.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.BaseTemplate/dist/TcHmiBurgerMenu/TcHmiBurgerMenu.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.BaseTemplate/dist/TcHmiHeader/TcHmiHeader.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.BaseTemplate/dist/TcHmiNavigation/TcHmiNavigation.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.BaseTemplate/dist/TcHmiResponsiveBehaviour/TcHmiResponsiveBehaviour.esm.js" type="module"></script>
 <script src="/Beckhoff.TwinCAT.HMI.EcDiagnosticsControl/dist/TcHmiEcDiagnostics/TcHmiEcDiagnostics.esm.js" type="module"></script>
 <script src="/Beckhoff.TwinCAT.HMI.Functions/ActivateRecipe.js" type="module"></script>
 <script src="/Beckhoff.TwinCAT.HMI.Functions/BigIntToNumber.js" type="module"></script>
@@ -241,6 +261,8 @@
 <script src="/Beckhoff.TwinCAT.HMI.Functions/SymbolExists.js" type="module"></script>
 <script src="/Beckhoff.TwinCAT.HMI.Functions/TeachAsNewRecipe.js" type="module"></script>
 <script src="/Beckhoff.TwinCAT.HMI.Functions/Wait.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/TcUiClientIsAvailable.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/TcUiClientScreenshot.js" type="module"></script>
 <script src="/Beckhoff.TwinCAT.HMI.Functions/TeachRecipe.js" type="module"></script>
 <script src="/Beckhoff.TwinCAT.HMI.Functions/ToDateString.js" type="module"></script>
 <script src="/Beckhoff.TwinCAT.HMI.Functions/ToDateTimeString.js" type="module"></script>
@@ -259,7 +281,7 @@
 </head>
 <body class="tchmi-body-designer">
 	<div id="Desktop" data-tchmi-type="TcHmi.Controls.System.TcHmiView" data-tchmi-top="0" data-tchmi-left="5" data-tchmi-width-mode="Content" data-tchmi-min-width="100" data-tchmi-min-width-unit="%" data-tchmi-height-mode="Content" data-tchmi-min-height="100" data-tchmi-min-height-unit="%" data-tchmi-zindex="6" data-tchmi-creator-partial-key="/Desktop.view">
-  <div id="TcHmiTextblock_4" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="202" data-tchmi-height-unit="px" data-tchmi-left="34" data-tchmi-left-unit="px" data-tchmi-top="295" data-tchmi-top-unit="px" data-tchmi-width="871" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text="%f%'Valve_1 State: ' + %s%ADS.PLC1.GVL_HMI.ACT_Valve1_State%/s% + '		Valve_2 State: ' + %s%ADS.PLC1.GVL_HMI.ACT_Valve2_State%/s% +  '		Valve_3 State: ' + %s%ADS.PLC1.GVL_HMI.ACT_Valve3_State%/s% +
+  <div id="TcHmiTextblock_4" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="202" data-tchmi-height-unit="px" data-tchmi-left="34" data-tchmi-left-unit="px" data-tchmi-top="295" data-tchmi-top-unit="px" data-tchmi-width="871" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text="%f%'Valve_1 State: ' + %s%ADS.PLC1.GVL_HMI.ACT_Valve1_State%/s%  + '		Valve_2 State: ' + %s%ADS.PLC1.GVL_HMI.ACT_Valve2_State%/s% +  '		Valve_3 State: ' +  %s%ADS.PLC1.GVL_HMI.ACT_Valve3_State%/s%+
 '\n\n 0_Init	1_Homing	2_Idle	3_Moving	4_Halt	5_Hold	6_Fault	7_Reset ' +
 
 '\n\nStroke Length: ' + %s%ADS.PLC1.GVL_Config.VALVE_FULL_STROKE_MM%/s% +
@@ -481,7 +503,7 @@
 }
 </script>
 </div>
-<div id="TcHmiRadioButton_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRadioButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="29" data-tchmi-left-unit="px" data-tchmi-text="HMI" data-tchmi-top="843" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-radio-state="Active" data-tchmi-zindex="6">
+<div id="TcHmiRadioButton_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRadioButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="29" data-tchmi-left-unit="px" data-tchmi-text="HMI" data-tchmi-top="843" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-radio-state="Active" data-tchmi-zindex="6" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.sHMI_mode|BindingMode=TwoWay|Interval=5%/s%">
 
 <script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
 [
@@ -517,44 +539,11 @@
               {
                 "objectType": "WriteToSymbol",
                 "active": true,
-                "symbolExpression": "%ctrl%TcHmiRadioButton_2::RadioState%/ctrl%",
-                "value": {
-                  "objectType": "StaticValue",
-                  "valueType": "tchmi:framework#/definitions/ToggleState",
-                  "value": "Normal"
-                },
-                "asyncWait": true
-              },
-              {
-                "objectType": "WriteToSymbol",
-                "active": true,
-                "symbolExpression": "%ctrl%TcHmiRadioButton_3::RadioState%/ctrl%",
-                "value": {
-                  "objectType": "StaticValue",
-                  "valueType": "tchmi:framework#/definitions/ToggleState",
-                  "value": "Normal"
-                },
-                "asyncWait": true
-              },
-              {
-                "objectType": "WriteToSymbol",
-                "active": true,
                 "symbolExpression": "%ctrl%TcHmiContainer_1::IsEnabled%/ctrl%",
                 "value": {
                   "objectType": "StaticValue",
                   "valueType": "tchmi:general#/definitions/Boolean",
                   "value": true
-                },
-                "asyncWait": true
-              },
-              {
-                "objectType": "WriteToSymbol",
-                "active": true,
-                "symbolExpression": "%s%ADS.PLC1.GVL_HMI.HMI_CommandSource%/s%",
-                "value": {
-                  "objectType": "StaticValue",
-                  "valueType": "tchmi:server#/definitions/ADS-PLC1.E_CommandSource",
-                  "value": 0
                 },
                 "asyncWait": true
               }
@@ -579,11 +568,49 @@
         "asyncWait": true
       }
     ]
+  },
+  {
+    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onMouseClick",
+    "actions": [
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%s%ADS.PLC1.GVL_HMI.HMI_CommandSource%/s%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:server#/definitions/ADS-PLC1.E_CommandSource",
+          "value": 0
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiRadioButton_3::RadioState%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/ToggleState",
+          "value": "Normal"
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiRadioButton_2::RadioState%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/ToggleState",
+          "value": "Normal"
+        },
+        "asyncWait": true
+      }
+    ]
   }
 ]
 </script>
 </div>
-<div id="TcHmiRadioButton_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRadioButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="139" data-tchmi-left-unit="px" data-tchmi-text="MQTT" data-tchmi-top="843" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<div id="TcHmiRadioButton_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRadioButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="139" data-tchmi-left-unit="px" data-tchmi-text="MQTT" data-tchmi-top="843" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-zindex="6" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.sMqtt_mode|BindingMode=TwoWay|Interval=5%/s%">
 
 <script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
 [
@@ -615,41 +642,7 @@
                 "logic": null
               }
             ],
-            "then": [
-              {
-                "objectType": "WriteToSymbol",
-                "active": true,
-                "symbolExpression": "%ctrl%TcHmiRadioButton_1::RadioState%/ctrl%",
-                "value": {
-                  "objectType": "StaticValue",
-                  "valueType": "tchmi:framework#/definitions/ToggleState",
-                  "value": "Normal"
-                },
-                "asyncWait": true
-              },
-              {
-                "objectType": "WriteToSymbol",
-                "active": true,
-                "symbolExpression": "%ctrl%TcHmiRadioButton_3::RadioState%/ctrl%",
-                "value": {
-                  "objectType": "StaticValue",
-                  "valueType": "tchmi:framework#/definitions/ToggleState",
-                  "value": "Normal"
-                },
-                "asyncWait": true
-              },
-              {
-                "objectType": "WriteToSymbol",
-                "active": true,
-                "symbolExpression": "%s%ADS.PLC1.GVL_HMI.HMI_CommandSource%/s%",
-                "value": {
-                  "objectType": "StaticValue",
-                  "valueType": "tchmi:server#/definitions/ADS-PLC1.E_CommandSource",
-                  "value": 1
-                },
-                "asyncWait": true
-              }
-            ]
+            "then": []
           },
           {
             "else": []
@@ -658,11 +651,49 @@
         "asyncWait": true
       }
     ]
+  },
+  {
+    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onMouseClick",
+    "actions": [
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%s%ADS.PLC1.GVL_HMI.HMI_CommandSource%/s%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:server#/definitions/ADS-PLC1.E_CommandSource",
+          "value": 1
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiRadioButton_3::RadioState%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/ToggleState",
+          "value": "Normal"
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiRadioButton_1::RadioState%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/ToggleState",
+          "value": "Normal"
+        },
+        "asyncWait": true
+      }
+    ]
   }
 ]
 </script>
 </div>
-<div id="TcHmiRadioButton_3" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRadioButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="249" data-tchmi-left-unit="px" data-tchmi-text="Mannual" data-tchmi-top="843" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<div id="TcHmiRadioButton_3" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRadioButton" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="249" data-tchmi-left-unit="px" data-tchmi-text="Mannual" data-tchmi-top="843" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-zindex="6" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.sMannual_mode|BindingMode=TwoWay|Interval=5%/s%">
 
 <script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
 [
@@ -691,39 +722,6 @@
               }
             ],
             "then": [
-              {
-                "objectType": "WriteToSymbol",
-                "active": true,
-                "symbolExpression": "%ctrl%TcHmiRadioButton_2::RadioState%/ctrl%",
-                "value": {
-                  "objectType": "StaticValue",
-                  "valueType": "tchmi:framework#/definitions/ToggleState",
-                  "value": "Normal"
-                },
-                "asyncWait": true
-              },
-              {
-                "objectType": "WriteToSymbol",
-                "active": true,
-                "symbolExpression": "%ctrl%TcHmiRadioButton_1::RadioState%/ctrl%",
-                "value": {
-                  "objectType": "StaticValue",
-                  "valueType": "tchmi:framework#/definitions/ToggleState",
-                  "value": "Normal"
-                },
-                "asyncWait": true
-              },
-              {
-                "objectType": "WriteToSymbol",
-                "active": true,
-                "symbolExpression": "%s%ADS.PLC1.GVL_HMI.HMI_CommandSource%/s%",
-                "value": {
-                  "objectType": "StaticValue",
-                  "valueType": "tchmi:server#/definitions/ADS-PLC1.E_CommandSource",
-                  "value": 2
-                },
-                "asyncWait": true
-              },
               {
                 "objectType": "WriteToSymbol",
                 "active": true,
@@ -760,6 +758,44 @@
   {
     "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onStateChanged",
     "actions": []
+  },
+  {
+    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onMouseClick",
+    "actions": [
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%s%ADS.PLC1.GVL_HMI.HMI_CommandSource%/s%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:server#/definitions/ADS-PLC1.E_CommandSource",
+          "value": 2
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiRadioButton_1::RadioState%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/ToggleState",
+          "value": "Normal"
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiRadioButton_2::RadioState%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/ToggleState",
+          "value": "Normal"
+        },
+        "asyncWait": true
+      }
+    ]
   }
 ]
 </script>
@@ -1332,7 +1368,53 @@
 </script>
 </div>
 </div>
-<div id="TcHmiEcDiagnostics_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiEcDiagnostics" data-tchmi-allow-zoom-and-pan="True" data-tchmi-device="Dev1" data-tchmi-height="851" data-tchmi-height-unit="px" data-tchmi-left="915" data-tchmi-left-unit="px" data-tchmi-toolbox-reset-view="True" data-tchmi-top="18" data-tchmi-top-unit="px" data-tchmi-width="1182" data-tchmi-width-unit="px" data-tchmi-zindex="10">
+<div id="TcHmiEcDiagnostics_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiEcDiagnostics" data-tchmi-allow-zoom-and-pan="True" data-tchmi-device="Dev1" data-tchmi-height="851" data-tchmi-height-unit="px" data-tchmi-left="915" data-tchmi-left-unit="px" data-tchmi-toolbox-reset-view="True" data-tchmi-top="16" data-tchmi-top-unit="px" data-tchmi-width="1182" data-tchmi-width-unit="px" data-tchmi-zindex="10">
+</div>
+<div id="TcHmiTrendLineChart_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTrendLineChart" data-tchmi-end="Latest" data-tchmi-height="400" data-tchmi-height-unit="px" data-tchmi-left="686" data-tchmi-left-unit="px" data-tchmi-start="First" data-tchmi-top="724" data-tchmi-top-unit="px" data-tchmi-width="730" data-tchmi-width-unit="px" data-tchmi-x-axis-name="x-axis 1" data-tchmi-x-sub-tick-steps="4" data-tchmi-y-sub-tick-steps="4">
+<script data-tchmi-target-attribute="data-tchmi-y-axis" type="application/json">
+[
+  {
+    "id": 1,
+    "showAxis": true,
+    "position": "Left",
+    "logarithmicScale": false,
+    "axisLabeling": "Number",
+    "labelFontColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::YAxisLabelFontColor%/tr%",
+    "showLabels": true,
+    "axisColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::YAxisAxisColor%/tr%",
+    "mainTickMinValue": 0,
+    "mainTickMaxValue": 100,
+    "showAxisName": true,
+    "axisName": "y-axis 1",
+    "axisNameFontFamily": null,
+    "axisNameFontSize": 15,
+    "axisNameFontSizeUnit": "px",
+    "axisNameFontWeight": "Bold",
+    "axisNameFontColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::YAxisAxisNameFontColor%/tr%",
+    "decimalPlaces": 2,
+    "autoScaling": false
+  }
+]
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-line-graph-descriptions" type="application/json">
+[
+  {
+    "yAxisId": 1,
+    "symbol": "ADS.PLC1.GVL_HMI.ACT_Valve1_Position",
+    "lineWidth": 1,
+    "pointDot": false,
+    "pointDotRadius": 3,
+    "pointDotStrokeWidth": 1,
+    "pointDotInStopMode": false,
+    "lineColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::LineGraphDescriptionLineColor%/tr%",
+    "pointDotFillColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::LineGraphDescriptionPointDotFillColor%/tr%",
+    "pointDotStrokeColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiTrendLineChart::LineGraphDescriptionPointDotStrokeColor%/tr%",
+    "fillColor": "%tr%Control::TcHmi.Controls.Beckhoff.TcHmiLineChart::LineGraphDescriptionFillColor%/tr%"
+  }
+]
+</script>
 </div>
 </div>
 </body>

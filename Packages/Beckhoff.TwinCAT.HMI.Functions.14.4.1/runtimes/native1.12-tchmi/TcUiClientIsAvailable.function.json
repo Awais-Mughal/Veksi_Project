@@ -1,0 +1,31 @@
+{
+    "$schema": "../TcHmiFramework/Schema/FunctionDescription.Schema.json",
+    "apiVersion": 1,
+    "version": {
+        "full": "14.4.1.0",
+        "fullSemVer": "14.4.1",
+        "major": 14,
+        "minor": 4,
+        "build": 1,
+        "revision": 0
+    },
+    "dependencyFiles": [
+        {
+            "name": "TcUiClientIsAvailable.js",
+            "type": "EsModule"
+        }
+    ],
+    "function": {
+        "name": "TcUiClientIsAvailable",
+        "namespace": "TcHmi.Functions.Beckhoff",
+        "displayName": "TcUiClientIsAvailable",
+        "visible": true,
+        "category": "TcUiClient",
+        "description": "Checks if the TcUiClient API is available in the current browser environment. \nReturns true if available, false otherwise.",
+        "returnValue": {
+            "type": "tchmi:general#/definitions/Boolean",
+            "description": "True if the TcUiClient API is available, false otherwise."
+        },
+        "arguments": []
+    }
+}

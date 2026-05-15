@@ -1,0 +1,230 @@
+/** Styles for all themes */
+.TcHmi_Controls_Beckhoff_TcHmiCalculator {
+    overflow: hidden;
+}
+
+.TcHmi_Controls_Beckhoff_TcHmiCalculator-template {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    .calculator-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .menu-bar-container {
+        width: 100%;
+        height: 45px;
+        min-height: 28px;
+        box-sizing: border-box;
+        padding-left: 10px;
+        padding-right: 10px;
+        position: relative;
+        padding-top: 10px;
+    }
+
+    .full-display-container {
+        width: 100%;
+        height: 128px;
+        padding: 10px 10px 0px 10px;
+        box-sizing: border-box;
+    }
+
+    .display-term-container {
+        height: 25px;
+        text-align: right;
+        padding-top: 0px;
+        padding-left: 10px;
+        padding-right: 10px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .display-result-term-container {
+        height: 45px;
+        text-align: right;
+        padding-bottom: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: flex-end;
+    }
+
+    .display-term-span {
+        font-size: 17px;
+        width: 100%;
+        text-align: right;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .display-result-term-input {
+        font-size: 20px;
+        width: 100%;
+        text-align: right;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        box-sizing: border-box;
+        height: 100%;
+        border: none;
+        font-family: inherit;
+    }
+
+    .keyboard-container {
+        width: 100%;
+        height: calc(100% - 100px);
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    .key-element {
+        box-sizing: border-box;
+        transition: background-color 0.1s ease-in-out;
+    }
+
+    .key-span-element {
+        align-items: center;
+        justify-content: center;
+        inset: 4px;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        font-size: 17px;
+        transition: font-size 0.1s ease-in-out;
+
+        &.key-span-element-rad-deg {
+            height: 50%;
+        }
+
+        &.key-span-element-smaller-font {
+            font-size: 10px;
+        }
+    }
+
+    .keyboard-inner-container {
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+
+    .key-svg-element {
+        stroke-width: 1.2px;
+        fill: none;
+    }
+
+    .key-svg-path-element {
+    }
+
+    .svg-scientific-icon-container {
+        left: 10px;
+        position: absolute;
+    }
+
+    .svg-history-icon-container {
+        right: 10px;
+        position: absolute;
+    }
+
+    .svg-history-copy-icon-container {
+        position: relative;
+        /*visibility: hidden;*/
+        flex-direction: row;
+        display: flex;
+    }
+
+    .svg-context-menu-span {
+        font-size: 15px;
+        padding-left: 3px;
+    }
+
+    .svg-history-delete-icon-container {
+        position: absolute;
+        right: 10px;
+    }
+
+    .svg-icon-container {
+        height: 22px;
+        width: auto;
+        border-radius: 10%;
+        padding: 3px;
+        transition: background-color 0.2s ease-in-out;
+
+        &.disabled {
+            opacity: 0.2;
+        }
+    }
+
+    .result-term-copy-icon-container {
+        align-self: flex-end;
+    }
+
+    .history-container {
+        width: 100%;
+        height: calc(100% - 128px); /* 19px for the menu height and some as buffer */
+        transition:
+            top 0.3s cubic-bezier(0.33, 0, 0.2, 1),
+            backdrop-filter 0.3s ease-in-out;
+        position: absolute;
+        top: 128px; /* 128px for the menu and display height */
+        backdrop-filter: blur(2px);
+        padding: 10px;
+        box-sizing: border-box;
+
+        &.hidden {
+            top: 100%;
+            backdrop-filter: blur(0px);
+        }
+    }
+
+    .history-scroll-container {
+        height: calc(100% - 25px);
+        overflow: auto;
+        display: block;
+    }
+
+    .history-menu-container {
+        height: 25px;
+    }
+
+    .history-element {
+        width: auto;
+        height: 60px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-right: 5px;
+        box-sizing: border-box;
+        align-items: end;
+        justify-items: center;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transition:
+            background-color 0.1s ease-in-out,
+            height 0.5s cubic-bezier(0.33, 0, 0.2, 1),
+            padding 0.5s cubic-bezier(0.33, 0, 0.2, 1);
+    }
+
+    .history-span-element {
+        font-size: 15px;
+        white-space: nowrap;
+    }
+
+    .history-span-element-term {
+        word-spacing: 5px;
+    }
+
+    .history-span-element-result {
+    }
+}

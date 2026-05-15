@@ -1,0 +1,1 @@
+import{Functions,TcUiClient}from"Beckhoff.TwinCAT.HMI.Framework/index.esm.js";export function TcUiClientIsAvailable(){return TcUiClient.isAvailable()}Functions.registerFunctionEx("TcUiClientIsAvailable","TcHmi.Functions.Beckhoff",TcUiClientIsAvailable,{injectInGlobalObject:!0});

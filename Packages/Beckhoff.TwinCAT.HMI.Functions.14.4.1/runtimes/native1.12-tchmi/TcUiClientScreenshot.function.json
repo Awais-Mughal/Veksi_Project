@@ -1,0 +1,71 @@
+{
+    "$schema": "../TcHmiFramework/Schema/FunctionDescription.Schema.json",
+    "apiVersion": 1,
+    "version": {
+        "full": "14.4.1.0",
+        "fullSemVer": "14.4.1",
+        "major": 14,
+        "minor": 4,
+        "build": 1,
+        "revision": 0
+    },
+    "dependencyFiles": [
+        {
+            "name": "TcUiClientScreenshot.js",
+            "type": "EsModule"
+        }
+    ],
+    "function": {
+        "name": "TcUiClientScreenshot",
+        "namespace": "TcHmi.Functions.Beckhoff",
+        "displayName": "TcUiClientScreenshot",
+        "visible": true,
+        "category": "TcUiClient",
+        "waitMode": "Asynchronous",
+        "injectContextObject": true,
+        "description": "Takes a screenshot via the TcUiClient API. This feature requires the TcUiClient.",
+        "returnValue": null,
+        "arguments": [
+            {
+                "name": "ctx",
+                "displayName": "ctx",
+                "type": "tchmi:framework#/definitions/ContextReference",
+                "description": "Context Reference",
+                "required": true,
+                "bindable": false
+            },
+            {
+                "name": "path",
+                "displayName": "Path",
+                "type": "tchmi:general#/definitions/String",
+                "description": "The target directory path for the screenshot file.",
+                "required": true,
+                "bindable": true
+            },
+            {
+                "name": "fileName",
+                "displayName": "FileName",
+                "type": "tchmi:general#/definitions/String",
+                "description": "The filename for the screenshot file.",
+                "required": true,
+                "bindable": true
+            },
+            {
+                "name": "querySelectorAll",
+                "displayName": "QuerySelectorAll",
+                "type": "tchmi:general#/definitions/String",
+                "description": "A CSS selector string to select elements to capture.",
+                "required": true,
+                "bindable": true
+            },
+            {
+                "name": "selectorIndex",
+                "displayName": "SelectorIndex",
+                "type": "tchmi:general#/definitions/Number",
+                "description": "An optional index to select a specific element from the query result.",
+                "required": false,
+                "bindable": true
+            }
+        ]
+    }
+}

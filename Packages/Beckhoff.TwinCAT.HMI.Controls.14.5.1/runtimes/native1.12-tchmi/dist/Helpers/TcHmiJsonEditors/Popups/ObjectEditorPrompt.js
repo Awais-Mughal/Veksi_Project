@@ -1,0 +1,1 @@
+import{EditorPrompt}from"./EditorPrompt.js";import{ObjectEditorPane}from"../BaseEditors/EditorPanes/ObjectEditorPane.js";export class ObjectEditorPrompt extends EditorPrompt{constructor(editorInfo,factory){super(editorInfo,ObjectEditorPane,factory)}}TcHmi.Controls.Helpers??={},TcHmi.Controls.Helpers.ObjectEditorPrompt=ObjectEditorPrompt;

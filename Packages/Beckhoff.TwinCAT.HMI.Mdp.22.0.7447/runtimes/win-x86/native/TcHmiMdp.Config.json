@@ -1,0 +1,129 @@
+{
+  "$schema": "../../TcHmiSrv/schema/ExtensionSettings.Schema.json",
+  "version": "14.4.245.0",
+  "configVersion": "1.0.1.2",
+  "guid": "713EC6CF-3C7D-4061-BB8C-85C04825D1A4",
+  "visibility": "AlwaysShow",
+  "policies": [
+    "StrictPropertyValidation"
+  ],
+  "symbols": {
+    "ListSymbols": {
+      "readValue": {
+        "function": true
+      }
+    },
+    "GetSchema": {
+      "writeValue": {
+        "type": "string"
+      },
+      "readValue": {
+        "function": true
+      }
+    },
+    "Diagnostics": {
+      "userGroups": [
+        "__SystemUsers"
+      ],
+      "readValue": {
+        "allOf": [
+          {
+            "function": true
+          },
+          {
+            "oneOf": [
+              {
+                "versions": [
+                  1.0
+                ],
+                "type": "object",
+                "properties": {
+                  "targetSystems": {
+                    "type": "object",
+                    "configDescription": "descTargetSystems",
+                    "additionalProperties": {
+                      "type": "object",
+                      "properties": {
+                        "connectionState": {
+                          "propertyOrder": 1,
+                          "type": "string"
+                        },
+                        "connectError": {
+                          "propertyOrder": 2,
+                          "type": "integer"
+                        },
+                        "connectErrorMessage": {
+                          "propertyOrder": 3,
+                          "type": "string"
+                        },
+                        "availableModulesCount": {
+                          "propertyOrder": 4,
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "connectionState"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "versions": [
+                  2.0
+                ],
+                "type": "object",
+                "properties": {
+                  "domainState": {
+                    "propertyOrder": 2,
+                    "type": "string",
+                    "enum": [
+                      "Good",
+                      "Bad"
+                    ]
+                  },
+                  "domainError": {
+                    "propertyOrder": 3,
+                    "type": "string",
+                    "format": "multiline"
+                  },
+                  "targetSystems": {
+                    "type": "object",
+                    "configDescription": "descTargetSystems",
+                    "additionalProperties": {
+                      "type": "object",
+                      "properties": {
+                        "connectionState": {
+                          "propertyOrder": 1,
+                          "type": "string"
+                        },
+                        "connectError": {
+                          "propertyOrder": 2,
+                          "type": "integer"
+                        },
+                        "connectErrorMessage": {
+                          "propertyOrder": 3,
+                          "type": "string"
+                        },
+                        "availableModulesCount": {
+                          "propertyOrder": 4,
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "connectionState"
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "packageVersion": "22.0.7447",
+  "productVersion": "14.4.245.0",
+  "signature": "W5KZioKh7/mLKo3er0vEk/+sQ40p1TtExasGZhpbHeS3JuYhKzMyp//C938odcUaZivx4lFKDkk9wM1O/dSiucwKRGHYoA5F8YPs5oidTn9DaR7HNDLXzdxqCs2UH0dzZw872+k1WLRgzYTRQdbvj61G80iKMphq+lyXmyedFHZQLBRD8YIKqMLnEVYWeZD0UOVZ1iYSfMzmxi4be/f9i1+hivgnhoUsaTqu7ehQdhiUsyzhlGhmiops1Z4321kPawLlH5Q53uKvWRPTgjrAPvIQYnW+3Qy1IEC73F84CFr5UPvdaEOgGhlBeIgrpscYRVyXYoVF1QKSdzjGRJwTCA=="
+}

@@ -1,0 +1,10 @@
+{
+    "$schema": "../../../../../TwinCAT-HMI-Common/JsonSchemas/Language.Schema.json",
+    "locale": "de",
+    "localizedText": {
+        "Error_Dialog_Load_View_Insufficient_Access": "Keine Berechtigung zur Anzeige der View: '{0}'.",
+        "Error_Dialog_Load_View_Insufficient_Access_User_Details": "Keine Berechtigung zur Anzeige der View: '{0}' für Benutzer {1}.",
+        "Error_Dialog_Load_View_Insufficient_Access_User_Details_Title": "Gruppenzugehörigkeit: {0}\nAutorisiert von {1} in der Session:\n{2}",
+        "Error_Dialog_Load_View_Insufficient_Access_Logout": "Ausloggen"
+    }
+}

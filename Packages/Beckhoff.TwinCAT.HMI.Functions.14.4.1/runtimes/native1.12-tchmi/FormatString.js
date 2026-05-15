@@ -1,0 +1,1 @@
+import{Functions}from"Beckhoff.TwinCAT.HMI.Framework/index.esm.js";export function FormatString(formatString,...args){return tchmi_format_string(formatString,...args)}Functions.registerFunctionEx("FormatString","TcHmi.Functions.Beckhoff",FormatString,{injectInGlobalObject:!0});

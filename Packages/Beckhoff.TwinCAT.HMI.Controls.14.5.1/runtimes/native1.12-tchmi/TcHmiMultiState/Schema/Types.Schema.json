@@ -1,0 +1,95 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "definitions": {
+        "TcHmi.Controls.Beckhoff.TcHmiMultiState": {
+            "$schema": "http://json-schema.org/draft-04/schema",
+            "type": "object",
+            "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+            "frameworkControlType": "TcHmiMultiState",
+            "frameworkControlNamespace": "TcHmi.Controls.Beckhoff"
+        },
+        "TcHmiMultiState": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiMultiState"
+        },
+        "TcHmi.Controls.Beckhoff.TcHmiMultiState.StateList": {
+            "title": "StateList",
+            "description": "State List",
+            "type": "array",
+            "items": {
+                "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiMultiState.StateListItem"
+            }
+        },
+        "TcHmi.Controls.Beckhoff.TcHmiMultiState.StateListItem": {
+            "title": "State List Item",
+            "description": "State List Item",
+            "type": "object",
+            "engineeringColumns": ["state"],
+            "propertiesMeta": [
+                {
+                    "name": "state",
+                    "displayName": "State",
+                    "category": "General",
+                    "displayPriority": 10,
+                    "description": "State Value",
+                    "defaultValue": null,
+                    "defaultValueInternal": null
+                },
+                {
+                    "name": "stateBackgroundColor",
+                    "displayName": "State Background Color",
+                    "category": "General",
+                    "displayPriority": 10,
+                    "description": "Background Color for this entry.",
+                    "defaultValue": null,
+                    "defaultValueInternal": null
+                },
+                {
+                    "name": "stateIcon",
+                    "displayName": "State Icon",
+                    "category": "General",
+                    "displayPriority": 10,
+                    "description": "Icon Path for this entry.",
+                    "defaultValue": null,
+                    "defaultValueInternal": null
+                },
+                {
+                    "name": "stateText",
+                    "displayName": "State Text",
+                    "category": "General",
+                    "displayPriority": 10,
+                    "description": "Text for this entry.",
+                    "defaultValue": null,
+                    "defaultValueInternal": null
+                },
+                {
+                    "name": "stateTextColor",
+                    "displayName": "State Text Color",
+                    "category": "General",
+                    "displayPriority": 10,
+                    "description": "Text Color for this entry.",
+                    "defaultValue": null,
+                    "defaultValueInternal": null
+                }
+            ],
+            "properties": {
+                "state": {
+                    "$ref": "tchmi:general#/definitions/Any"
+                },
+                "stateBackgroundColor": {
+                    "$ref": "tchmi:framework#/definitions/Color"
+                },
+                "stateIcon": {
+                    "$ref": "tchmi:framework#/definitions/Path"
+                },
+                "stateText": {
+                    "$ref": "tchmi:general#/definitions/String"
+                },
+                "stateTextColor": {
+                    "$ref": "tchmi:framework#/definitions/SolidColor"
+                }
+            },
+            "additionalProperties": false,
+            "required": ["state"]
+        }
+    }
+}

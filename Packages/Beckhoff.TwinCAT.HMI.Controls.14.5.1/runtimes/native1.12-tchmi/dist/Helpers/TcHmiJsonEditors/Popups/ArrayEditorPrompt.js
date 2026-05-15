@@ -1,0 +1,1 @@
+import{EditorPrompt}from"./EditorPrompt.js";import{ArrayEditorPane}from"../BaseEditors/EditorPanes/ArrayEditorPane.js";export class ArrayEditorPrompt extends EditorPrompt{constructor(editorInfo,factory){super(editorInfo,ArrayEditorPane,factory)}}TcHmi.Controls.Helpers??={},TcHmi.Controls.Helpers.ArrayEditorPrompt=ArrayEditorPrompt;

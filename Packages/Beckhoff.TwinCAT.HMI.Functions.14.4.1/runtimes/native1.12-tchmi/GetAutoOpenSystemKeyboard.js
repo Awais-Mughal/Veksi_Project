@@ -1,0 +1,1 @@
+import{Functions,Keyboard}from"Beckhoff.TwinCAT.HMI.Framework/index.esm.js";export function GetAutoOpenSystemKeyboard(){return Keyboard.getAutoOpen()}Functions.registerFunctionEx("GetAutoOpenSystemKeyboard","TcHmi.Functions.Beckhoff",GetAutoOpenSystemKeyboard,{injectInGlobalObject:!0});

@@ -1,0 +1,21 @@
+import{localizationManager}from"../System/LocalizationManager.js";import{isParameterTypeInvalid}from"../System/SystemFunctions.js";import{createTask}from"../System/Callback.js";import*as Callback from"./Callback.js";
+/**
+ * Changes the locale of the HMI including all localization symbols.
+ * Note that this does not change the Time Format Locale.
+ * The locale name is given as ISO 639/BCP 47 identifier (Examples: 'en', 'en-US').
+ * @param locale locale name to load. The locale name is given as ISO 639/BCP 47 identifier (Examples: 'en', 'en-US').
+ * @param callback optional callback which is called after locale change
+ * @preserve (Part of the public API)
+ */export function load(locale,callback=null){isParameterTypeInvalid(locale,"locale",{type:"string",required:"nullOk",minStringLength:1},"TcHmi.Locale",callback)||localizationManager.loadLocale(locale??void 0,callback)}
+/**
+ * Returns the current locale string for texts or undefined if no localized Symbol is available.
+ * Note that this is not the Time Format Locale.
+ * The locale name is given as ISO 639/BCP 47 identifier (Examples: 'en', 'en-US').
+ * @returns The current locale identifier as ISO 639/BCP 47 identifier (Examples: 'en', 'en-US').
+ * @preserve (Part of the public API)
+ */export function get(){return localizationManager.getLocale()}
+/**
+ * Returns the list of available application locales.
+ * The locale name is given as ISO 639/BCP 47 identifiers (Examples: 'en', 'en-US').
+ * @preserve (Part of the public API)
+ */export function getRegisteredLocales(){let files=localizationManager.getFiles();if(!files)return[];let applicationFiles=files.get("TcHmi.System.Localization.Application");return applicationFiles?Array.from(applicationFiles.keys()):[]}export function getRegisteredLocalesForControl(type){let files=localizationManager.getFiles();if(!files)return[];let controlFiles=files.get("TcHmi.System.Localization.Control<"+type+">");return controlFiles?Array.from(controlFiles.keys()):[]}export function getRegisteredLocalesForFunction(type){let files=localizationManager.getFiles();if(!files)return[];let functionFiles=files.get("TcHmi.System.Localization.Function<"+type+">");return functionFiles?Array.from(functionFiles.keys()):[]}export class LocalizationReader{constructor(localization){this.__localizationDictionary=localization}__localizationDictionary;getLocalization(){return this.__localizationDictionary}get(key){let res=this.__localizationDictionary[key];return null==res&&(res=key),res}}export class Localization{__namespace="";get(options){return localizationManager.get(this.__namespace,options)}watch(callback){const callstackLinker=createTask("Locale.watch>"+this.__namespace);return localizationManager.watch(this.__namespace,void 0,data=>{callstackLinker.run(()=>{Callback.callSafeEx(callback,this,data)})})}watchEx(options={level:Level.Application},callback){const callstackLinker=createTask("Locale.watchEx>"+this.__namespace);return localizationManager.watch(this.__namespace,options,data=>{callstackLinker.run(()=>{Callback.callSafeEx(callback,this,data)})})}getText(key,options){return localizationManager.getText(this.__namespace,key,options)}watchText(key,callback){return localizationManager.watchText(this.__namespace,key,void 0,data=>{Callback.callSafeEx(callback,this,data)})}watchTextEx(key,options={level:Level.Application},callback){return localizationManager.watchText(this.__namespace,key,options,data=>{Callback.callSafeEx(callback,this,data)})}}export class ApplicationLocalization extends Localization{constructor(){super(),this.__namespace="TcHmi.System.Localization.Application"}}export class ControlLocalization extends Localization{constructor(type){super(),this.__namespace="TcHmi.System.Localization.Control<"+type+">"}}export class FunctionLocalization extends Localization{constructor(type){super(),this.__namespace="TcHmi.System.Localization.Function<"+type+">"}}export class PackageLocalization extends Localization{constructor(id){super(),this.__namespace="TcHmi.System.Localization.Package<"+id+">"}}export var Level;!function(Level){Level[Level.Application=0]="Application",Level[Level.Engineering=1]="Engineering"}(Level||(Level={}));

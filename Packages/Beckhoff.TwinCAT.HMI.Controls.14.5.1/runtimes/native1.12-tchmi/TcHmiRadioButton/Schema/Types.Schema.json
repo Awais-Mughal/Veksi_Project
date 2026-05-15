@@ -1,0 +1,55 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "definitions": {
+        "TcHmi.Controls.Beckhoff.TcHmiRadioButton": {
+            "$schema": "http://json-schema.org/draft-04/schema",
+            "type": "object",
+            "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+            "frameworkControlType": "TcHmiRadioButton",
+            "frameworkControlNamespace": "TcHmi.Controls.Beckhoff"
+        },
+        "TcHmi.Controls.Beckhoff.TcHmiRadioButton.StateSymbol": {
+            "title": "StateSymbol",
+            "allOf": [
+                {
+                    "$ref": "tchmi:framework#/definitions/Symbol"
+                },
+                {
+                    "frameworkSymbolSubType": {
+                        "$ref": "tchmi:general#/definitions/Boolean"
+                    }
+                }
+            ]
+        },
+        "TcHmi.Controls.Beckhoff.TcHmiRadioButton.TextPosition": {
+            "title": "TextPosition",
+            "type": "string",
+            "enum": ["Left", "Right"]
+        },
+        "TcHmiRadioButton": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiRadioButton"
+        },
+        "TcHmiRadioButtonStateSymbol": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiRadioButton.StateSymbol"
+        },
+        "TcHmi.Controls.Beckhoff.TcHmiRadioButton.StateChangedEventObject": {
+            "title": "StateChangedEventObject",
+            "type": "object",
+            "properties": {
+                "control": {
+                    "$ref": "tchmi:framework#/definitions/Control"
+                },
+                "state": {
+                    "type": "boolean"
+                },
+                "stateOld": {
+                    "type": "boolean"
+                }
+            },
+            "additionalProperties": false
+        },
+        "TcHmiRadioButtonStateChangedEventObject": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiRadioButton.StateChangedEventObject"
+        }
+    }
+}

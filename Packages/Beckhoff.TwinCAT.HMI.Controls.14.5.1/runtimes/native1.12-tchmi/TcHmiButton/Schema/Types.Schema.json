@@ -1,0 +1,50 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "definitions": {
+        "TcHmi.Controls.Beckhoff.TcHmiButton": {
+            "$schema": "http://json-schema.org/draft-04/schema",
+            "type": "object",
+            "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+            "frameworkControlType": "TcHmiButton",
+            "frameworkControlNamespace": "TcHmi.Controls.Beckhoff"
+        },
+        "TcHmi.Controls.Beckhoff.TcHmiButton.StateSymbol": {
+            "title": "StateSymbol",
+            "allOf": [
+                {
+                    "$ref": "tchmi:framework#/definitions/Symbol"
+                },
+                {
+                    "frameworkSymbolSubType": {
+                        "$ref": "tchmi:general#/definitions/Boolean"
+                    }
+                }
+            ]
+        },
+        "TcHmi.Controls.Beckhoff.TcHmiButton.StateChangedEventObject": {
+            "title": "StateChangedEventObject",
+            "type": "object",
+            "properties": {
+                "control": {
+                    "$ref": "tchmi:framework#/definitions/Control"
+                },
+                "state": {
+                    "type": "boolean"
+                },
+                "stateOld": {
+                    "type": "boolean"
+                }
+            },
+            "additionalProperties": false
+        },
+        "TcHmiButton": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiButton"
+        },
+        "TcHmiButtonStateSymbol": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiButton.StateSymbol"
+        },
+        "TcHmiButtonStateChangedEventObject": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiButton.StateChangedEventObject"
+        }
+    }
+}

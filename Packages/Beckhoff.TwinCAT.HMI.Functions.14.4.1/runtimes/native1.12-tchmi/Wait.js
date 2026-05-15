@@ -1,0 +1,1 @@
+import{Functions}from"Beckhoff.TwinCAT.HMI.Framework/index.esm.js";export function Wait(ctx,time){setTimeout(()=>{ctx.success()},time)}Functions.registerFunctionEx("Wait","TcHmi.Functions.Beckhoff",Wait,{injectInGlobalObject:!0});
