@@ -1,32 +1,7 @@
 {
     "commitInterval": "PT10S",
     "enableBackup": false,
-    "historizedSymbolList": {
-        "ADS.PLC1.GVL_HMI.ACT_Valve1_Position": {
-            "interval": "PT1S",
-            "maxEntries": 10000,
-            "recordingEnabled": true,
-            "rowLimit": 100000
-        },
-        "ADS.PLC1.GVL_HMI.ACT_Valve2_Position": {
-            "interval": "PT1S",
-            "maxEntries": 10000,
-            "recordingEnabled": true,
-            "rowLimit": 100000
-        },
-        "ADS.PLC1.GVL_HMI.ACT_Valve3_Position": {
-            "interval": "PT1S",
-            "maxEntries": 10000,
-            "recordingEnabled": true,
-            "rowLimit": 100000
-        },
-        "ADS.PLC1.GVL_HMI.ACT_WaterLevel_pct": {
-            "interval": "PT1S",
-            "maxEntries": 10000,
-            "recordingEnabled": true,
-            "rowLimit": 100000
-        }
-    },
+    "historizedSymbolList": {},
     "inMemory": false,
     "maxBackups": 1,
     "mode": 3,
