@@ -370,15 +370,16 @@ div[data-tchmi-type="TcHmi.Controls.System.TcHmiView"] {
 
 /* Rahksuo dashboard responsive tuning
  * Layout-only scaling for the dashboard. Do not add data bindings here.
- * The dashboard is scaled to fit a 1920x1200 viewport without scrollbars;
- * larger viewports scale up and smaller viewports scale down.
+ * 1920x1200 is the normal full-screen HMI baseline. The three dashboard
+ * columns use equal grid factors in Dashboard.content; these rules only scale
+ * the whole layout for different screen sizes and keep vertical scrolling.
  */
 #Additional_Info_1 {
     width: 100%;
     max-width: 100%;
-    height: 100vh !important;
     min-height: 100vh;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     box-sizing: border-box;
 }
 
@@ -386,9 +387,9 @@ div[data-tchmi-type="TcHmi.Controls.System.TcHmiView"] {
     left: 12px !important;
     right: 12px !important;
     max-width: calc(100% - 24px);
-    height: calc(100vh - 95px) !important;
     min-height: calc(100vh - 95px);
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     box-sizing: border-box;
 }
 
@@ -404,7 +405,7 @@ div[data-tchmi-type="TcHmi.Controls.System.TcHmiView"] {
 #TcHmiGrid_17,
 #TcHmiContainer_27,
 #TcHmiImage_4 {
-    min-width: 320px;
+    min-width: 0;
 }
 
 @media screen and (min-width: 2200px) and (min-height: 1300px) {
@@ -480,7 +481,6 @@ div[data-tchmi-type="TcHmi.Controls.System.TcHmiView"] {
         left: 4px !important;
         right: 4px !important;
         max-width: calc(100% - 8px);
-        height: calc(100vh - 80px) !important;
         min-height: calc(100vh - 80px);
     }
 
