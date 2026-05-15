@@ -1,4 +1,4 @@
-<div id="Additional_Info_1" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="100" data-tchmi-width-unit="%" data-tchmi-height="100" data-tchmi-height-unit="%" data-tchmi-height-mode="Parent">
+<div id="Additional_Info_1" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="100" data-tchmi-width-unit="%" data-tchmi-height="880" data-tchmi-height-unit="px" data-tchmi-height-mode="Content">
   
   <div id="TcHmiTextblock_Additional_Info_24" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="32" data-tchmi-height-unit="px" data-tchmi-left="32" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right="16" data-tchmi-text="Dashboard">
     <script data-tchmi-target-attribute="data-tchmi-class-names" type="application/json">
@@ -8,7 +8,7 @@
     </script>
   </div>
 
-  <div id="TcHmiContainer_Additional_Info_27" data-tchmi-type="TcHmi.Controls.System.TcHmiContainer" data-tchmi-left="16" data-tchmi-left-unit="px" data-tchmi-top="40" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right-unit="px" data-tchmi-right="16" data-tchmi-height="100" data-tchmi-height-unit="%" data-tchmi-height-mode="Parent" data-tchmi-bottom="16" data-tchmi-bottom-unit="px">
+  <div id="TcHmiContainer_Additional_Info_27" data-tchmi-type="TcHmi.Controls.System.TcHmiContainer" data-tchmi-height-unit="px" data-tchmi-left="16" data-tchmi-left-unit="px" data-tchmi-top="40" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right-unit="px" data-tchmi-right="16" data-tchmi-height="800" data-tchmi-height-mode="Content">
     <script data-tchmi-target-attribute="data-tchmi-class-names" type="application/json">
       [
       "background-container"
@@ -18,25 +18,22 @@
 <script data-tchmi-target-attribute="data-tchmi-column-options" type="application/json">
 [
   {
-    "maxWidth": 820.0,
-    "minWidth": 768.0,
+    "minWidth": 800.0,
     "overflow": false,
-    "width": 2,
+    "width": 1,
     "widthMode": "Value",
-    "widthUnit": "factor"
-  },
-  {
-    "maxWidth": 760.0,
-    "minWidth": 560.0,
-    "overflow": false,
-    "width": 2,
-    "widthMode": "Value",
-    "widthUnit": "factor"
+    "widthUnit": "px"
   },
   {
     "maxWidth": 900.0,
-    "minWidth": 380.0,
-    "overflow": false,
+    "minWidth": 600.0,
+    "width": 1,
+    "widthMode": "Value",
+    "widthUnit": "factor"
+  },
+  {
+    "maxWidth": 1500.0,
+    "minWidth": 600.0,
     "width": 1,
     "widthMode": "Value",
     "widthUnit": "factor"
