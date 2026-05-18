@@ -459,6 +459,18 @@ div[data-tchmi-type="TcHmi.Controls.System.TcHmiView"] {
     }
 }
 
+@media screen and (max-width: 1366px) {
+    #TcHmiGrid_20 {
+        zoom: 0.56;
+    }
+}
+
+@media screen and (max-width: 1280px) {
+    #TcHmiGrid_20 {
+        zoom: 0.52;
+    }
+}
+
 @media screen and (max-width: 1180px) {
     #TcHmiGrid_20 {
         zoom: 0.48;
