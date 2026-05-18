@@ -370,9 +370,9 @@ div[data-tchmi-type="TcHmi.Controls.System.TcHmiView"] {
 
 /* Rahksuo dashboard responsive tuning
  * Layout-only scaling for the dashboard. Do not add data bindings here.
- * The dashboard is designed as three equal 745px columns (2235px total).
- * We keep that internal screen size stable and scale the whole grid with zoom
- * so columns cannot collapse back over each other between breakpoints.
+ * The dashboard is treated as three equal 768px columns (2304px total).
+ * The 768px column width matches the widest valve panels, so controls and
+ * columns keep their positions and cannot overlap while the whole grid scales.
  */
 #Additional_Info_1 {
     width: 100%;
@@ -396,21 +396,24 @@ div[data-tchmi-type="TcHmi.Controls.System.TcHmiView"] {
 #TcHmiGrid_20 {
     transform: none !important;
     transform-origin: initial !important;
-    width: 2235px !important;
-    min-width: 2235px;
+    width: 2304px !important;
+    min-width: 2304px;
     max-width: none;
-    zoom: 0.84;
+    zoom: 0.82;
 }
 
+#TcHmiGrid_18,
 #TcHmiGrid_17,
 #TcHmiContainer_27,
-#TcHmiImage_4 {
+#TcHmiImage_4,
+#TcHmiContainer_35,
+#TcHmiGrid_19 {
     min-width: 0;
 }
 
 @media screen and (min-width: 2200px) and (min-height: 1300px) {
     #TcHmiGrid_20 {
-        zoom: 0.97;
+        zoom: 0.95;
     }
 }
 
@@ -428,37 +431,37 @@ div[data-tchmi-type="TcHmi.Controls.System.TcHmiView"] {
 
 @media screen and (min-width: 3840px) and (min-height: 2160px) {
     #TcHmiGrid_20 {
-        zoom: 1.7;
+        zoom: 1.65;
     }
 }
 
 @media screen and (min-width: 1761px) and (max-height: 1199px) {
     #TcHmiGrid_20 {
-        zoom: 0.77;
+        zoom: 0.74;
     }
 }
 
 @media screen and (min-width: 1761px) and (max-height: 1000px) {
     #TcHmiGrid_20 {
-        zoom: 0.62;
+        zoom: 0.6;
     }
 }
 
 @media screen and (max-width: 1760px) {
     #TcHmiGrid_20 {
-        zoom: 0.77;
+        zoom: 0.74;
     }
 }
 
 @media screen and (max-width: 1440px) {
     #TcHmiGrid_20 {
-        zoom: 0.62;
+        zoom: 0.6;
     }
 }
 
 @media screen and (max-width: 1180px) {
     #TcHmiGrid_20 {
-        zoom: 0.5;
+        zoom: 0.48;
     }
 }
 
@@ -476,6 +479,6 @@ div[data-tchmi-type="TcHmi.Controls.System.TcHmiView"] {
     }
 
     #TcHmiGrid_20 {
-        zoom: 0.38;
+        zoom: 0.37;
     }
 }
