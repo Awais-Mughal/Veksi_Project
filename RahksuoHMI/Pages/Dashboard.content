@@ -18,22 +18,22 @@
 <script data-tchmi-target-attribute="data-tchmi-column-options" type="application/json">
 [
   {
-    "minWidth": 800.0,
+    "minWidth": 768.0,
     "overflow": false,
-    "width": 1,
-    "widthMode": "Value",
-    "widthUnit": "px"
-  },
-  {
-    "maxWidth": 900.0,
-    "minWidth": 600.0,
     "width": 1,
     "widthMode": "Value",
     "widthUnit": "factor"
   },
   {
-    "maxWidth": 1500.0,
-    "minWidth": 600.0,
+    "minWidth": 768.0,
+    "overflow": false,
+    "width": 1,
+    "widthMode": "Value",
+    "widthUnit": "factor"
+  },
+  {
+    "minWidth": 768.0,
+    "overflow": false,
     "width": 1,
     "widthMode": "Value",
     "widthUnit": "factor"
